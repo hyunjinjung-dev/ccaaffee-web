@@ -19,21 +19,14 @@
 
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list nav dense>
-        <v-list-item-group active-class="deep-purple--text text--accent-4">
-          <v-list-item>
-            <v-list-item-title>Foo</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Bar</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Fizz</v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title>Buzz</v-list-item-title>
+        <v-list-item-group active-class="red--text text--accent-4">
+          <v-list-item v-for="(item, index) in items" :key="index" router link exact>
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              {{ item.title }}
+            </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -45,6 +38,33 @@
 export default {
   data: () => ({
     drawer: false,
+    items: [
+      {
+        title: "Home",
+        link: "/",
+        icon: "mdi-home",
+      },
+      {
+        title: "Search",
+        link: "/search",
+        icon: "mdi-magnify",
+      },
+      {
+        title: "Map",
+        link: "/map",
+        icon: "mdi-map-search",
+      },
+      {
+        title: "Community",
+        link: "/community",
+        icon: "mdi-account-group",
+      },
+      {
+        title: "Mypage",
+        link: "/mypage",
+        icon: "mdi-account",
+      },
+    ],
   }),
   methods: {},
 }
