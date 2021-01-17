@@ -1,6 +1,6 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-// import NavBar from "@/components/NavBar.vue"
+import NavBar from "@/components/NavBar.vue"
 
 Vue.use(VueRouter)
 
@@ -9,17 +9,41 @@ const routes = [
     path: "/",
     name: "Home",
     components: {
-      // NavBar,
+      NavBar,
       default: () => import(/* webpackChunkName: "Home" */ "../views/Home.vue"),
     },
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/search",
+    name: "Search",
+    component: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "about" */ "../views/Search.vue"),
+    },
+  },
+  {
+    path: "/map",
+    name: "Map",
+    component: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "about" */ "../views/Map.vue"),
+    },
+  },
+  {
+    path: "/community",
+    name: "Community",
+    component: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "about" */ "../views/Community.vue"),
+    },
+  },
+  {
+    path: "/mypage",
+    name: "Mypage",
+    component: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "about" */ "../views/Mypage.vue"),
+    },
   },
 ]
 
