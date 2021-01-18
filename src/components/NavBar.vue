@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="font-weight-bold"
         ><router-link to="/" class="black--text" style="text-decoration: none"
-          >VueTube</router-link
+          >ccaaffee</router-link
         ></v-toolbar-title
       >
       <v-spacer></v-spacer>
@@ -21,41 +21,6 @@
       ></v-text-field>
 
       <v-spacer></v-spacer>
-      <v-menu offsetY>
-        <template v-slot:activator="{ on: menu }">
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on: tooltip }">
-              <v-btn icon v-on="{ ...tooltip, ...menu }"
-                ><v-icon size="25">mdi-video-plus</v-icon></v-btn
-              >
-            </template>
-            <span>Create a video and more</span>
-          </v-tooltip>
-        </template>
-        <v-list>
-          <v-list-item router to="/studio">
-            <v-list-item-icon class="mr-3"><v-icon>mdi-play-box-outline</v-icon></v-list-item-icon>
-            <v-list-item-title>Upload video</v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon class="mr-3"><v-icon>mdi-access-point</v-icon></v-list-item-icon>
-            <v-list-item-title>Go live</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on"> <v-icon size="25">mdi-apps</v-icon></v-btn>
-        </template>
-        <span>VueTube apps</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on" class="mr-7"> <v-icon size="25">mdi-bell</v-icon></v-btn>
-        </template>
-        <span>Notifications</span>
-      </v-tooltip>
 
       <v-menu offset-y left>
         <template v-slot:activator="{ on }">
@@ -91,7 +56,7 @@
               <v-list-item-icon>
                 <v-icon>mdi-youtube-studio</v-icon>
               </v-list-item-icon>
-              <v-list-item-title>VueTube Studio</v-list-item-title>
+              <v-list-item-title>ccaaffee Studio</v-list-item-title>
             </v-list-item>
             <v-list-item router to="/signin">
               <v-list-item-icon>
@@ -111,7 +76,7 @@
       :temporary="$route.name === 'Watch'"
       id="nav"
     >
-      <div tag="div" class="v-navigation-drawer__content" v-bar>
+      <div tag="div" class="v-navigation-drawer__content">
         <v-list dense nav class="py-0" tag="div">
           <v-list-item
             :class="{
@@ -119,7 +84,7 @@
             }"
           >
             <v-app-bar-nav-icon @click="drawer = !drawer" class="mr-5"></v-app-bar-nav-icon>
-            <v-toolbar-title class="font-weight-bold">VueTube Hell</v-toolbar-title>
+            <v-toolbar-title class="font-weight-bold">ccaaffee</v-toolbar-title>
           </v-list-item>
           <v-divider class="hidden-lg-and-up"></v-divider>
 
@@ -153,15 +118,22 @@
             </v-list-item>
             <v-divider class="mt-2 mb-2"></v-divider>
           </div>
-
+          <!-- 
           <span v-for="link in links" :key="link.text">
             <span v-if="link.text === 'Terms'" class="mb-2 d-block"> </span>
             <v-btn href router :to="link.link" text class="text-capitalize px-1" small>{{
               link.text
             }}</v-btn>
-          </span>
+          </span> -->
         </v-list>
       </div>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block>
+            Setting
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
   </nav>
 </template>
@@ -186,38 +158,37 @@ export default {
           // },
         ],
       },
-      {
-        header: null,
-        pages: [
-          {
-            title: "Library",
-            link: "#l",
-            icon: "mdi-play-box-multiple",
-          },
-          {
-            title: "History",
-            link: "/history",
-            icon: "mdi-history",
-          },
-          {
-            title: "Your videos",
-            link: "/channels/ddd",
-            icon: "mdi-play-box-outline",
-          },
+      // {
+      //   header: null,
+      //   pages: [
+      //     {
+      //       title: "Library",
+      //       link: "#l",
+      //       icon: "mdi-play-box-multiple",
+      //     },
+      //     {
+      //       title: "History",
+      //       link: "/history",
+      //       icon: "mdi-history",
+      //     },
+      //     {
+      //       title: "Your videos",
+      //       link: "/channels/ddd",
+      //       icon: "mdi-play-box-outline",
+      //     },
 
-          {
-            title: "Watch later",
-            link: "#wl",
-            icon: "mdi-clock",
-          },
-
-          {
-            title: "Liked videos",
-            link: "#lw",
-            icon: "mdi-thumb-up",
-          },
-        ],
-      },
+      //     {
+      //       title: "Watch later",
+      //       link: "#wl",
+      //       icon: "mdi-clock",
+      //     },
+      //     {
+      //       title: "Liked videos",
+      //       link: "#lw",
+      //       icon: "mdi-thumb-up",
+      //     },
+      //   ],
+      // },
       {
         header: null,
         pages: [
@@ -226,16 +197,16 @@ export default {
             link: "#sg",
             icon: "mdi-cog",
           },
-          {
-            title: "Report history",
-            link: "#rh",
-            icon: "mdi-flag",
-          },
-          {
-            title: "Help",
-            link: "#hp",
-            icon: "mdi-help-circle",
-          },
+          // {
+          //   title: "Report history",
+          //   link: "#rh",
+          //   icon: "mdi-flag",
+          // },
+          // {
+          //   title: "Help",
+          //   link: "#hp",
+          //   icon: "mdi-help-circle",
+          // },
           {
             title: "Send feedback",
             link: "#f",
@@ -244,19 +215,19 @@ export default {
         ],
       },
     ],
-    links: [
-      { text: "About", link: "#" },
-      { text: "Press", link: "#" },
-      { text: "Copyrignt", link: "#" },
-      { text: "Contact us", link: "#" },
-      { text: "Creators", link: "#" },
-      { text: "Advertise", link: "#" },
-      { text: "Developers", link: "#" },
-      { text: "Terms", link: "#" },
-      { text: "Privacy", link: "#" },
-      { text: "Policy & Safety", link: "#" },
-      { text: "Test new features", link: "#" },
-    ],
+    // links: [
+    //   { text: "About", link: "#" },
+    //   { text: "Press", link: "#" },
+    //   { text: "Copyrignt", link: "#" },
+    //   { text: "Contact us", link: "#" },
+    //   { text: "Creators", link: "#" },
+    //   { text: "Advertise", link: "#" },
+    //   { text: "Developers", link: "#" },
+    //   { text: "Terms", link: "#" },
+    //   { text: "Privacy", link: "#" },
+    //   { text: "Policy & Safety", link: "#" },
+    //   { text: "Test new features", link: "#" },
+    // ],
     searchText: "",
   }),
   methods: {

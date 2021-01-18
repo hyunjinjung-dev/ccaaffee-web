@@ -10,39 +10,39 @@ const routes = [
     name: "Home",
     components: {
       NavBar,
-      default: () => import(/* webpackChunkName: "Home" */ "../views/Home.vue"),
+      default: () => import(/* webpackChunkName: "about" */ "../views/Home.vue"),
     },
   },
   {
     path: "/search",
     name: "Search",
-    component: {
+    components: {
       NavBar,
-      default: () => import(/* webpackChunkName: "about" */ "../views/Search.vue"),
+      default: () => import(/* webpackChunkName: "search" */ "../views/Search.vue"),
     },
   },
   {
     path: "/map",
     name: "Map",
-    component: {
+    components: {
       NavBar,
-      default: () => import(/* webpackChunkName: "about" */ "../views/Map.vue"),
+      default: () => import(/* webpackChunkName: "map" */ "../views/Map.vue"),
     },
   },
   {
     path: "/community",
     name: "Community",
-    component: {
+    components: {
       NavBar,
-      default: () => import(/* webpackChunkName: "about" */ "../views/Community.vue"),
+      default: () => import(/* webpackChunkName: "community" */ "../views/Community.vue"),
     },
   },
   {
     path: "/mypage",
     name: "Mypage",
-    component: {
+    components: {
       NavBar,
-      default: () => import(/* webpackChunkName: "about" */ "../views/Mypage.vue"),
+      default: () => import(/* webpackChunkName: "mypage" */ "../views/Mypage.vue"),
     },
   },
 ]

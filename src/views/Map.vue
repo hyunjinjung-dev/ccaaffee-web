@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-view name="NavBar"></router-view>
     this is map
   </div>
 </template>
