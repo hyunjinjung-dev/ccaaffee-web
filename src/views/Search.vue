@@ -5,6 +5,8 @@
     </div>
 
     <v-btn @click="openFilterDialog">필터</v-btn>
+    <v-btn @click="save">save</v-btn>
+    <v-btn @click="read">read</v-btn>
 
     <!-- 필터 -->
     <v-dialog
@@ -35,10 +37,49 @@ export default {
   },
   methods: {
     openFilterDialog() {
+      this.$firebase
+        .database()
+        .ref()
+        .child("abcd")
+        .child("abcd")
+        .child("abcd")
+        .set({
+          title: "abcd",
+          text: "tttttt",
+        })
+
       this.filterDialogToggle = true
     },
     closeFilterDialog() {
       this.filterDialogToggle = false
+    },
+    async save() {
+      console.log("save@@@")
+      try {
+        await this.$firebase
+          .database()
+          .ref()
+          .child("abcd")
+          .child("abcd")
+          .child("abcd")
+          .set({
+            title: "abcd",
+            text: "tttttt",
+          })
+      } finally {
+        this.dialog = false
+      }
+    },
+
+    read() {
+      this.$firebase
+        .database()
+        .ref()
+        .child("abcd")
+        .on("value", (sn) => {
+          console.log(sn)
+          console.log(sn.val())
+        })
     },
   },
 }

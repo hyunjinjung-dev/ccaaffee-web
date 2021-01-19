@@ -1,5 +1,5 @@
 <template>
-  <v-card class="content-bg card mx-auto" :max-width="card.maxWidth" flat tile>
+  <v-card class="content-bg card mx-auto" :max-width="card.maxWidth" flat tile @click="goToDetail">
     <v-carousel
       :continuous="true"
       :show-arrows="true"
@@ -82,6 +82,9 @@ export default {
   methods: {
     heartBtnClicked() {
       this.liked = !this.liked
+    },
+    goToDetail() {
+      this.$router.push({ name: "Detail" })
     },
   },
   computed: {

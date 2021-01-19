@@ -45,6 +45,14 @@ const routes = [
       default: () => import(/* webpackChunkName: "mypage" */ "../views/Mypage.vue"),
     },
   },
+  {
+    path: "/detail",
+    name: "Detail",
+    components: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "detail" */ "../views/Detail.vue"),
+    },
+  },
 ]
 
 const router = new VueRouter({
