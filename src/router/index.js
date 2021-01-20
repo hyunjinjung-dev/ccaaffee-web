@@ -53,6 +53,13 @@ const routes = [
       default: () => import(/* webpackChunkName: "detail" */ "../views/Detail.vue"),
     },
   },
+  {
+    path: "/signin",
+    name: "SignIn",
+    components: {
+      default: () => import(/* webpackChunkName: "signin" */ "../views/Auth/SignIn.vue"),
+    },
+  },
 ]
 
 const router = new VueRouter({

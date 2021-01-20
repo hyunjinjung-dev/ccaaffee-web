@@ -2,11 +2,11 @@
   <nav id="navbar">
     <v-app-bar class="white" flat app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="font-weight-bold"
-        ><router-link to="/" class="black--text" style="text-decoration: none"
-          >ccaaffee</router-link
-        ></v-toolbar-title
-      >
+      <v-toolbar-title class="font-weight-bold">
+        <router-link to="/" class="black--text" style="text-decoration: none">
+          ccaaffee
+        </router-link>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-text-field
         flat
@@ -22,51 +22,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-menu offset-y left>
-        <template v-slot:activator="{ on }">
-          <v-btn small color="red" depressed fab v-on="on" class="white--text">
-            T
-          </v-btn>
-        </template>
-
-        <v-card>
-          <v-list>
-            <v-list-item>
-              <v-list-item-avatar>
-                <img :src="`https://randomuser.me/api/portraits/men/4.jpg`" />
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title>Tech Reagan</v-list-item-title>
-                <v-list-item-subtitle>techreagan@gmail.com</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-
-          <v-divider></v-divider>
-
-          <v-list>
-            <v-list-item router to="/channels/10">
-              <v-list-item-icon>
-                <v-icon>mdi-account-box</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Your channel</v-list-item-title>
-            </v-list-item>
-            <v-list-item router to="/studio">
-              <v-list-item-icon>
-                <v-icon>mdi-youtube-studio</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>ccaaffee Studio</v-list-item-title>
-            </v-list-item>
-            <v-list-item router to="/signin">
-              <v-list-item-icon>
-                <v-icon>mdi-login-variant</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Sign out</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-menu>
+      <account-menu v-if="$store.state.fireUser"></account-menu>
+      <sign-in-dialog v-else></sign-in-dialog>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -139,9 +96,18 @@
 </template>
 
 <script>
+import AccountMenu from "@/components/AccountMenu"
+import SignInDialog from "@/components/SignInDialog"
+
 export default {
+  components: {
+    AccountMenu,
+    SignInDialog,
+  },
   data: () => ({
     drawer: false,
+    isLogin: false,
+    signInDialogToggle: false,
     items: [
       {
         header: null,
