@@ -54,10 +54,10 @@ const routes = [
     },
   },
   {
-    path: "/signin",
-    name: "SignIn",
+    path: "/signup",
+    name: "SignUp",
     components: {
-      default: () => import(/* webpackChunkName: "signin" */ "../views/Auth/SignIn.vue"),
+      default: () => import(/* webpackChunkName: "signup" */ "../views/Auth/SignUp.vue"),
     },
   },
 ]

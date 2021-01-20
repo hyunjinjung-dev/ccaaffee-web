@@ -3,7 +3,13 @@
     <v-dialog v-model="dialog" width="350" transition="scroll-x-transition">
       <template v-slot:activator="{ on, attrs }">
         <v-btn outlined color="primary" v-bind="attrs" v-on="on">
-          <v-icon left>mdi-account</v-icon>
+          <v-progress-circular
+            indeterminate
+            v-if="loading"
+            size="20"
+            class="mr-2"
+          ></v-progress-circular>
+          <v-icon left v-else>mdi-account</v-icon>
           <span>로그인</span>
         </v-btn>
       </template>
@@ -48,11 +54,11 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false">
+          <v-btn color="primary" text @click="this.dialog = false">
             Close
           </v-btn>
           <v-scroll-x-transition>
-            <v-btn v-if="openEmailSignIn" color="primary" text @click="signIn">
+            <v-btn v-if="openEmailSignIn" color="primary" text @click="signInBtnClicked">
               Login
             </v-btn>
           </v-scroll-x-transition>
@@ -80,11 +86,19 @@ export default {
       pwdRules: [(v) => !!v || "비밀번호를 입력해주세요."],
     }
   },
+  watch: {
+    dialog(close) {
+      if (close) {
+        this.openEmailSignIn = false
+      }
+    },
+  },
   methods: {
-    async signIn() {
+    async signInBtnClicked() {
       await this.$refs.form.validate()
       if (this.valid) {
         console.log("good")
+        this.dialog = false
       } else {
         console.log("hell")
       }
@@ -92,9 +106,16 @@ export default {
     async signInWithGoogle() {
       const provider = new this.$firebase.auth.GoogleAuthProvider()
       this.$firebase.auth().languageCode = "ko"
+      this.loading = true
       try {
         await this.$firebase.auth().signInWithPopup(provider)
+      } catch (e) {
+        this.$toast.error(e.message)
+        this.loading = false
       } finally {
+        this.loading = false
+        this.form.email = ""
+        this.form.pwd = ""
         this.dialog = false
       }
     },
