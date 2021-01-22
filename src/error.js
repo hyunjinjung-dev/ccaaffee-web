@@ -1,5 +1,5 @@
-import Vue from "vue"
+// import Vue from "vue"
 
-Vue.config.errorHandler = (e) => {
-  Vue.prototype.$toast.error(e.message)
-}
+// Vue.config.errorHandler = (e) => {
+//   Vue.prototype.$toast.error(e.message)
+// }

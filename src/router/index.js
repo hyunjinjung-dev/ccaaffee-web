@@ -34,9 +34,27 @@ const routes = [
     name: "Community",
     components: {
       NavBar,
-      default: () => import(/* webpackChunkName: "community" */ "../views/Community.vue"),
+      default: () => import(/* webpackChunkName: "community" */ "../views/Community/Index.vue"),
     },
+    children: [
+      {
+        path: "/",
+        name: "Boards",
+        component: () => import(/* webpackChunkName: "Boards" */ "../views/Community/Boards.vue"),
+      },
+      {
+        path: "/community/form",
+        name: "Form",
+        component: () => import(/* webpackChunkName: "Form" */ "../views/Community/Form.vue"),
+      },
+    ],
   },
+  // {
+  //   path: "/community/:document",
+  //   name: "Commnunity",
+  //   component: () => import("../views/Community.vue"),
+  // },
+
   {
     path: "/mypage",
     name: "Mypage",
@@ -54,10 +72,26 @@ const routes = [
     },
   },
   {
+    path: "/storage",
+    name: "Storage",
+    components: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "Storage" */ "../views/Storage.vue"),
+    },
+  },
+  {
     path: "/signup",
     name: "SignUp",
     components: {
       default: () => import(/* webpackChunkName: "signup" */ "../views/Auth/SignUp.vue"),
+    },
+  },
+  {
+    path: "*",
+    name: "Error",
+    components: {
+      NavBar,
+      default: () => import("../views/Error.vue"),
     },
   },
 ]

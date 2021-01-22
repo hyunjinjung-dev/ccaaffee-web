@@ -1,6 +1,6 @@
 <template>
   <div>
-    this is community
+    render
   </div>
 </template>
 

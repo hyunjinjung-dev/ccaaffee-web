@@ -1,11 +1,12 @@
 import Vue from "vue"
-import firebase from "firebase/app"
 import store from "../store/"
 
+import firebase from "firebase/app"
+import firebaseConfig from "../../firebaseConfig"
 import "firebase/auth"
 import "firebase/firebase-database"
-import "firebase/firestore"
-import firebaseConfig from "../../firebaseConfig"
+import "firebase/firebase-firestore"
+import "firebase/firebase-storage"
 
 firebase.initializeApp(firebaseConfig)
 

@@ -27,7 +27,13 @@
         </v-card-text>
 
         <v-card-text>
-          <v-btn outlined color="secondary" block @click="openEmailSignIn = !openEmailSignIn">
+          <v-btn
+            disabled
+            outlined
+            color="secondary"
+            block
+            @click="openEmailSignIn = !openEmailSignIn"
+          >
             <v-icon left>mdi-email</v-icon>
             <span>이메일로 회원가입</span>
           </v-btn>
@@ -54,7 +60,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="this.dialog = false">
+          <v-btn color="primary" text @click="dialog = false">
             Close
           </v-btn>
           <v-scroll-x-transition>
