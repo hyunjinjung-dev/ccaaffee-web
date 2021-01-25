@@ -1,5 +1,5 @@
 <template>
-  <v-menu offset-y left>
+  <v-menu offset-y left max-width="300" nudge-bottom="10" nudge-left="10">
     <template v-slot:activator="{ on }">
       <v-btn icon v-on="on">
         <v-avatar size="36">
@@ -39,7 +39,7 @@
         </v-list-item> -->
         <v-list-item @click="signOut">
           <v-list-item-icon>
-            <v-icon>mdi-login-variant</v-icon>
+            <v-icon small>mdi-login-variant</v-icon>
           </v-list-item-icon>
           <v-list-item-title>로그아웃</v-list-item-title>
         </v-list-item>

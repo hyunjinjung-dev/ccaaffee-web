@@ -1,8 +1,30 @@
 import Vue from "vue"
+import store from "@/store"
 import VueRouter from "vue-router"
 import NavBar from "@/components/NavBar.vue"
 
 Vue.use(VueRouter)
+
+let isLogin = store.state.isLogin
+
+// 로그인 가드
+const onlyAuthUser = (to, from, next) => {
+  console.log("hell1 : ", isLogin)
+  console.log("hell2 : ", store.state.isLogin)
+  if (store.state.isLogin) {
+    next()
+  } else {
+    Vue.prototype.$toast.error("로그인이 필요해요!")
+  }
+}
+// 로그인 가드
+// const rejectAuthUser = (to, from, next) => {
+//   if (store.state.isLogin === true) {
+//     next()
+//   } else {
+//     next("/mypage")
+//   }
+// }
 
 const routes = [
   {
@@ -13,6 +35,7 @@ const routes = [
       default: () => import(/* webpackChunkName: "about" */ "../views/Home.vue"),
     },
   },
+
   {
     path: "/search",
     name: "Search",
@@ -38,7 +61,7 @@ const routes = [
     },
     children: [
       {
-        path: "/",
+        path: "/community/boards",
         name: "Boards",
         component: () => import(/* webpackChunkName: "Boards" */ "../views/Community/Boards.vue"),
       },
@@ -49,6 +72,15 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/regist",
+    name: "Regist",
+    beforeEnter: onlyAuthUser,
+    components: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "regist" */ "../views/Regist.vue"),
+    },
+  },
   // {
   //   path: "/community/:document",
   //   name: "Commnunity",
@@ -58,6 +90,7 @@ const routes = [
   {
     path: "/mypage",
     name: "Mypage",
+    beforeEnter: onlyAuthUser,
     components: {
       NavBar,
       default: () => import(/* webpackChunkName: "mypage" */ "../views/Mypage.vue"),

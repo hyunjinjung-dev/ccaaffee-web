@@ -13,6 +13,7 @@ firebase.initializeApp(firebaseConfig)
 // functions와 별개로 auth 정보에 변경이 있으면 작동
 firebase.auth().onAuthStateChanged((fu) => {
   store.commit("setFireUser", fu)
+  store.commit("setLogin")
 })
 
 Vue.prototype.$firebase = firebase

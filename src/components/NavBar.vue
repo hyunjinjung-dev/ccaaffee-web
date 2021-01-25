@@ -112,11 +112,11 @@ export default {
       {
         header: null,
         pages: [
-          { title: "Home", link: "/", icon: "mdi-home" },
+          { title: "Home", link: "/", icon: "mdi-home-outline" },
           { title: "Search", link: "/search", icon: "mdi-magnify" },
-          { title: "Map", link: "/map", icon: "mdi-map-search" },
-          { title: "Community", link: "/community", icon: "mdi-account-group" },
-          { title: "Mypage", link: "/mypage", icon: "mdi-account" },
+          { title: "Map", link: "/map", icon: "mdi-map-outline" },
+          { title: "Community", link: "/community", icon: "mdi-account-group-outline" },
+          { title: "Regist", link: "/regist", icon: "mdi-plus-box-multiple-outline" },
           // {
           //   title: "Subscriptions",
           //   link: "#s",
@@ -158,11 +158,14 @@ export default {
       {
         header: null,
         pages: [
+          { title: "Mypage", link: "/mypage", icon: "mdi-account-outline" },
+          { title: "Setting", link: "#sg", icon: "mdi-cog-outline" },
           {
-            title: "Setting",
-            link: "#sg",
-            icon: "mdi-cog",
+            title: "Send feedback",
+            link: "#f",
+            icon: "mdi-message-alert-outline",
           },
+
           // {
           //   title: "Report history",
           //   link: "#rh",
@@ -173,11 +176,6 @@ export default {
           //   link: "#hp",
           //   icon: "mdi-help-circle",
           // },
-          {
-            title: "Send feedback",
-            link: "#f",
-            icon: "mdi-message-alert",
-          },
         ],
       },
     ],

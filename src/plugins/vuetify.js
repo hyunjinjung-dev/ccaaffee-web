@@ -46,7 +46,7 @@ Vue.use(VuetifyToast, {
   x: "right", // default
   y: "bottom", // default
   color: "info", // default
-  icon: "",
+  icon: "mdi-information",
   iconColor: "", // default
   classes: ["body-2"],
   timeout: 3000, // default
