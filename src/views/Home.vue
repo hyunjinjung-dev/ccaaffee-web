@@ -30,7 +30,7 @@ export default {
     loading: true,
     store: {
       storeId: "",
-      storeName: "gongrot",
+      storeNameKor: "gongrot",
       branchName: "-",
       isOpen: "영업중",
 

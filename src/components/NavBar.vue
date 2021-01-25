@@ -107,7 +107,6 @@ export default {
   data: () => ({
     drawer: false,
     isLogin: false,
-    signInDialogToggle: false,
     items: [
       {
         header: null,
