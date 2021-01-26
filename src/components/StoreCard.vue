@@ -1,5 +1,5 @@
 <template>
-  <v-card class="content-bg card mx-auto" :max-width="card.maxWidth" flat tile>
+  <v-card class="content-bg card mx-auto pa-2" :max-width="card.maxWidth">
     <v-carousel
       :continuous="true"
       :show-arrows="true"
@@ -7,7 +7,6 @@
       hide-delimiter-background
       show-arrows-on-hover
       height="200px"
-      @click="goToDetail"
     >
       <!-- <template v-slot:prev="{ on, attrs }">
         <v-btn color="white" v-bind="attrs" v-on="on" icon small>
@@ -20,7 +19,7 @@
         </v-btn>
       </template> -->
 
-      <v-carousel-item v-for="(slide, i) in slides" :key="i">
+      <v-carousel-item v-for="(slide, i) in slides" :key="i" @click="goToDetail(store.storeId)">
         <v-sheet :color="colors[i]" height="200px" tile>
           <v-row class="fill-height" align="center" justify="center">
             <div class="display-3">{{ slide }} Slide</div>
@@ -31,7 +30,7 @@
     <!-- <v-img :src="store.thumb" height="200px"></v-img> -->
 
     <v-row no-gutters>
-      <v-col cols="10" @click="goToDetail">
+      <v-col cols="10" @click="goToDetail(store.storeId)">
         <v-card-title class="pt-3 pl-2 subtitle-1 font-weight-bold">
           {{ store.storeNameKor }}
           {{ store.branchName }}
@@ -84,8 +83,8 @@ export default {
     heartBtnClicked() {
       this.liked = !this.liked
     },
-    goToDetail() {
-      this.$router.push({ name: "Detail" })
+    goToDetail(storeId) {
+      this.$router.push({ name: "Detail", params: { storeId: storeId } })
     },
   },
   computed: {

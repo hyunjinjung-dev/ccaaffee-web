@@ -5,12 +5,8 @@ import NavBar from "@/components/NavBar.vue"
 
 Vue.use(VueRouter)
 
-let isLogin = store.state.isLogin
-
 // 로그인 가드
 const onlyAuthUser = (to, from, next) => {
-  console.log("hell1 : ", isLogin)
-  console.log("hell2 : ", store.state.isLogin)
   if (store.state.isLogin) {
     next()
   } else {
@@ -61,12 +57,12 @@ const routes = [
     },
     children: [
       {
-        path: "/community/boards",
+        path: "/boards",
         name: "Boards",
         component: () => import(/* webpackChunkName: "Boards" */ "../views/Community/Boards.vue"),
       },
       {
-        path: "/community/form",
+        path: "/form",
         name: "Form",
         component: () => import(/* webpackChunkName: "Form" */ "../views/Community/Form.vue"),
       },
@@ -97,7 +93,7 @@ const routes = [
     },
   },
   {
-    path: "/detail",
+    path: "/detail/:storeId",
     name: "Detail",
     components: {
       NavBar,
@@ -117,6 +113,13 @@ const routes = [
     name: "SignUp",
     components: {
       default: () => import(/* webpackChunkName: "signup" */ "../views/Auth/SignUp.vue"),
+    },
+  },
+  {
+    path: "/detailhello",
+    name: "detailhello",
+    components: {
+      default: () => import(/* webpackChunkName: "signup" */ "../views/Detailhello.vue"),
     },
   },
   {

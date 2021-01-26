@@ -51,6 +51,10 @@ import StoreCard from "@/components/StoreCard"
 import FilterDialog from "@/components/FilterDialog.vue"
 
 export default {
+  components: {
+    FilterDialog,
+    StoreCard,
+  },
   data() {
     return {
       loading: true,
@@ -73,9 +77,10 @@ export default {
       this.loading = false
     }, 1000)
   },
-  components: {
-    FilterDialog,
-    StoreCard,
+  destroyed() {
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
   },
   methods: {
     // getCurrentLocation() {

@@ -3,7 +3,7 @@
     <!-- named routes, named views -->
     <router-view name="NavBar"></router-view>
     <router-view name="StudioNavBar"></router-view>
-    <v-main
+    <!-- <v-main
       :class="{
         'content-bg': !['SignIn', 'SignUp', 'Dashboard', 'Video', 'Detail'].includes(
           this.$route.name
@@ -11,7 +11,8 @@
           ? true
           : false,
       }"
-    >
+    > -->
+    <v-main class="content-bg">
       <router-view></router-view>
     </v-main>
   </v-app>
