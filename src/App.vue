@@ -1,18 +1,34 @@
 <template>
   <v-app>
-    <nav-bar></nav-bar>
+    <!-- named routes, named views -->
+    <router-view name="NavBar"></router-view>
+    <router-view name="StudioNavBar"></router-view>
+    <!-- <v-main
+      :class="{
+        'content-bg': !['SignIn', 'SignUp', 'Dashboard', 'Video', 'Detail'].includes(
+          this.$route.name
+        )
+          ? true
+          : false,
+      }"
+    > -->
+    <v-main class="content-bg">
+      <router-view></router-view>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import NavBar from "@/components/NavBar.vue"
-
 export default {
-  components: {
-    NavBar,
-  },
-  data: () => ({}),
+  name: "App",
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.content-bg {
+  background-color: #f9f9f9;
+}
+.card {
+  background: #f9f9f9 !important;
+}
+</style>
