@@ -2,17 +2,20 @@
   <div>
     <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" style="border: 2px solid red;">
       <v-flex xs12 style="border: 2px solid green">
-        <v-layout wrap align-center style="border: 2px solid blue">
-          <v-flex md6 sm12 xs12 align-baseline shrink style="border: 2px solid red">
-            <span class="mx-2 title">{{ store.storeNameKor }}</span>
+        <v-layout wrap align-end style="border: 2px solid blue">
+          <v-flex md6 sm12 xs12 shrink style="border: 2px solid red">
+            <v-btn icon color="info" class="mr-2" @click="$router.go(-1)">
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+            <span class="mx-2 font-weight-bold title">{{ store.storeNameKor }}</span>
             <span>{{ store.branchName }}</span>
             <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span>
-            <v-btn color="info" fab dark small class="mx-3" depressed>
+            <v-btn color="info" fab dark x-small class="mx-3" depressed>
               <v-icon dark>mdi-clock-fast</v-icon>
             </v-btn>
           </v-flex>
 
-          <v-flex md6 sm12 xs12 mb-0 ma-0 shrink style="border: 2px solid red">
+          <v-flex md6 sm12 xs12 shrink style="border: 2px solid red">
             <v-menu offset-y left>
               <template #activator="{ on }">
                 <v-btn color="info" v-on="on" class="mx-2">
