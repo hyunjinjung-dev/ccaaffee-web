@@ -246,7 +246,6 @@ export default {
         this.e1 = n + 1
       }
     },
-
     openAddressDialog() {
       this.addressDialogToggle = true
     },
@@ -258,16 +257,20 @@ export default {
     async registBtnClicked() {
       // await this.$refs.form.validate()
       await this.removeHyphen()
+      await this.removeAt()
       await this.getLatLng()
 
-      if (this.form.lat && this.form.lng) {
+      if (this.valid1 && this.valid2 && this.valid3 && this.form.lat && this.form.lng) {
         this.registStore()
       } else {
-        this.$toast.error("입력하신 주소를 확인해주세요")
+        this.$toast.error("입력한 내용을 확인해주세요")
       }
     },
     removeHyphen() {
       this.form.phoneNumber = this.form.phoneNumber.replace(/-/g, "")
+    },
+    removeAt() {
+      this.form.instagram = this.form.instagram.replace("@", "")
     },
     async getLatLng() {
       // To Do
