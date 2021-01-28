@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent width="350" transition="scroll-x-transition">
+  <v-dialog v-model="dialog" persistent max-width="350" transition="scroll-x-transition">
     <v-card class="pa-2">
       <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 수정</v-card-title>
       <v-card-text>
