@@ -7,7 +7,7 @@
       <v-flex class="py-0" shrink>
         <v-tooltip left>
           <template v-slot:activator="{ on }">
-            <v-btn class="ma-0" icon v-on="on" @click="editBtnClicked">
+            <v-btn class="ml-2 mr-0 my-0" icon v-on="on" @click="editBtnClicked">
               <v-icon color="primary" dark>mdi-pencil-circle</v-icon>
             </v-btn>
           </template>
@@ -30,11 +30,9 @@
 <script>
 export default {
   name: "DetailCardBar",
-  props: ["title", "store"],
+  props: ["title", "store", "expand"],
   data() {
-    return {
-      expand: true,
-    }
+    return {}
   },
   computed: {
     sizeXS() {

@@ -3,6 +3,7 @@
     <detail-card-bar
       :title="title"
       :store="store"
+      :expand="expand"
       @expandToggle="expandToggle"
       @updateBtnClicked="openUpdateDialog"
     ></detail-card-bar>
@@ -20,9 +21,12 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <!-- To Do 전화 번호 복사 기능 만들기-->
-                  <v-list-item-title v-if="store.since">
-                    Since {{ store.since }} ~
+                  <v-list-item-title>
+                    오픈 일자
                   </v-list-item-title>
+                  <v-list-item-subtitle class="info--text" v-if="store.since">
+                    Since {{ store.since }}
+                  </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
                     정보를 입력해주세요
                   </v-list-item-subtitle>
@@ -38,9 +42,12 @@
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title v-if="store.seatCount"
-                    >{{ store.seatCount }} 석</v-list-item-title
-                  >
+                  <v-list-item-title>
+                    좌석 수
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="info--text" v-if="store.seatCount">
+                    {{ store.seatCount }} 석
+                  </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
                     정보를 입력해주세요
                   </v-list-item-subtitle>
@@ -57,9 +64,12 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <!-- To Do 전화 번호 복사 기능 만들기-->
-                  <v-list-item-title v-if="store.phoneNumber">
-                    {{ store.phoneNumber }}
+                  <v-list-item-title>
+                    전화 번호
                   </v-list-item-title>
+                  <v-list-item-subtitle class="info--text" v-if="store.phoneNumber">
+                    {{ store.phoneNumber }}
+                  </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
                     정보를 입력해주세요
                   </v-list-item-subtitle>
@@ -76,9 +86,12 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <!-- To Do 인스타그램 연결 링크 만들기 -->
-                  <v-list-item-title v-if="store.instagram"
-                    >@{{ store.instagram }}</v-list-item-title
-                  >
+                  <v-list-item-title>
+                    인스타그램
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="info--text" v-if="store.instagram">
+                    @{{ store.instagram }}
+                  </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
                     정보를 입력해주세요
                   </v-list-item-subtitle>

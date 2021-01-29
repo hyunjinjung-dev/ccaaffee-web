@@ -68,7 +68,7 @@
         </v-expand-transition>
 
         <v-layout wrap style="border: 2px solid blue">
-          <v-flex sm8 xs12 style="border: 2px solid red">
+          <v-flex md8 sm12 xs12 style="border: 2px solid red" class="pa-1">
             <detail-image></detail-image>
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
@@ -81,7 +81,7 @@
             <dashboard-whats-coming-up></dashboard-whats-coming-up>
             <!-- <dashboard-performance></dashboard-performance> -->
           </v-flex>
-          <v-flex sm4 xs12 style="border: 2px solid red">
+          <v-flex md4 sm12 xs12 style="border: 2px solid red" class="pa-1">
             <detail-sentiment></detail-sentiment>
             <detail-review></detail-review>
             <!-- <dashboard-sentiment></dashboard-sentiment> -->
@@ -115,6 +115,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
+
 import QuickActions from "../components/modules/Dashboard/QuickActions.vue"
 import DashboardTimeOff from "../components/modules/Dashboard/TimeOff.vue"
 import DashboardWhatNeedsDoing from "../components/modules/Dashboard/WhatNeedsDoing.vue"
@@ -241,6 +243,9 @@ export default {
       this.unsubscribe()
     }
   },
+  computed: {
+    ...mapState(["parkingTags", "offerTags", "policyTags", "amenityTags", "themeTags"]),
+  },
   methods: {
     async readCountUpdate() {
       await this.ref.doc(this.storeId).update({
@@ -261,7 +266,7 @@ export default {
         this.store = item
         this.store.storeId = this.storeId
         if (this.store.operatingTime) {
-          let ot = this.store.operatingTime
+          const ot = this.store.operatingTime
           this.store.operatingTime = [
             { open: ot.openSun, openTime: ot.openTimeSun, closeTime: ot.closeTimeSun },
             { open: ot.openMon, openTime: ot.openTimeMon, closeTime: ot.closeTimeMon },
@@ -271,6 +276,36 @@ export default {
             { open: ot.openFri, openTime: ot.openTimeFri, closeTime: ot.closeTimeFri },
             { open: ot.openSat, openTime: ot.openTimeSat, closeTime: ot.closeTimeSat },
           ]
+        }
+        if (this.store.options) {
+          this.store.selectedParkingTags = []
+          this.store.selectedOfferTags = []
+          this.store.selectedPolicyTags = []
+          this.store.selectedAmenityTags = []
+          this.store.selectedThemeTags = []
+
+          for (let item in this.store.options) {
+            if (this.parkingTags.includes(item)) {
+              this.store.selectedParkingTags.push(item)
+              continue
+            }
+            if (this.offerTags.includes(item)) {
+              this.store.selectedOfferTags.push(item)
+              continue
+            }
+            if (this.policyTags.includes(item)) {
+              this.store.selectedPolicyTags.push(item)
+              continue
+            }
+            if (this.amenityTags.includes(item)) {
+              this.store.selectedAmenityTags.push(item)
+              continue
+            }
+            if (this.themeTags.includes(item)) {
+              this.store.selectedThemeTags.push(item)
+              continue
+            }
+          }
         }
       }, console.error)
     },
