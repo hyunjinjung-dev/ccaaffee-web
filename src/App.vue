@@ -13,7 +13,9 @@
       }"
     > -->
     <v-main class="content-bg">
-      <router-view></router-view>
+      <transition name="moveInUp">
+        <router-view></router-view>
+      </transition>
     </v-main>
   </v-app>
 </template>
@@ -30,5 +32,49 @@ export default {
 }
 .card {
   background: #f9f9f9 !important;
+}
+.moveInUp-enter-active {
+  animation: fadeIn 0.9s ease-in;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  33% {
+    opacity: 0;
+  }
+  66% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+  /* 0% {
+    transform: translateX(1000px);
+  }
+  100% {
+    transform: translateX(0);
+  } */
+}
+.moveInUp-leave-active {
+  animation: moveInUp 0.3s ease-in;
+}
+@keyframes moveInUp {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+
+  /* 0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-1000px);
+  } */
 }
 </style>

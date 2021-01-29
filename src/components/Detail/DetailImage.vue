@@ -1,10 +1,10 @@
 <template>
   <v-card tag="section">
     <v-card-title>
-      <span class="font-weight-medium subheading">What's coming up?</span>
+      <span class="font-weight-bold subheading">이미지</span>
     </v-card-title>
     <v-divider></v-divider>
-    <v-card-text class="pa-0">
+    <!-- <v-card-text class="pa-0">
       <v-list two-line>
         <v-list-item>
           <v-list-item-avatar>
@@ -18,23 +18,25 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item>
-          <v-list-item>
+          <v-list-item-avatar>
             <v-avatar color="secondary" size="40px">
               <v-icon color="white">mdi-file</v-icon>
             </v-avatar>
-          </v-list-item>
+          </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>Monthly safety check task will need completing</v-list-item-title>
             <v-list-item-subtitle class="info--text">in 3 weeks</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-card-text>
+    </v-card-text> -->
   </v-card>
 </template>
 
 <script>
 export default {
-  name: "DashboardWhatsComingUp",
+  name: "DetailImage",
 }
 </script>
+
+<style></style>

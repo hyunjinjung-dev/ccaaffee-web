@@ -1,19 +1,26 @@
 <template>
   <div>
-    <v-layout class="ma-2" style="border: 2px solid red;">
+    <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" style="border: 2px solid red;">
       <v-flex xs12 style="border: 2px solid green">
-        <v-layout wrap align-center style="border: 2px solid blue">
-          <v-flex sm6 xs12 align-baseline shrink style="border: 2px solid red">
-            <span class="mx-2 title">{{ pageTitle }}</span>
+        <v-layout wrap align-end style="border: 2px solid blue">
+          <v-flex md6 sm12 xs12 shrink style="border: 2px solid red">
+            <v-btn icon color="info" class="mr-2" @click="$router.go(-1)">
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+            <span class="mx-2 font-weight-bold title">{{ store.storeNameKor }}</span>
+            <span>{{ store.branchName }}</span>
             <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span>
+            <v-btn color="info" fab dark x-small class="mx-3" depressed>
+              <v-icon dark>mdi-clock-fast</v-icon>
+            </v-btn>
           </v-flex>
 
-          <v-flex sm6 xs12 mb-0 ma-0 shrink style="border: 2px solid red">
+          <v-flex md6 sm12 xs12 shrink style="border: 2px solid red">
             <v-menu offset-y left>
               <template #activator="{ on }">
-                <v-btn color="info" v-on="on" class="mx-1">
+                <v-btn color="info" v-on="on" class="mx-2">
                   <v-icon left>mdi-plus-circle</v-icon>
-                  <span>Quick actions</span>
+                  <span>Quick</span>
                 </v-btn>
               </template>
               <v-list dense>
@@ -31,18 +38,20 @@
                 </template>
               </v-list>
             </v-menu>
+
+            <!-- :flat="!showQuickActions" -->
             <v-btn
-              :flat="!showQuickActions"
               @click="showQuickActions = !showQuickActions"
+              :outlined="showQuickActions"
               color="info"
               class="mx-2"
             >
-              Quick actions
-              <v-icon class="ml-1 quick-actions__icon" :class="{ open: showQuickActions }">
-                mdi-chevron-down
-              </v-icon>
+              <v-icon left>{{ showQuickActions ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+              <span>Quick</span>
             </v-btn>
-            <v-divider class="mx-2" vertical />
+
+            <!-- <v-divider class="mx-2" vertical color="black" /> -->
+
             <v-btn icon>
               <v-icon color="info">mdi-refresh</v-icon>
             </v-btn>
@@ -52,17 +61,29 @@
           </v-flex>
         </v-layout>
 
-        <v-layout v-if="showQuickActions" style="border: 2px solid blue">
-          <quick-actions></quick-actions>
-        </v-layout>
+        <v-expand-transition>
+          <v-layout v-show="showQuickActions" style="border: 2px solid blue">
+            <quick-actions></quick-actions>
+          </v-layout>
+        </v-expand-transition>
+
         <v-layout wrap style="border: 2px solid blue">
           <v-flex sm8 xs12 style="border: 2px solid red">
+            <detail-image></detail-image>
+            <detail-basic-info :store="store"></detail-basic-info>
+            <detail-operating-time :store="store"></detail-operating-time>
+            <detail-options :store="store"></detail-options>
+            <detail-location :store="store"></detail-location>
+            <detail-menu :store="store"></detail-menu>
+
             <dashboard-time-off></dashboard-time-off>
             <dashboard-what-needs-doing></dashboard-what-needs-doing>
             <dashboard-whats-coming-up></dashboard-whats-coming-up>
             <!-- <dashboard-performance></dashboard-performance> -->
           </v-flex>
           <v-flex sm4 xs12 style="border: 2px solid red">
+            <detail-sentiment></detail-sentiment>
+            <detail-review></detail-review>
             <!-- <dashboard-sentiment></dashboard-sentiment> -->
             <!-- <dashboard-whos-got-time-off></dashboard-whos-got-time-off> -->
             <!-- <dashboard-whos-celebrating></dashboard-whos-celebrating> -->
@@ -99,6 +120,16 @@ import DashboardTimeOff from "../components/modules/Dashboard/TimeOff.vue"
 import DashboardWhatNeedsDoing from "../components/modules/Dashboard/WhatNeedsDoing.vue"
 import DashboardWhatsComingUp from "../components/modules/Dashboard/WhatsComingUp.vue"
 
+import DetailImage from "@/components/Detail/DetailImage.vue"
+import DetailBasicInfo from "@/components/Detail/DetailBasicInfo.vue"
+import DetailOperatingTime from "@/components/Detail/DetailOperatingTime.vue"
+import DetailOptions from "@/components/Detail/DetailOptions.vue"
+import DetailLocation from "@/components/Detail/DetailLocation.vue"
+import DetailMenu from "@/components/Detail/DetailMenu.vue"
+
+import DetailSentiment from "@/components/Detail/DetailSentiment.vue"
+import DetailReview from "@/components/Detail/DetailReview.vue"
+
 export default {
   props: {},
   components: {
@@ -106,6 +137,16 @@ export default {
     DashboardTimeOff,
     DashboardWhatNeedsDoing,
     DashboardWhatsComingUp,
+
+    DetailImage,
+    DetailBasicInfo,
+    DetailOperatingTime,
+    DetailOptions,
+    DetailLocation,
+    DetailMenu,
+
+    DetailSentiment,
+    DetailReview,
   },
   data() {
     return {
@@ -218,6 +259,19 @@ export default {
         const item = doc.data()
         item.createdAt = item.createdAt.toDate()
         this.store = item
+        this.store.storeId = this.storeId
+        if (this.store.operatingTime) {
+          let ot = this.store.operatingTime
+          this.store.operatingTime = [
+            { open: ot.openSun, openTime: ot.openTimeSun, closeTime: ot.closeTimeSun },
+            { open: ot.openMon, openTime: ot.openTimeMon, closeTime: ot.closeTimeMon },
+            { open: ot.openTue, openTime: ot.openTimeTue, closeTime: ot.closeTimeTue },
+            { open: ot.openWed, openTime: ot.openTimeWed, closeTime: ot.closeTimeWed },
+            { open: ot.openThu, openTime: ot.openTimeThu, closeTime: ot.closeTimeThu },
+            { open: ot.openFri, openTime: ot.openTimeFri, closeTime: ot.closeTimeFri },
+            { open: ot.openSat, openTime: ot.openTimeSat, closeTime: ot.closeTimeSat },
+          ]
+        }
       }, console.error)
     },
   },
@@ -226,7 +280,7 @@ export default {
 
 <style scoped>
 .v-card {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 .v-list-item {
   height: 22px !important;
