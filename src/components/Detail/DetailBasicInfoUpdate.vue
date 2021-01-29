@@ -5,6 +5,41 @@
       <v-card-text>
         <v-form ref="form" v-model="valid">
           <v-container class="ma-0 pa-0">
+            <v-menu
+              v-model="calendarToggle"
+              :close-on-content-click="false"
+              :nudge-top="20"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="form.since"
+                  label="오픈 일자"
+                  readonly
+                  outlined
+                  clearable
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="form.since"
+                locale="ko-kr"
+                @input="calendarToggle = false"
+              ></v-date-picker>
+            </v-menu>
+
+            <v-text-field
+              v-model="form.seatCount"
+              :rules="seatCountRules"
+              type="number"
+              hint="평상시 좌석 수를 입력해주세요"
+              label="좌석 수"
+              outlined
+            ></v-text-field>
+
             <v-text-field
               v-model="form.phoneNumber"
               :rules="phoneNumberRules"
@@ -13,19 +48,12 @@
               label="전화번호"
               outlined
             ></v-text-field>
+
             <v-text-field
               v-model="form.instagram"
               :rules="instagramRules"
               hint="At(@)은 제외하고 입력해주세요"
               label="인스타그램 아이디"
-              outlined
-            ></v-text-field>
-            <v-text-field
-              v-model="form.seatCount"
-              :rules="seatCountRules"
-              type="number"
-              hint="평상시 좌석 수를 입력해주세요"
-              label="좌석 수"
               outlined
             ></v-text-field>
           </v-container>
@@ -46,15 +74,17 @@ export default {
   props: ["title", "store", "dialog"],
   data() {
     return {
+      calendarToggle: false,
       form: {
+        since: "",
+        seatCount: null,
         phoneNumber: "",
         instagram: "",
-        seatCount: null,
       },
       valid: false,
+      seatCountRules: [(v) => v >= 0 || "좌석 수를 확인해주세요"],
       phoneNumberRules: [(v) => v.length <= 11 || "입력하신 전화번호를 확인해주세요"],
       instagramRules: [(v) => v.length <= 20 || "인스타그램 아이디는 20자 이하로 입력 가능합니다"],
-      seatCountRules: [(v) => v >= 0 || "좌석 수를 확인해주세요"],
     }
   },
   mounted() {
@@ -65,14 +95,17 @@ export default {
       this.$emit("closeBtnClicked")
     },
     fetch() {
+      if (this.store.since) {
+        this.form.since = this.store.since
+      }
+      if (this.store.seatCount) {
+        this.form.seatCount = this.store.seatCount
+      }
       if (this.store.phoneNumber) {
         this.form.phoneNumber = this.store.phoneNumber
       }
       if (this.store.instagram) {
         this.form.instagram = this.store.instagram
-      }
-      if (this.store.seatCount) {
-        this.form.seatCount = this.store.seatCount
       }
     },
     async updateBtnClicked() {
@@ -80,9 +113,10 @@ export default {
       await this.removeAt()
 
       if (
+        this.store.since === this.form.since &&
+        this.store.seatCount === this.form.seatCount &&
         this.store.phoneNumber === this.form.phoneNumber &&
-        this.store.instagram === this.form.instagram &&
-        this.store.seatCount === this.form.seatCount
+        this.store.instagram === this.form.instagram
       ) {
         this.$toast.error("변경된 내용이 없습니다.")
         return

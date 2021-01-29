@@ -18,10 +18,13 @@
                     <v-list-item-title>
                       이 시각 운영
                     </v-list-item-title>
-                    <v-list-item-subtitle v-if="store.operatingTimeInfo">
-                      hell
+                    <v-list-item-subtitle v-if="store.operatingTimeInfo" class="pa-2">
+                      <detail-operating-time-calc
+                        :operatingTime="store.operatingTime"
+                      ></detail-operating-time-calc>
+                      <span>상황에 따라 운영 시간이 변경 될 수 있습니다</span>
                     </v-list-item-subtitle>
-                    <v-list-item-subtitle class="info--text" v-else>
+                    <v-list-item-subtitle class="info--text pa-lg-12" v-else>
                       정보를 입력해주세요
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -36,10 +39,10 @@
                     <v-list-item-title>
                       운영 정보 팁
                     </v-list-item-title>
-                    <v-list-item-subtitle v-if="store.operatingTimeInfo">
-                      hell
+                    <v-list-item-subtitle v-if="store.operatingTimeTip" class="pa-2">
+                      {{ store.operatingTimeTip }}
                     </v-list-item-subtitle>
-                    <v-list-item-subtitle class="info--text" v-else>
+                    <v-list-item-subtitle class="info--text pa-2" v-else>
                       정보를 입력해주세요
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -59,15 +62,28 @@
                   <v-list-item-title>
                     요일별 운영시간
                   </v-list-item-title>
-                  <v-list-item-subtitle v-if="!store.operatingTimeInfo">
-                    <v-container>
-                      <v-row>
-                        <v-col>hell</v-col>
-                        <v-col>hell</v-col>
-                      </v-row>
-                      <v-row>
-                        <v-col>hell</v-col>
-                        <v-col>hell</v-col>
+                  <v-list-item-subtitle v-if="store.operatingTimeInfo" class="pa-2">
+                    <v-container class="pa-0 ma-0">
+                      <v-row
+                        v-for="(item, index) in store.operatingTime"
+                        :key="index"
+                        no-gutters
+                        :class="{ 'font-weight-black': boldToday(index) }"
+                      >
+                        <template v-if="item.open">
+                          <v-col>
+                            <span class="mr-2">{{ dayLabels[index] }}</span>
+                            <span>{{ stringfyTime(item.openTime) }}</span>
+                            <span class="mx-1">-</span>
+                            <span>{{ stringfyTime(item.closeTime) }}</span>
+                          </v-col>
+                        </template>
+                        <template v-else>
+                          <v-col>
+                            <span class="mr-2">{{ dayLabels[index] }}</span>
+                            <span class="error--text">휴무</span>
+                          </v-col>
+                        </template>
                       </v-row>
                     </v-container>
                   </v-list-item-subtitle>
@@ -79,41 +95,6 @@
             </v-list>
           </v-flex>
         </v-layout>
-        <!-- <v-list dense>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-if="store.phoneNumber">
-                {{ store.phoneNumber }}
-              </v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-else>
-                정보를 입력해주세요
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title v-if="store.instagram">{{ store.instagram }}</v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-else>
-                정보를 입력해주세요
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-avatar color="secondary" size="40px">
-                <span color="white">
-                  월
-                </span>
-              </v-avatar>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-if="store.seatCount">{{ store.seatCount }} 석</v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-else>
-                정보를 입력해주세요
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list> -->
       </v-card-text>
     </v-expand-transition>
 
@@ -130,6 +111,7 @@
 <script>
 import DetailCardBar from "@/components/Detail/DetailCardBar.vue"
 import DetailOperatingTimeUpdate from "@/components/Detail/DetailOperatingTimeUpdate.vue"
+import DetailOperatingTimeCalc from "@/components/Detail/DetailOperatingTimeCalc.vue"
 
 export default {
   name: "DetailOperatingTime",
@@ -137,6 +119,7 @@ export default {
   components: {
     DetailCardBar,
     DetailOperatingTimeUpdate,
+    DetailOperatingTimeCalc,
   },
   data() {
     return {
@@ -144,15 +127,57 @@ export default {
       expand: true,
       updateDialog: false,
 
-      dayLabels: ["월", "화", "수", "목", "금", "토", "일"],
+      dayLabels: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
     }
   },
+  // mounted() {
+  // },
+  // watch: {
+  //   store() {
+  //     this.fetch()
+  //   },
+  // },
   computed: {
     breakPointXs() {
       return this.$vuetify.breakpoint.xs ? true : false
     },
   },
   methods: {
+    // boldToday(index) {
+    //   let nowDay = new Date().getDay()
+    //   if (nowDay == 0) {
+    //     if (index == 6) {
+    //       return true
+    //     } else {
+    //       return false
+    //     }
+    //   } else {
+    //     if (nowDay === index + 1) {
+    //       return true
+    //     } else {
+    //       return false
+    //     }
+    //   }
+    // },
+    boldToday(index) {
+      let nowDay = new Date().getDay()
+      if (nowDay === index) {
+        return true
+      } else {
+        return false
+      }
+    },
+    stringfyTime(time) {
+      let hours = ""
+      let minutes = ""
+      if (time ?? false) {
+        hours = time.slice(0, 2)
+        minutes = time.slice(2)
+        return hours + ":" + minutes
+      } else {
+        return "휴무"
+      }
+    },
     expandToggle() {
       this.expand = !this.expand
     },

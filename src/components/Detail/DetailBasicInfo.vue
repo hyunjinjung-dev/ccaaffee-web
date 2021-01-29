@@ -10,47 +10,82 @@
     <v-expand-transition>
       <v-card-text class="pa-0" v-show="expand">
         <v-list dense>
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-avatar color="secondary" size="40px">
-                <v-icon color="white">mdi-phone</v-icon>
-              </v-avatar>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-if="store.phoneNumber">
-                {{ store.phoneNumber }}
-              </v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-else>
-                정보를 입력해주세요
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-avatar color="secondary" size="40px">
-                <v-icon color="white">mdi-instagram</v-icon>
-              </v-avatar>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-if="store.instagram">{{ store.instagram }}</v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-else>
-                정보를 입력해주세요
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-avatar color="secondary" size="40px">
-                <v-icon color="white">mdi-seat</v-icon>
-              </v-avatar>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title v-if="store.seatCount">{{ store.seatCount }} 석</v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-else>
-                정보를 입력해주세요
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          <v-layout wrap>
+            <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-door-open</v-icon>
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <!-- To Do 전화 번호 복사 기능 만들기-->
+                  <v-list-item-title v-if="store.since">
+                    Since {{ store.since }} ~
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="info--text" v-else>
+                    정보를 입력해주세요
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-flex>
+
+            <v-flex sm6 xs12>
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-seat</v-icon>
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title v-if="store.seatCount"
+                    >{{ store.seatCount }} 석</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="info--text" v-else>
+                    정보를 입력해주세요
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-flex>
+
+            <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-phone</v-icon>
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <!-- To Do 전화 번호 복사 기능 만들기-->
+                  <v-list-item-title v-if="store.phoneNumber">
+                    {{ store.phoneNumber }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="info--text" v-else>
+                    정보를 입력해주세요
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-flex>
+
+            <v-flex sm6 xs12>
+              <v-list-item>
+                <v-list-item-avatar>
+                  <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-instagram</v-icon>
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <!-- To Do 인스타그램 연결 링크 만들기 -->
+                  <v-list-item-title v-if="store.instagram"
+                    >@{{ store.instagram }}</v-list-item-title
+                  >
+                  <v-list-item-subtitle class="info--text" v-else>
+                    정보를 입력해주세요
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-flex>
+          </v-layout>
         </v-list>
       </v-card-text>
     </v-expand-transition>
@@ -83,6 +118,12 @@ export default {
       updateDialog: false,
     }
   },
+  computed: {
+    breakPointXs() {
+      return this.$vuetify.breakpoint.xs ? true : false
+    },
+  },
+
   methods: {
     expandToggle() {
       this.expand = !this.expand
@@ -97,4 +138,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.borderRight {
+  border-right: 1px solid #eeee;
+}
+</style>

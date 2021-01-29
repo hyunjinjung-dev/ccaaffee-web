@@ -260,6 +260,18 @@ export default {
         item.createdAt = item.createdAt.toDate()
         this.store = item
         this.store.storeId = this.storeId
+        if (this.store.operatingTime) {
+          let ot = this.store.operatingTime
+          this.store.operatingTime = [
+            { open: ot.openSun, openTime: ot.openTimeSun, closeTime: ot.closeTimeSun },
+            { open: ot.openMon, openTime: ot.openTimeMon, closeTime: ot.closeTimeMon },
+            { open: ot.openTue, openTime: ot.openTimeTue, closeTime: ot.closeTimeTue },
+            { open: ot.openWed, openTime: ot.openTimeWed, closeTime: ot.closeTimeWed },
+            { open: ot.openThu, openTime: ot.openTimeThu, closeTime: ot.closeTimeThu },
+            { open: ot.openFri, openTime: ot.openTimeFri, closeTime: ot.closeTimeFri },
+            { open: ot.openSat, openTime: ot.openTimeSat, closeTime: ot.closeTimeSat },
+          ]
+        }
       }, console.error)
     },
   },
