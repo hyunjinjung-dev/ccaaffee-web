@@ -1,10 +1,11 @@
 <template>
   <div class="operating-time-outer">
     <div v-if="isOpen">
-      <span class="text-green">영업중</span> · 영업종료시간 : {{ noticeTime }}
+      <span class="text-green">영업중</span> · 영업종료시간 : {{ stringfyTime(noticeTime) }}
     </div>
     <div v-else>
-      <span class="text-red">영업종료</span> · 영업시작시간 : {{ noticeDay }} {{ noticeTime }}
+      <span class="text-red">영업종료</span> · 영업시작시간 : {{ noticeDay }}요일
+      {{ stringfyTime(noticeTime) }}
     </div>
     <!-- <div>
       {{ calcNowTime }}
@@ -70,11 +71,13 @@ export default {
         if (this.calcNowTime < today.openTime) {
           this.isOpen = false
           this.noticeDay = ""
-          this.noticeTime = this.stringfyTime(today.openTime)
+          this.noticeTime = today.openTime
+          return
         } else if (today.openTime <= this.calcNowTime && this.calcNowTime < today.closeTime) {
           this.isOpen = true
           this.noticeDay = ""
-          this.noticeTime = this.stringfyTime(today.closeTime)
+          this.noticeTime = today.closeTime
+          return
         } else if (this.calcNowTime >= today.closeTime) {
           this.isOpen = false
           for (let i = this.nowDay + 1; i < 7; i++) {

@@ -1,12 +1,18 @@
 <template>
-  <v-dialog v-model="dialog" persistent scrollable max-width="350" transition="scroll-x-transition">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    scrollable
+    max-width="500px"
+    transition="scroll-x-transition"
+  >
     <v-card class="pa-2">
       <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 수정</v-card-title>
       <v-card-text style="max-height: 80vh">
         <small>Tip. 운영 시간을 4자리 숫자로 입력해주세요</small>
         <br />
         <small> ex) 09시 00분 ~ 25시 30분 영업 = 0900, 2530</small>
-        <v-divider class="mx-auto my-5" style="width: 20%"></v-divider>
+        <v-divider class="mx-auto mt-5 mb-10" style="width: 20%"></v-divider>
 
         <v-container class="ma-0 pa-0">
           <v-row no-gutters v-for="(item, index) in form" :key="index">
@@ -39,7 +45,7 @@
             </v-col>
           </v-row>
 
-          <v-divider class="mx-auto my-5" style="width: 20%"></v-divider>
+          <v-divider class="mx-auto mt-5 mb-10" style="width: 20%"></v-divider>
 
           <v-row class="mx-1">
             <v-text-field v-model="formTip" label="운영 시간 Tip"></v-text-field>
@@ -47,7 +53,7 @@
         </v-container>
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions class="mt-5">
         <v-btn text @click="closeBtnClicked">취소</v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" @click="updateBtnClicked">수정</v-btn>

@@ -3,6 +3,7 @@
     <detail-card-bar
       :title="title"
       :store="store"
+      :expand="expand"
       @expandToggle="expandToggle"
       @updateBtnClicked="openUpdateDialog"
     ></detail-card-bar>
@@ -18,11 +19,11 @@
                     <v-list-item-title>
                       이 시각 운영
                     </v-list-item-title>
-                    <v-list-item-subtitle v-if="store.operatingTimeInfo" class="pa-2">
+                    <v-list-item-subtitle v-if="store.operatingTimeInfo" class="pa-2 text-wrap">
                       <detail-operating-time-calc
                         :operatingTime="store.operatingTime"
                       ></detail-operating-time-calc>
-                      <span>상황에 따라 운영 시간이 변경 될 수 있습니다</span>
+                      <!-- <span>(상황에 따라 운영 시간이 변경 될 수 있음)</span> -->
                     </v-list-item-subtitle>
                     <v-list-item-subtitle class="info--text pa-lg-12" v-else>
                       정보를 입력해주세요
@@ -39,7 +40,7 @@
                     <v-list-item-title>
                       운영 정보 팁
                     </v-list-item-title>
-                    <v-list-item-subtitle v-if="store.operatingTimeTip" class="pa-2">
+                    <v-list-item-subtitle v-if="store.operatingTimeTip" class="pa-2 text-wrap">
                       {{ store.operatingTimeTip }}
                     </v-list-item-subtitle>
                     <v-list-item-subtitle class="info--text pa-2" v-else>
@@ -71,7 +72,7 @@
                         :class="{ 'font-weight-black': boldToday(index) }"
                       >
                         <template v-if="item.open">
-                          <v-col>
+                          <v-col class="mb-1">
                             <span class="mr-2">{{ dayLabels[index] }}</span>
                             <span>{{ stringfyTime(item.openTime) }}</span>
                             <span class="mx-1">-</span>
@@ -79,7 +80,7 @@
                           </v-col>
                         </template>
                         <template v-else>
-                          <v-col>
+                          <v-col class="mb-1">
                             <span class="mr-2">{{ dayLabels[index] }}</span>
                             <span class="error--text">휴무</span>
                           </v-col>
