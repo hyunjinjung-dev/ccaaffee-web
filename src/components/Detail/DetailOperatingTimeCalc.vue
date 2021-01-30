@@ -4,8 +4,10 @@
       <span class="text-green">영업중</span> · 영업종료시간 : {{ stringfyTime(noticeTime) }}
     </div>
     <div v-else>
-      <span class="text-red">영업종료</span> · 영업시작시간 : {{ noticeDay }}요일
-      {{ stringfyTime(noticeTime) }}
+      <span class="text-red">영업종료</span>
+      <span> · 영업시작시간 : </span>
+      <span v-if="noticeDay">{{ noticeDay }}요일</span>
+      <span>{{ stringfyTime(noticeTime) }}</span>
     </div>
     <!-- <div>
       {{ calcNowTime }}

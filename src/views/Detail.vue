@@ -69,11 +69,11 @@
 
         <v-layout wrap style="border: 2px solid blue">
           <v-flex md8 sm12 xs12 style="border: 2px solid red" class="pa-1">
+            <detail-location :store="store"></detail-location>
             <detail-image></detail-image>
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
             <detail-options :store="store"></detail-options>
-            <detail-location :store="store"></detail-location>
             <detail-menu :store="store"></detail-menu>
 
             <dashboard-time-off></dashboard-time-off>
@@ -236,7 +236,7 @@ export default {
   },
   async created() {
     await this.readCountUpdate()
-    this.subscribe()
+    await this.subscribe()
   },
   destroyed() {
     if (this.unsubscribe) {
@@ -252,11 +252,12 @@ export default {
         viewCount: this.$firebase.firestore.FieldValue.increment(1),
       })
     },
-    subscribe() {
+    async subscribe() {
       if (this.unsubscribe) {
         this.unsubscribe()
       }
-      this.unsubscribe = this.ref.doc(this.storeId).onSnapshot((doc) => {
+
+      this.unsubscribe = await this.ref.doc(this.storeId).onSnapshot((doc) => {
         if (!doc.exists) {
           this.back()
           return
@@ -306,6 +307,12 @@ export default {
               continue
             }
           }
+        }
+        if (this.store.lat) {
+          this.store.lat = Number(this.store.lat)
+        }
+        if (this.store.lng) {
+          this.store.lng = Number(this.store.lng)
         }
       }, console.error)
     },
