@@ -15,7 +15,11 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-subtitle>
-                <v-text-field v-model="parkingTip" label="주차 팁"></v-text-field>
+                <v-text-field
+                  v-model="parkingTip"
+                  label="주차 팁"
+                  hint="ex) 도보 15분 거리, 연남1 노상 공영 주차장 이용 가능"
+                ></v-text-field>
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>

@@ -8721,6 +8721,11 @@ vue-cli-plugin-vuetify@~2.0.9:
     semver "^7.1.2"
     shelljs "^0.8.3"
 
+vue-daum-postcode@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/vue-daum-postcode/-/vue-daum-postcode-0.9.0.tgz#2982b8946c6c756e1f9faccc4cb8fc7c93b4b117"
+  integrity sha512-9nlPp4MlMyMlpmd0tHBQqzvctZldhaN/uEl+W7nWSQIDHcsUvsFF1oCbzFVpz1fexjPeFrn+rmtPyk8/dthexA==
+
 vue-eslint-parser@^7.0.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-7.3.0.tgz#894085839d99d81296fa081d19643733f23d7559"
@@ -8757,6 +8762,13 @@ vue-loader@^15.9.2:
     loader-utils "^1.1.0"
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
+
+vue-naver-maps@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/vue-naver-maps/-/vue-naver-maps-0.14.1.tgz#20014c49da00f61ffc60c2ed786d4e0d97313d39"
+  integrity sha512-7RENBdmCkLq1GcqzFb+Ct8z3DYsKkwz4VcGQof0Puv1tE7hJDG1T2O4QUlJvXYFajGfyZ+cZ+ahRdWP+p0LyuA==
+  dependencies:
+    vue "^2.6.11"
 
 vue-router@^3.2.0:
   version "3.4.9"

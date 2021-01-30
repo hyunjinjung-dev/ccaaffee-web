@@ -11,94 +11,42 @@
     <v-expand-transition>
       <v-card-text class="pa-0" v-show="expand">
         <v-list dense>
-          <v-layout wrap>
-            <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
-              <v-list-item>
-                <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-door-open</v-icon>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <!-- To Do 전화 번호 복사 기능 만들기-->
-                  <v-list-item-title>
-                    오픈 일자
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="info--text" v-if="store.since">
-                    Since {{ store.since }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle class="info--text" v-else>
-                    정보를 입력해주세요
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-flex>
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-avatar color="secondary" size="40px">
+                <v-icon color="white">mdi-map-marker</v-icon>
+              </v-avatar>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>주소</v-list-item-title>
+              <v-list-item-subtitle class="info--text" v-if="store.address">
+                {{ store.address }}
+              </v-list-item-subtitle>
+              <v-list-item-subtitle class="info--text" v-else>
+                정보를 입력해주세요
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
 
-            <v-flex sm6 xs12>
-              <v-list-item>
-                <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-seat</v-icon>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    좌석 수
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="info--text" v-if="store.seatCount">
-                    {{ store.seatCount }} 석
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle class="info--text" v-else>
-                    정보를 입력해주세요
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-flex>
-
-            <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
-              <v-list-item>
-                <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-phone</v-icon>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <!-- To Do 전화 번호 복사 기능 만들기-->
-                  <v-list-item-title>
-                    전화 번호
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="info--text" v-if="store.phoneNumber">
-                    {{ store.phoneNumber }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle class="info--text" v-else>
-                    정보를 입력해주세요
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-flex>
-
-            <v-flex sm6 xs12>
-              <v-list-item>
-                <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-instagram</v-icon>
-                  </v-avatar>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <!-- To Do 인스타그램 연결 링크 만들기 -->
-                  <v-list-item-title>
-                    인스타그램
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="info--text" v-if="store.instagram">
-                    @{{ store.instagram }}
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle class="info--text" v-else>
-                    정보를 입력해주세요
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-flex>
-          </v-layout>
+          <v-list-item class="my-2">
+            <!-- v-list-item 태그가 자동으로 naver-map 태그 사이즈 조절 -->
+            <naver-maps
+              v-if="store.lat && store.lng && mapOptions.lat && mapOptions.lng"
+              ref="maps"
+              :width="mapWidth"
+              :height="mapHeight"
+              :mapOptions="mapOptions"
+              :initLayers="initLayers"
+              @load="onLoad"
+            >
+              <naver-marker
+                :lat="mapOptions.lat"
+                :lng="mapOptions.lng"
+                @click="onMarkerClicked"
+                @load="onMarkerLoaded"
+              ></naver-marker>
+            </naver-maps>
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-expand-transition>
@@ -129,6 +77,34 @@ export default {
       title: "위치 정보",
       expand: true,
       updateDialog: false,
+
+      // 지도
+      mapWidth: 3000,
+      mapHeight: 300,
+      info: false,
+      marker: null,
+      count: 1,
+      map: null,
+      isCTT: false,
+      mapOptions: {
+        lat: this.store.lat,
+        lng: this.store.lng,
+        zoom: 16,
+        scaleControl: false,
+        zoomControl: true,
+        // 도큐먼트와는 다르게 style, position을 Number로 세팅해야한다.
+        zoomControlOptions: { style: 2, position: 8 },
+        mapTypeControl: false,
+      },
+      initLayers: [
+        "BACKGROUND",
+        "BACKGROUND_DETAIL",
+        "POI_KOREAN",
+        "TRANSIT",
+        "ENGLISH",
+        "CHINESE",
+        "JAPANESE",
+      ],
     }
   },
   computed: {
@@ -136,8 +112,22 @@ export default {
       return this.$vuetify.breakpoint.xs ? true : false
     },
   },
-
+  watch: {
+    store: {
+      deep: true,
+      handler(newVal) {
+        this.mapOptions.lat = newVal.lat
+        this.mapOptions.lng = newVal.lng
+        this.setCenterMap()
+      },
+    },
+  },
   methods: {
+    setCenterMap() {
+      let lat = this.mapOptions.lat
+      let lng = this.mapOptions.lng
+      this.map.setCenter(lat, lng)
+    },
     expandToggle() {
       this.expand = !this.expand
     },
@@ -146,6 +136,20 @@ export default {
     },
     closeUpdateDialog() {
       this.updateDialog = false
+    },
+    // 네이버 지도
+    onLoad(vue) {
+      this.map = vue
+    },
+    onWindowLoad(that) {
+      console.log(that)
+    },
+    onMarkerClicked(event) {
+      this.info = !this.info
+      console.log(event)
+    },
+    onMarkerLoaded(vue) {
+      this.marker = vue.marker
     },
   },
 }

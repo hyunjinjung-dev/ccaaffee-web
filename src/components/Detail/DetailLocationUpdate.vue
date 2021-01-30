@@ -2,62 +2,30 @@
   <v-dialog v-model="dialog" persistent max-width="350" transition="scroll-x-transition">
     <v-card class="pa-2">
       <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 수정</v-card-title>
+
       <v-card-text>
-        <v-form ref="form" v-model="valid">
-          <v-container class="ma-0 pa-0">
-            <v-menu
-              v-model="calendarToggle"
-              :close-on-content-click="false"
-              :nudge-top="20"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="form.since"
-                  label="오픈 일자"
-                  readonly
-                  outlined
-                  clearable
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="form.since"
-                locale="ko-kr"
-                @input="calendarToggle = false"
-              ></v-date-picker>
-            </v-menu>
-
-            <v-text-field
-              v-model="form.seatCount"
-              :rules="seatCountRules"
-              type="number"
-              hint="평상시 좌석 수를 입력해주세요"
-              label="좌석 수"
-              outlined
-            ></v-text-field>
-
-            <v-text-field
-              v-model="form.phoneNumber"
-              :rules="phoneNumberRules"
-              type="tel"
-              hint="하이픈(-)은 제외하고 입력해주세요"
-              label="전화번호"
-              outlined
-            ></v-text-field>
-
-            <v-text-field
-              v-model="form.instagram"
-              :rules="instagramRules"
-              hint="At(@)은 제외하고 입력해주세요"
-              label="인스타그램 아이디"
-              outlined
-            ></v-text-field>
-          </v-container>
+        <div class="mb-5">
+          <small>Tip. 수정하려면 아래 주소 칸을 터치(클릭)해주세요</small>
+        </div>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-text-field
+            v-model="form.address"
+            :rules="addressRules"
+            label="주소"
+            readonly
+            outlined
+            required
+            @click="openAddressDialog"
+          ></v-text-field>
         </v-form>
+        <v-dialog max-height="500px" max-width="500px" v-model="addressDialogToggle">
+          <v-card>
+            <vue-daum-postcode
+              style="height: 500px; overflow: scroll;"
+              @complete="addressSelected($event.roadAddress)"
+            />
+          </v-card>
+        </v-dialog>
       </v-card-text>
 
       <v-card-actions class="mt-5">
@@ -70,69 +38,77 @@
 </template>
 
 <script>
+import { VueDaumPostcode } from "vue-daum-postcode"
+import axios from "axios"
+
 export default {
   props: ["title", "store", "dialog"],
+  components: {
+    VueDaumPostcode,
+  },
   data() {
     return {
-      calendarToggle: false,
+      addressDialogToggle: false,
+      addressRules: [
+        (v) => !!v || "주소를 입력해주세요",
+        (v) => v != this.store.address || "기존 주소와 같아요",
+      ],
       form: {
-        since: "",
-        seatCount: null,
-        phoneNumber: "",
-        instagram: "",
+        address: "",
       },
-      valid: false,
-      seatCountRules: [(v) => v >= 0 || "좌석 수를 확인해주세요"],
-      phoneNumberRules: [(v) => v.length <= 11 || "입력하신 전화번호를 확인해주세요"],
-      instagramRules: [(v) => v.length <= 20 || "인스타그램 아이디는 20자 이하로 입력 가능합니다"],
+      valid: true,
     }
   },
   mounted() {
     this.fetch()
   },
   methods: {
+    fetch() {
+      if (this.store.address) {
+        this.form.address = this.store.address
+      }
+    },
     closeBtnClicked() {
       this.$emit("closeBtnClicked")
     },
-    fetch() {
-      if (this.store.since) {
-        this.form.since = this.store.since
-      }
-      if (this.store.seatCount) {
-        this.form.seatCount = this.store.seatCount
-      }
-      if (this.store.phoneNumber) {
-        this.form.phoneNumber = this.store.phoneNumber
-      }
-      if (this.store.instagram) {
-        this.form.instagram = this.store.instagram
-      }
+    openAddressDialog() {
+      this.addressDialogToggle = true
+    },
+    addressSelected(selectedAddress) {
+      this.form.address = selectedAddress
+      this.addressDialogToggle = false
+    },
+    async getLatLng() {
+      // To Do
+      // JavaSciprt Key : e9b8744f142d87e82a9a840a32aa395b
+      // REST API Key : 8aec30f44a150144c4bcac2194e4d9f7
+
+      let restAPIKey = "8aec30f44a150144c4bcac2194e4d9f7" // REST API key
+      let queryString = this.form.address
+
+      let URL = "https://dapi.kakao.com/v2/local/search/address.json?query=" + queryString
+      axios.defaults.withCredentials = false
+      axios.defaults.headers.common["Authorization"] = "KakaoAK " + restAPIKey
+      axios.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded"
+      await axios
+        .get(URL)
+        .then((res) => {
+          this.form.lat = res.data.documents[0].y
+          this.form.lng = res.data.documents[0].x
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     async updateBtnClicked() {
-      await this.removeHyphen()
-      await this.removeAt()
+      await this.$refs.form.validate()
+      await this.getLatLng()
 
-      if (
-        this.store.since === this.form.since &&
-        this.store.seatCount === this.form.seatCount &&
-        this.store.phoneNumber === this.form.phoneNumber &&
-        this.store.instagram === this.form.instagram
-      ) {
-        this.$toast.error("변경된 내용이 없습니다.")
-        return
-      }
-
-      if (this.valid) {
+      if (this.valid && this.form.lat && this.form.lng) {
         this.update()
       } else {
         this.$toast.error("입력한 내용을 확인해주세요")
       }
-    },
-    removeHyphen() {
-      this.form.phoneNumber = this.form.phoneNumber.replace(/-/g, "")
-    },
-    removeAt() {
-      this.form.instagram = this.form.instagram.replace("@", "")
     },
     async update() {
       let ref = this.$firebase

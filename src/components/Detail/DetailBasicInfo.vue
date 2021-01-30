@@ -136,7 +136,6 @@ export default {
       return this.$vuetify.breakpoint.xs ? true : false
     },
   },
-
   methods: {
     expandToggle() {
       this.expand = !this.expand
