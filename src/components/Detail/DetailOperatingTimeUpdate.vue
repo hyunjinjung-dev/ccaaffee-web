@@ -48,7 +48,7 @@
           <v-divider class="mx-auto mt-5 mb-10" style="width: 20%"></v-divider>
 
           <v-row class="mx-1">
-            <v-text-field v-model="formTip" label="운영 시간 Tip"></v-text-field>
+            <v-text-field v-model="formTip" label="운영 정보 Tip"></v-text-field>
           </v-row>
         </v-container>
       </v-card-text>
