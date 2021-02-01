@@ -69,12 +69,12 @@
 
         <v-layout wrap style="border: 2px solid blue">
           <v-flex md8 sm12 xs12 style="border: 2px solid red" class="pa-1">
-            <detail-location :store="store"></detail-location>
+            <detail-menu :store="store"></detail-menu>
             <detail-image></detail-image>
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
             <detail-options :store="store"></detail-options>
-            <detail-menu :store="store"></detail-menu>
+            <detail-location :store="store"></detail-location>
 
             <dashboard-time-off></dashboard-time-off>
             <dashboard-what-needs-doing></dashboard-what-needs-doing>

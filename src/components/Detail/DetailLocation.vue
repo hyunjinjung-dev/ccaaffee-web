@@ -116,17 +116,19 @@ export default {
     store: {
       deep: true,
       handler(newVal) {
-        this.mapOptions.lat = newVal.lat
-        this.mapOptions.lng = newVal.lng
-        this.setCenterMap()
+        if (this.mapOptions.lat != newVal.lat || this.mapOptions.lng != newVal.lng) {
+          this.mapOptions.lat = newVal.lat
+          this.mapOptions.lng = newVal.lng
+          this.setCenterMap(newVal.lat, newVal.lng)
+        }
       },
     },
   },
   methods: {
-    setCenterMap() {
-      let lat = this.mapOptions.lat
-      let lng = this.mapOptions.lng
-      this.map.setCenter(lat, lng)
+    setCenterMap(lat, lng) {
+      if (this.map) {
+        this.map.setCenter(lat, lng)
+      }
     },
     expandToggle() {
       this.expand = !this.expand
