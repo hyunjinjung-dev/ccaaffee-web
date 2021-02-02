@@ -10,7 +10,7 @@
   >
     <v-card class="pa-2">
       <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 수정</v-card-title>
-      <v-card-text :class="breakPointXs ? 'pa-0' : ''">
+      <v-card-text :class="breakPointXs ? 'pa-0' : ''" id="container" ref="hell">
         <draggable v-model="form" :options="{ group: 'menus' }" style="min-height: 10px">
           <template v-for="(item, index) in form">
             <v-container :key="index">
@@ -163,8 +163,13 @@ export default {
       this.removeMenuIndex = -1
       this.removeConfirmDialog = false
     },
-    addMenu() {
-      this.form.push({ name: "", price: "", describe: "" })
+    async addMenu() {
+      // 메뉴 추가와 스크롤 다운이 동기로 진행되기 때문에 메뉴 추가를 비동기 처리하여
+      // 처리 후의 scrollHeight를 잡아준다.
+      await this.form.push({ name: "", price: "", describe: "" })
+
+      var Hells = this.$refs.hell
+      Hells.scrollTop = Hells.scrollHeight
     },
     async update() {
       let ref = this.$firebase
