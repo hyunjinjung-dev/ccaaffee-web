@@ -51,12 +51,12 @@ Vue.use(VuetifyToast, {
   classes: ["body-2"],
   timeout: 3000, // default
   dismissable: true, // default
-  multiLine: false, // default
-  vertical: false, // default
+  multiLine: true, // default
+  vertical: true, // default
   queueable: false, // default
-  showClose: false, // default
+  showClose: true, // default
   closeText: "", // default
-  closeIcon: "close", // default
+  closeIcon: "mdi-close", // default
   closeColor: "", // default
   slot: [], //default
   shorts: {
