@@ -77,6 +77,14 @@ const routes = [
       default: () => import(/* webpackChunkName: "regist" */ "../views/Regist.vue"),
     },
   },
+  {
+    path: "/registhell",
+    name: "RegistHell",
+    components: {
+      NavBar,
+      default: () => import(/* webpackChunkName: "registhell" */ "../views/Registhell.vue"),
+    },
+  },
   // {
   //   path: "/community/:document",
   //   name: "Commnunity",
