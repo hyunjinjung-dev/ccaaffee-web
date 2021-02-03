@@ -14,7 +14,7 @@ export default {
   data: () => ({
     quickAddItems: [
       {
-        icon: "mdi-refresh",
+        icon: "mdi-arrow-right",
         route: "create-article",
         title: "Add article",
       },

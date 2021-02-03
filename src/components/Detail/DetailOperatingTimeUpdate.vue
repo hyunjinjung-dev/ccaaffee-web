@@ -73,6 +73,7 @@ export default {
     }
   },
   mounted() {
+    console.log("here", this.store)
     this.fetch()
   },
   methods: {

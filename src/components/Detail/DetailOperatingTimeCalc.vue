@@ -6,7 +6,7 @@
     <div v-else>
       <span class="text-red">영업종료</span>
       <span> · 영업시작시간 : </span>
-      <span v-if="noticeDay">{{ noticeDay }}요일</span>
+      <span v-if="noticeDay">{{ noticeDay }}요일 </span>
       <span>{{ stringfyTime(noticeTime) }}</span>
     </div>
     <!-- <div>

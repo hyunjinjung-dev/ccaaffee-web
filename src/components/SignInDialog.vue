@@ -123,6 +123,7 @@ export default {
         this.form.email = ""
         this.form.pwd = ""
         this.dialog = false
+        this.$router.go()
       }
     },
   },

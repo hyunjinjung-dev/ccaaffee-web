@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     fireUser: null,
+    user: null,
     isLogin: false,
 
     sortTags: ["거리순", "평점순", "리뷰순", "신규오픈순"],
@@ -55,10 +56,24 @@ export default new Vuex.Store({
     setFireUser(state, fu) {
       state.fireUser = fu
     },
+    setUser(state, userData) {
+      state.user = userData
+    },
     setLogin(state) {
       state.isLogin = true
     },
+    setLogout(state) {
+      state.isLogin = false
+    },
   },
-  actions: {},
+  actions: {
+    // Login && Logout
+    login({ commit }) {
+      commit("setLogin")
+    },
+    logout({ commit }) {
+      commit("setLogout")
+    },
+  },
   modules: {},
 })

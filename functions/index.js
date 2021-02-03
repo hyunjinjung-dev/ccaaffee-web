@@ -21,7 +21,10 @@ exports.createUser = functions.auth.user().onCreate(async (user) => {
     level: email === functions.config().admin.email ? 0 : 5,
     visitedAt: time,
     visitCount: 0,
-    likeList: [],
+    likeStoreList: [],
+    likeStoreCount: 0,
+    sentimentStoreList: [],
+    sentimentStoreCount: 0,
   }
   await fdb
     .collection("users")

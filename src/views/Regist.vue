@@ -206,6 +206,8 @@ export default {
         operatingTimeTip: "",
         options: [],
         parkingTip: "",
+        sentimentCount: 0,
+        sentimentUserList: [],
       },
       storeNameKorRules: [
         (v) => !!v || "카페명을 입력해주세요",

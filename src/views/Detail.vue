@@ -3,7 +3,7 @@
     <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" style="border: 2px solid red;">
       <v-flex xs12 style="border: 2px solid green">
         <v-layout wrap align-end style="border: 2px solid blue">
-          <v-flex md6 sm12 xs12 shrink style="border: 2px solid red">
+          <v-flex md8 sm12 xs12 shrink style="border: 2px solid red">
             <v-btn icon color="info" class="mr-2" @click="$router.go(-1)">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
@@ -15,8 +15,8 @@
             </v-btn>
           </v-flex>
 
-          <v-flex md6 sm12 xs12 shrink style="border: 2px solid red">
-            <v-menu offset-y left>
+          <v-flex md4 sm12 xs12 shrink style="border: 2px solid red" class="py-1">
+            <!-- <v-menu offset-y left>
               <template #activator="{ on }">
                 <v-btn color="info" v-on="on" class="mx-2">
                   <v-icon left>mdi-plus-circle</v-icon>
@@ -37,27 +37,84 @@
                   </v-list-item>
                 </template>
               </v-list>
-            </v-menu>
+            </v-menu> -->
 
             <!-- :flat="!showQuickActions" -->
-            <v-btn
-              @click="showQuickActions = !showQuickActions"
-              :outlined="showQuickActions"
-              color="info"
-              class="mx-2"
-            >
-              <v-icon left>{{ showQuickActions ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
-              <span>Quick</span>
-            </v-btn>
+            <v-layout wrap align-end justify-space-around>
+              <!-- <v-flex xs3 style="text-align: center;">
+                <v-btn
+                  @click="showQuickActions = !showQuickActions"
+                  :outlined="showQuickActions"
+                  color="info"
+                  class="mx-2"
+                >
+                  <v-icon left>{{
+                    showQuickActions ? "mdi-chevron-up" : "mdi-chevron-down"
+                  }}</v-icon>
+                  <span>Q</span>
+                </v-btn>
+              </v-flex> -->
 
-            <!-- <v-divider class="mx-2" vertical color="black" /> -->
+              <v-flex xs3 style="text-align: center;">
+                <v-btn height="56" fab>
+                  <div class="pa-1">
+                    <div class="pb-1">
+                      <v-icon>mdi-heart-outline</v-icon>
+                    </div>
+                    <small style="display: block;">
+                      1200
+                    </small>
+                  </div>
+                </v-btn>
+              </v-flex>
 
-            <v-btn icon>
-              <v-icon color="info">mdi-refresh</v-icon>
-            </v-btn>
-            <v-btn icon>
-              <v-icon color="info">mdi-swap-vertical</v-icon>
-            </v-btn>
+              <v-flex xs3 style="text-align: center;">
+                <v-btn height="56" fab>
+                  <div class="pa-1">
+                    <div class="pb-1">
+                      <v-icon>mdi-bookmark-outline</v-icon>
+                    </div>
+                    <small style="display: block;">
+                      1200
+                    </small>
+                  </div>
+                </v-btn>
+              </v-flex>
+
+              <v-flex xs3 style="text-align: center;">
+                <v-tooltip v-model="visitTooltip" bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="included"
+                      v-bind="attrs"
+                      v-on="on"
+                      :color="sentimentColor"
+                      height="56"
+                      fab
+                      @click="selectSentimentClicked"
+                      :loading="pinLoading"
+                      :disabled="pinLoading"
+                    >
+                      <div class="pa-1">
+                        <div class="pb-1">
+                          <v-icon v-if="userSentiment == 1">mdi-emoticon-sad-outline</v-icon>
+                          <v-icon v-else-if="userSentiment == 2"
+                            >mdi-emoticon-neutral-outline</v-icon
+                          >
+                          <v-icon v-else-if="userSentiment == 3">mdi-emoticon-happy-outline</v-icon>
+                          <v-icon v-else-if="userSentiment == 4">mdi-emoticon-kiss-outline</v-icon>
+                          <v-icon v-else>mdi-head-question-outline</v-icon>
+                        </div>
+                        <small style="display: block;">
+                          {{ store.sentimentUserCount }}
+                        </small>
+                      </div>
+                    </v-btn>
+                  </template>
+                  <span>방문하신 적이 있나요?</span>
+                </v-tooltip>
+              </v-flex>
+            </v-layout>
           </v-flex>
         </v-layout>
 
@@ -67,60 +124,45 @@
           </v-layout>
         </v-expand-transition>
 
+        <v-expand-transition>
+          <v-layout v-if="showMobileSentiment">
+            <detail-select-sentiment
+              v-click-outside="{
+                handler: onClickOutside,
+                include: include,
+              }"
+              :store="store"
+              :userSentiment="userSentiment"
+              @sentimentSelected="sentimentSelected"
+            ></detail-select-sentiment>
+          </v-layout>
+        </v-expand-transition>
+
         <v-layout wrap style="border: 2px solid blue">
           <v-flex md8 sm12 xs12 style="border: 2px solid red" class="pa-1">
-            <detail-menu :store="store"></detail-menu>
             <detail-image></detail-image>
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
             <detail-options :store="store"></detail-options>
             <detail-location :store="store"></detail-location>
-
-            <dashboard-time-off></dashboard-time-off>
-            <dashboard-what-needs-doing></dashboard-what-needs-doing>
-            <dashboard-whats-coming-up></dashboard-whats-coming-up>
-            <!-- <dashboard-performance></dashboard-performance> -->
+            <detail-menu :store="store"></detail-menu>
           </v-flex>
           <v-flex md4 sm12 xs12 style="border: 2px solid red" class="pa-1">
-            <detail-sentiment></detail-sentiment>
+            <detail-sentiment :store="store"></detail-sentiment>
             <detail-review></detail-review>
-            <!-- <dashboard-sentiment></dashboard-sentiment> -->
             <!-- <dashboard-whos-got-time-off></dashboard-whos-got-time-off> -->
             <!-- <dashboard-whos-celebrating></dashboard-whos-celebrating> -->
           </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
-
-    <!-- <div :class="this.$vuetify.breakpoint.xs ? '' : 'ma-5'">
-    <v-row justify="center" class="mb-10">
-      <v-expansion-panels accordion flat>
-        <v-expansion-panel v-for="(item, i) in 5" :key="i">
-          <v-expansion-panel-header>Item</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-row>
-    <div>
-      this is detail
-    </div>
-    <div>storeID : {{ this.storeId }}</div>
-    <div>storeNameKor : {{ this.store.storeNameKor }}</div>
-  </div> -->
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex"
-
 import QuickActions from "../components/modules/Dashboard/QuickActions.vue"
-import DashboardTimeOff from "../components/modules/Dashboard/TimeOff.vue"
-import DashboardWhatNeedsDoing from "../components/modules/Dashboard/WhatNeedsDoing.vue"
-import DashboardWhatsComingUp from "../components/modules/Dashboard/WhatsComingUp.vue"
+import DetailSelectSentiment from "@/components/Detail/DetailSelectSentiment.vue"
 
 import DetailImage from "@/components/Detail/DetailImage.vue"
 import DetailBasicInfo from "@/components/Detail/DetailBasicInfo.vue"
@@ -136,9 +178,7 @@ export default {
   props: {},
   components: {
     QuickActions,
-    DashboardTimeOff,
-    DashboardWhatNeedsDoing,
-    DashboardWhatsComingUp,
+    DetailSelectSentiment,
 
     DetailImage,
     DetailBasicInfo,
@@ -153,6 +193,21 @@ export default {
   data() {
     return {
       pageTitle: "Today",
+      showQuickActions: false,
+      showMobileSentiment: false,
+      visitTooltip: false,
+      pinLoading: true,
+      userSentiment: 0,
+
+      storeId: this.$route.params.storeId,
+      store: {},
+      unsubcribe: null,
+      ref: this.$firebase
+        .firestore()
+        .collection("store")
+        .doc("cafes")
+        .collection("cafe"),
+
       quickAddItems: [
         {
           header: "Communications",
@@ -220,23 +275,23 @@ export default {
           title: "Add task",
         },
       ],
-      showQuickActions: false,
-
-      // 여기까지
-
-      storeId: this.$route.params.storeId,
-      store: {},
-      unsubcribe: null,
-      ref: this.$firebase
-        .firestore()
-        .collection("store")
-        .doc("cafes")
-        .collection("cafe"),
     }
   },
   async created() {
     await this.readCountUpdate()
     await this.subscribe()
+  },
+  mounted() {
+    setTimeout(() => {
+      if (this.userSentiment === null) {
+        this.visitTooltip = true
+      }
+    }, 1000)
+    setTimeout(() => {
+      if (this.userSentiment != null) {
+        this.visitTooltip = false
+      }
+    }, 3000)
   },
   destroyed() {
     if (this.unsubscribe) {
@@ -244,9 +299,35 @@ export default {
     }
   },
   computed: {
-    ...mapState(["parkingTags", "offerTags", "policyTags", "amenityTags", "themeTags"]),
+    ...mapState(["fireUser", "parkingTags", "offerTags", "policyTags", "amenityTags", "themeTags"]),
+    sentimentColor() {
+      if (this.userSentiment == 0) {
+        return "white"
+      } else {
+        return "error"
+      }
+    },
   },
   methods: {
+    selectSentimentClicked() {
+      if (this.fireUser) {
+        this.showMobileSentiment = !this.showMobileSentiment
+        this.pinLoading = true
+      } else {
+        this.$toast.error("로그인이 필요해요")
+      }
+    },
+    sentimentSelected() {
+      this.showMobileSentiment = false
+      this.pinLoading = false
+    },
+    onClickOutside() {
+      this.showMobileSentiment = false
+      this.pinLoading = false
+    },
+    include() {
+      return [document.querySelector(".included")]
+    },
     async readCountUpdate() {
       await this.ref.doc(this.storeId).update({
         viewCount: this.$firebase.firestore.FieldValue.increment(1),
@@ -314,7 +395,45 @@ export default {
         if (this.store.lng) {
           this.store.lng = Number(this.store.lng)
         }
+        if (this.store.sentimentUserList) {
+          // sentimentCount setting
+          this.store.sentiment = {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0,
+          }
+          this.store.sentimentUserList.map((item) => {
+            switch (item.sentiment) {
+              case 1:
+                this.store.sentiment.first++
+                break
+              case 2:
+                this.store.sentiment.second++
+                break
+              case 3:
+                this.store.sentiment.third++
+                break
+              case 4:
+                this.store.sentiment.fourth++
+                break
+            }
+          })
+        }
+        if (this.store.sentimentUserList && this.fireUser) {
+          const userSentimentData = this.store.sentimentUserList.find((item) => {
+            if (this.fireUser.uid) {
+              return item.uid === this.fireUser.uid
+            }
+          })
+          if (userSentimentData) {
+            this.userSentiment = userSentimentData.sentiment
+          } else {
+            this.userSentiment = 0
+          }
+        }
       }, console.error)
+      this.pinLoading = false
     },
   },
 }
