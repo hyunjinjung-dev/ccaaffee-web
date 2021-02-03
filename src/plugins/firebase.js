@@ -9,11 +9,40 @@ import "firebase/firebase-firestore"
 import "firebase/firebase-storage"
 
 firebase.initializeApp(firebaseConfig)
+let unsubscribe = null
 
 // functions와 별개로 auth 정보에 변경이 있으면 작동
+// firebase.auth().onAuthStateChanged((fu) => {
+//   store.commit("setFireUser", fu)
+//   store.commit("setLogin")
+// })
+const subscribe = (fu) => {
+  const ref = firebase
+    .firestore()
+    .collection("users")
+    .doc(fu.uid)
+  unsubscribe = ref.onSnapshot((doc) => {
+    if (doc.exists) {
+      store.commit("setUser", doc.data())
+    }
+  }, console.error)
+}
+
 firebase.auth().onAuthStateChanged((fu) => {
+  if (!fu) {
+    // user 정보가 없을 경우
+    store.commit("setFireUser", null)
+    store.commit("setUser", null)
+    store.dispatch("logout")
+    if (unsubscribe) {
+      unsubscribe()
+    }
+    return
+  }
+  // user 정보가 있을 경우
   store.commit("setFireUser", fu)
-  store.commit("setLogin")
+  subscribe(fu)
+  store.dispatch("login")
 })
 
 Vue.prototype.$firebase = firebase

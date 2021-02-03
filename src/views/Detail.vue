@@ -125,7 +125,7 @@
         </v-expand-transition>
 
         <v-expand-transition>
-          <v-layout v-show="showMobileSentiment" style="border: 2px solid yellow">
+          <v-layout v-if="showMobileSentiment">
             <detail-select-sentiment
               v-click-outside="{
                 handler: onClickOutside,
@@ -311,11 +311,6 @@ export default {
       } else {
         this.$toast.error("로그인이 필요해요")
       }
-    },
-    hideVisitTooltip() {
-      setTimeout(() => {
-        // Code here
-      }, 1000)
     },
     sentimentSelected(rate) {
       this.showMobileSentiment = false
