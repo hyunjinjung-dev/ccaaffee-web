@@ -55,6 +55,9 @@ export default {
   methods: {
     signOut() {
       this.$firebase.auth().signOut()
+      this.$router.go()
+
+      // this.$router.push({ name: "Home" })
     },
   },
   computed: {

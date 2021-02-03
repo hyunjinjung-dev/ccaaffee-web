@@ -106,7 +106,7 @@
                           <v-icon v-else>mdi-head-question-outline</v-icon>
                         </div>
                         <small style="display: block;">
-                          1200
+                          {{ store.sentimentUserCount }}
                         </small>
                       </div>
                     </v-btn>
@@ -132,6 +132,7 @@
                 include: include,
               }"
               :store="store"
+              :userSentiment="userSentiment"
               @sentimentSelected="sentimentSelected"
             ></detail-select-sentiment>
           </v-layout>
@@ -195,7 +196,7 @@ export default {
       showQuickActions: false,
       showMobileSentiment: false,
       visitTooltip: false,
-      pinLoading: false,
+      pinLoading: true,
       userSentiment: 0,
 
       storeId: this.$route.params.storeId,
@@ -282,10 +283,14 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.visitTooltip = true
+      if (this.userSentiment === null) {
+        this.visitTooltip = true
+      }
     }, 1000)
     setTimeout(() => {
-      this.visitTooltip = false
+      if (this.userSentiment != null) {
+        this.visitTooltip = false
+      }
     }, 3000)
   },
   destroyed() {
@@ -312,10 +317,9 @@ export default {
         this.$toast.error("로그인이 필요해요")
       }
     },
-    sentimentSelected(rate) {
+    sentimentSelected() {
       this.showMobileSentiment = false
       this.pinLoading = false
-      this.userSentiment = rate
     },
     onClickOutside() {
       this.showMobileSentiment = false
@@ -391,16 +395,45 @@ export default {
         if (this.store.lng) {
           this.store.lng = Number(this.store.lng)
         }
-        if (this.store.sentiment) {
-          let arr = [
-            this.store.sentiment.first,
-            this.store.sentiment.second,
-            this.store.sentiment.third,
-            this.store.sentiment.fourth,
-          ]
-          this.store.sentiment = arr
+        if (this.store.sentimentUserList) {
+          // sentimentCount setting
+          this.store.sentiment = {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0,
+          }
+          this.store.sentimentUserList.map((item) => {
+            switch (item.sentiment) {
+              case 1:
+                this.store.sentiment.first++
+                break
+              case 2:
+                this.store.sentiment.second++
+                break
+              case 3:
+                this.store.sentiment.third++
+                break
+              case 4:
+                this.store.sentiment.fourth++
+                break
+            }
+          })
+        }
+        if (this.store.sentimentUserList && this.fireUser) {
+          const userSentimentData = this.store.sentimentUserList.find((item) => {
+            if (this.fireUser.uid) {
+              return item.uid === this.fireUser.uid
+            }
+          })
+          if (userSentimentData) {
+            this.userSentiment = userSentimentData.sentiment
+          } else {
+            this.userSentiment = 0
+          }
         }
       }, console.error)
+      this.pinLoading = false
     },
   },
 }

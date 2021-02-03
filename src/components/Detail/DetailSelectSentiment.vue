@@ -36,11 +36,6 @@
               </v-tooltip>
             </v-btn-toggle>
           </v-flex>
-          <!-- <v-flex>
-            <v-btn @click="fetch"></v-btn>
-          </v-flex> -->
-          <!-- <v-flex>hell : {{ this.store }}</v-flex>
-          <v-flex>user : {{ this.user }}</v-flex> -->
         </v-layout>
       </v-card-title>
     </v-card>
@@ -50,7 +45,7 @@
 <script>
 export default {
   name: "DetailSelectSentiment",
-  props: ["store"],
+  props: ["store", "userSentiment"],
   data: () => ({
     oldSentiment: null,
     newSentiment: null,
@@ -103,32 +98,16 @@ export default {
   },
   methods: {
     fetch() {
-      if (this.store.sentimentUserList) {
-        let userSentiment = this.store.sentimentUserList.find(
-          (item) => (item.uid = this.fireUser.uid)
-        )
-        if (userSentiment) {
-          this.oldSentiment = userSentiment.sentiment
-        }
-      }
+      this.oldSentiment = this.userSentiment
     },
-    sentimentSelected(newVal, oldVal) {
-      console.log("nv", newVal, "ov", oldVal)
-      this.updateUserSentiment(newVal, oldVal)
-
-      // To Do
-      // emit 해서 수동으로 바꾸는게 아니라, server 데이터 보고 자동으로 바뀌도록 바꿔야한다.
-      // this.$emit("sentimentSelected", rate)
-      // 창 닫히는것도 바꿔야하고
-      // Detail 페이지에서도 값있으면 업데이트 해줘야한다. 사람 머리에 물음표 있는 아이콘이 아니라!!
-    },
-    async updateUserSentiment(newVal, oldVal) {
+    async sentimentSelected(newVal, oldVal) {
       if (!this.fireUser) {
         this.$toast.error("로그인이 필요해요")
         return
       }
       // 기존 값과 신규 값이 같으면 return
       if (oldVal == newVal) {
+        this.$emit("sentimentSelected")
         return
       }
       let refUser = this.$firebase
@@ -139,67 +118,70 @@ export default {
         .firestore()
         .collection("store")
         .doc("cafes")
-
-      if (oldVal == 0) {
-        // 기존 0, 신규 0은 위에서 걸러졌고,
-        // 기존 0, 신규 0이 아닐 때,
-        // >> 유저의 sentimentStoreList에 업데이트, 카운트 +1
-        // >> 카페의 sentimentUserList에 업데이트, 카운트 +1
-        let updateUserForm = { storeId: this.store.storeId, sentiment: newVal }
-        let updateStoreForm = { uid: this.fireUser.uid, sentiment: newVal }
-        const batch = await this.$firebase.firestore().batch()
-        batch.update(refUser, {
-          sentimentStoreList: this.$firebase.firestore.FieldValue.arrayUnion(updateUserForm),
-          sentimentStoreCount: this.$firebase.firestore.FieldValue.increment(1),
-        })
-        batch.update(ref.collection("cafe").doc(this.store.storeId), {
-          sentimentUserList: this.$firebase.firestore.FieldValue.arrayUnion(updateStoreForm),
-          sentimentUserCount: this.$firebase.firestore.FieldValue.increment(1),
-        })
-        await batch.commit()
-      } else {
-        if (newVal == 0) {
-          // >> 기존 0이 아니고, 신규 0일 때,
-          // >>>> 유저의 리스트에 기존 내용 삭제, 카운트 -1
-          // >>>> 카페의 리스트에 기존 내용 삭제, 카운트 -1
-          const batch = await this.$firebase.firestore().batch()
-          let removeUserForm = { storeId: this.store.storeId, sentiment: oldVal }
-          let removeStoreForm = { uid: this.fireUser.uid, sentiment: oldVal }
-          batch.update(refUser, {
-            sentimentStoreList: this.$firebase.firestore.FieldValue.arrayRemove(removeUserForm),
-            sentimentStoreCount: this.$firebase.firestore.FieldValue.increment(-1),
-          })
-          batch.update(ref.collection("cafe").doc(this.store.storeId), {
-            sentimentUserList: this.$firebase.firestore.FieldValue.arrayRemove(removeStoreForm),
-            sentimentUserCount: this.$firebase.firestore.FieldValue.increment(-1),
-          })
-          await batch.commit()
-        } else {
-          // >> 기존 0이 아니고, 신규도 0이 아닐 때,
-          // >>>> 유저의 리스트에 기존 내용 삭제
-          // >>>> 유저의 리스트에 업데이트, 카운트 +1
-          // >>>> 카페의 리스트에 기존 내용 삭제
-          // >>>> 카페의 리스트에 업데이트, 카운트 +1
-          const batch = await this.$firebase.firestore().batch()
+      try {
+        if (oldVal == 0) {
+          // 기존 0, 신규 0은 위에서 걸러졌고,
+          // 기존 0, 신규 0이 아닐 때,
+          // >> 유저의 sentimentStoreList에 업데이트, 카운트 +1
+          // >> 카페의 sentimentUserList에 업데이트, 카운트 +1
           let updateUserForm = { storeId: this.store.storeId, sentiment: newVal }
           let updateStoreForm = { uid: this.fireUser.uid, sentiment: newVal }
-          let removeUserForm = { storeId: this.store.storeId, sentiment: oldVal }
-          let removeStoreForm = { uid: this.fireUser.uid, sentiment: oldVal }
-
-          batch.update(refUser, {
-            sentimentStoreList: this.$firebase.firestore.FieldValue.arrayRemove(removeUserForm),
-          })
+          const batch = await this.$firebase.firestore().batch()
           batch.update(refUser, {
             sentimentStoreList: this.$firebase.firestore.FieldValue.arrayUnion(updateUserForm),
-          })
-          batch.update(ref.collection("cafe").doc(this.store.storeId), {
-            sentimentUserList: this.$firebase.firestore.FieldValue.arrayRemove(removeStoreForm),
+            sentimentStoreCount: this.$firebase.firestore.FieldValue.increment(1),
           })
           batch.update(ref.collection("cafe").doc(this.store.storeId), {
             sentimentUserList: this.$firebase.firestore.FieldValue.arrayUnion(updateStoreForm),
+            sentimentUserCount: this.$firebase.firestore.FieldValue.increment(1),
           })
           await batch.commit()
+        } else {
+          if (newVal == 0) {
+            // >> 기존 0이 아니고, 신규 0일 때,
+            // >>>> 유저의 리스트에 기존 내용 삭제, 카운트 -1
+            // >>>> 카페의 리스트에 기존 내용 삭제, 카운트 -1
+            const batch = await this.$firebase.firestore().batch()
+            let removeUserForm = { storeId: this.store.storeId, sentiment: oldVal }
+            let removeStoreForm = { uid: this.fireUser.uid, sentiment: oldVal }
+            batch.update(refUser, {
+              sentimentStoreList: this.$firebase.firestore.FieldValue.arrayRemove(removeUserForm),
+              sentimentStoreCount: this.$firebase.firestore.FieldValue.increment(-1),
+            })
+            batch.update(ref.collection("cafe").doc(this.store.storeId), {
+              sentimentUserList: this.$firebase.firestore.FieldValue.arrayRemove(removeStoreForm),
+              sentimentUserCount: this.$firebase.firestore.FieldValue.increment(-1),
+            })
+            await batch.commit()
+          } else {
+            // >> 기존 0이 아니고, 신규도 0이 아닐 때,
+            // >>>> 유저의 리스트에 기존 내용 삭제
+            // >>>> 유저의 리스트에 업데이트
+            // >>>> 카페의 리스트에 기존 내용 삭제
+            // >>>> 카페의 리스트에 업데이트
+            const batch = await this.$firebase.firestore().batch()
+            let updateUserForm = { storeId: this.store.storeId, sentiment: newVal }
+            let updateStoreForm = { uid: this.fireUser.uid, sentiment: newVal }
+            let removeUserForm = { storeId: this.store.storeId, sentiment: oldVal }
+            let removeStoreForm = { uid: this.fireUser.uid, sentiment: oldVal }
+
+            batch.update(refUser, {
+              sentimentStoreList: this.$firebase.firestore.FieldValue.arrayRemove(removeUserForm),
+            })
+            batch.update(refUser, {
+              sentimentStoreList: this.$firebase.firestore.FieldValue.arrayUnion(updateUserForm),
+            })
+            batch.update(ref.collection("cafe").doc(this.store.storeId), {
+              sentimentUserList: this.$firebase.firestore.FieldValue.arrayRemove(removeStoreForm),
+            })
+            batch.update(ref.collection("cafe").doc(this.store.storeId), {
+              sentimentUserList: this.$firebase.firestore.FieldValue.arrayUnion(updateStoreForm),
+            })
+            await batch.commit()
+          }
         }
+      } finally {
+        this.$emit("sentimentSelected")
       }
     },
   },
