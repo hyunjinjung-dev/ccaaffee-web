@@ -1,10 +1,10 @@
 <template>
   <v-bottom-sheet v-model="dialog" persistent>
-    <template v-slot:activator="{ on, attrs }">
+    <!-- <template v-slot:activator="{ on, attrs }">
       <v-btn color="green" dark v-bind="attrs" v-on="on">
         Open Persistent
       </v-btn>
-    </template>
+    </template> -->
     <v-sheet height="200px">
       <v-container class="py-5">
         <v-row class="justify-center">
@@ -67,13 +67,17 @@ export default {
   },
   methods: {
     fetch() {
-      console.log("here", this.selectedReview)
       this.updatedReviewContent = this.selectedReview.reviewContent
     },
     closeBtnClicked() {
       this.$emit("closeBtnClicked")
     },
     save() {
+      // 변경된 내용이 없을 경우 sheet 닫기
+      if (this.selectedReview.reviewContent == this.updatedReviewContent) {
+        this.$emit("closeBtnClicked")
+        return
+      }
       if (this.updatedReviewContent.length <= 10) {
         this.$toast.error("리뷰는 10글자 이상 입력해주세요")
         return

@@ -15,20 +15,22 @@
             auto-grow
           >
           </v-textarea>
-          <div v-if="showReviewBtns" class="d-inline-block text-right">
-            <v-btn text @click=";[(showReviewBtns = !showReviewBtns), (newReviewContent = '')]"
-              >취소</v-btn
-            >
-            <v-btn
-              class="primary white--text"
-              depressed
-              tile
-              :disabled="newReviewContent === ''"
-              @click="save"
-            >
-              리뷰
-            </v-btn>
-          </div>
+          <v-expand-transition>
+            <div v-if="showReviewBtns" class="d-inline-block text-right">
+              <v-btn text @click=";[(showReviewBtns = !showReviewBtns), (newReviewContent = '')]"
+                >취소</v-btn
+              >
+              <v-btn
+                class="primary white--text"
+                depressed
+                tile
+                :disabled="newReviewContent === ''"
+                @click="save"
+              >
+                리뷰
+              </v-btn>
+            </div>
+          </v-expand-transition>
         </v-list-item-content>
       </v-list-item>
 
@@ -49,8 +51,6 @@
               <!-- <span v-if="updatedToggle(review)"> · (수정됨)</span> -->
               <!-- TimeStamp 비교를 위해 String() type 변환 -->
               <span v-if="String(review.createdAt) != String(review.updatedAt)"> · (수정됨)</span>
-
-              <!-- <span class="mx-1"> • </span> -->
             </v-list-item-subtitle>
             <v-list-item-subtitle class="reviewRow">
               <span>{{ review.reviewContent }}</span>
@@ -233,7 +233,6 @@ export default {
       }
     },
     closeReviewMoreSheet() {
-      console.log("close")
       this.reviewMoreSheet = false
     },
     async save() {

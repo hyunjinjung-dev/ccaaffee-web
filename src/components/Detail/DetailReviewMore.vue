@@ -1,5 +1,9 @@
 <template>
-  <v-bottom-sheet v-if="reviewMoreSheet && fireUser" v-model="reviewMoreSheet">
+  <v-bottom-sheet
+    v-if="reviewMoreSheet && fireUser"
+    v-model="reviewMoreSheet"
+    @click:outside="closeBtnClicked"
+  >
     <v-list>
       <v-list-item v-if="fireUser.uid == selectedReview.uid" @click="updateReviewBtnClicked">
         <v-list-item-avatar>
@@ -13,6 +17,13 @@
           <v-icon small>mdi-delete</v-icon>
         </v-list-item-avatar>
         <v-list-item-title>삭제</v-list-item-title>
+      </v-list-item>
+
+      <v-list-item @click="reportReviewBtnClicked">
+        <v-list-item-avatar>
+          <v-icon small>mdi-delete</v-icon>
+        </v-list-item-avatar>
+        <v-list-item-title>신고</v-list-item-title>
       </v-list-item>
 
       <v-divider></v-divider>
@@ -51,8 +62,9 @@ export default {
       this.$emit("updateReviewBtnClicked")
     },
     deleteReviewBtnClicked() {
-      this.$emit("deleteReviewBtbClicked")
+      this.$emit("deleteReviewBtnClicked")
     },
+    reportReviewBtnClicked() {},
     // closeReviewMoreSheet() {
     //         this.$emit("closeBtnClicked")
     // },
