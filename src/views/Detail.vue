@@ -1,18 +1,26 @@
 <template>
   <div>
-    <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" style="border: 2px solid red;">
+    <v-layout
+      :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'"
+      style="border: 2px solid red;"
+      fill-height
+    >
       <v-flex xs12 style="border: 2px solid green">
-        <v-layout wrap align-end style="border: 2px solid blue">
+        <v-layout wrap align-center style="border: 2px solid blue">
+          <!-- v-layout align-end -->
           <v-flex md8 sm12 xs12 shrink style="border: 2px solid red">
-            <v-btn icon color="info" class="mr-2" @click="$router.go(-1)">
+            <v-btn icon color="info" class="mb-3" @click="$router.go(-1)">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <span class="mx-2 font-weight-bold title">{{ store.storeNameKor }}</span>
-            <span>{{ store.branchName }}</span>
-            <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span>
-            <v-btn color="info" fab dark x-small class="mx-3" depressed>
+            <span class="mx-2 font-weight-bold" style="font-size: 2.0rem">
+              {{ store.storeNameKor }}
+            </span>
+            <span style="font-size: 1.5rem">{{ store.branchName }}</span>
+            <span style="font-size: 1rem"> {{ $moment().format("YYYY-MM-DD HH:mm") }} 기준 </span>
+            <!-- <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span> -->
+            <!-- <v-btn color="info" fab dark x-small class="mx-3" depressed>
               <v-icon dark>mdi-clock-fast</v-icon>
-            </v-btn>
+            </v-btn> -->
           </v-flex>
 
           <v-flex md4 sm12 xs12 shrink style="border: 2px solid red" class="py-1">
@@ -103,7 +111,7 @@
                           >
                           <v-icon v-else-if="userSentiment == 3">mdi-emoticon-happy-outline</v-icon>
                           <v-icon v-else-if="userSentiment == 4">mdi-emoticon-kiss-outline</v-icon>
-                          <v-icon v-else>mdi-head-question-outline</v-icon>
+                          <v-icon v-else>mdi-pin-outline</v-icon>
                         </div>
                         <small style="display: block;">
                           {{ store.sentimentUserCount }}
@@ -149,7 +157,7 @@
           </v-flex>
           <v-flex md4 sm12 xs12 style="border: 2px solid red" class="pa-1">
             <detail-sentiment :store="store"></detail-sentiment>
-            <detail-review></detail-review>
+            <detail-review v-if="store && store.storeId" :store="store"></detail-review>
             <!-- <dashboard-whos-got-time-off></dashboard-whos-got-time-off> -->
             <!-- <dashboard-whos-celebrating></dashboard-whos-celebrating> -->
           </v-flex>

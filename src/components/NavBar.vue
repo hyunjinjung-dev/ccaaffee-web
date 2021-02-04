@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="font-weight-bold">
         <router-link to="/" class="black--text" style="text-decoration: none">
-          ccaaffee
+          ccaaffee ☕️
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>

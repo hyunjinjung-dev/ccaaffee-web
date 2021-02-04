@@ -10,14 +10,18 @@ admin.initializeApp({
 const rdb = admin.database() // RealTime Database
 const fdb = admin.firestore() // FireStore
 
+// 수정 후 Deploy 필수
+// firebase deploy --only functions:"FunctionsName"
+
 // RealTime Database, Firestore : User Save
 exports.createUser = functions.auth.user().onCreate(async (user) => {
-  const { uid, email, displayName } = user
+  const { uid, email, displayName, photoURL } = user
   const time = new Date()
   const u = {
     email,
     displayName,
     createdAt: time,
+    photoURL,
     level: email === functions.config().admin.email ? 0 : 5,
     visitedAt: time,
     visitCount: 0,
@@ -89,3 +93,30 @@ exports.decrementBoardCount = functions.firestore
       .doc("boards")
       .update("count", admin.firestore.FieldValue.increment(-1))
   })
+
+// Firestore : Create Review && Total Count Increment
+exports.onCreateCafeReview = functions.firestore
+  .document("store/{sid}/cafe/{cid}/review/{rid}")
+  .onCreate((snap, context) => {
+    return fdb
+      .collection("store")
+      .doc(context.params.sid)
+      .collection("cafe")
+      .doc(context.params.cid)
+      .update({ reviewCount: admin.firestore.FieldValue.increment(1) })
+  })
+
+// Firestore : Delete Review && Total Count Decrement
+exports.onDeleteCafeReview = functions.firestore
+  .document("store/{sid}/cafe/{cid}/review/{rid}")
+  .onDelete((snap, context) => {
+    return fdb
+      .collection("store")
+      .doc(context.params.sid)
+      .collection("cafe")
+      .doc(context.params.cid)
+      .update({ reviewCount: admin.firestore.FieldValue.increment(-1) })
+  })
+
+// 수정 후 Deploy 필수
+// firebase deploy --only functions:"FunctionsName"
