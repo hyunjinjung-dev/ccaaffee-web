@@ -40,6 +40,7 @@
 <script>
 export default {
   props: ["store", "selectedReview", "dialog"],
+
   data() {
     return {
       updatedReviewContent: "",
@@ -75,21 +76,24 @@ export default {
     save() {
       // 변경된 내용이 없을 경우 sheet 닫기
       if (this.selectedReview.reviewContent == this.updatedReviewContent) {
-        this.$emit("closeBtnClicked")
+        this.closeBtnClicked()
         return
       }
       if (this.updatedReviewContent.length <= 10) {
         this.$toast.error("리뷰는 10글자 이상 입력해주세요")
         return
       }
+      let updatedAt = new Date()
       let doc = {
-        updatedAt: new Date(),
+        updatedAt: updatedAt,
         reviewContent: this.updatedReviewContent,
       }
       this.ref
         .collection("review")
         .doc(this.selectedReview.id)
         .update(doc)
+      this.$emit("updateUserPage", updatedAt, this.updatedReviewContent)
+      this.closeBtnClicked()
     },
   },
 }

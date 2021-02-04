@@ -17,9 +17,9 @@
           </v-textarea>
           <v-expand-transition>
             <div v-if="showReviewBtns" class="d-inline-block text-right">
-              <v-btn text @click=";[(showReviewBtns = !showReviewBtns), (newReviewContent = '')]"
-                >취소</v-btn
-              >
+              <v-btn text @click=";[(showReviewBtns = !showReviewBtns), (newReviewContent = '')]">
+                취소
+              </v-btn>
               <v-btn
                 class="primary white--text"
                 depressed
@@ -48,7 +48,6 @@
               <span>{{ review.user.displayName }}</span>
               <span> · </span>
               <display-time :time="review.createdAt"></display-time>
-              <!-- <span v-if="updatedToggle(review)"> · (수정됨)</span> -->
               <!-- TimeStamp 비교를 위해 String() type 변환 -->
               <span v-if="String(review.createdAt) != String(review.updatedAt)"> · (수정됨)</span>
             </v-list-item-subtitle>
@@ -70,13 +69,14 @@
                 </v-col>
               </v-row>
 
-              <v-row align="center" no-gutters>
-                <v-col align="center">
-                  <v-btn icon dark @click="reviewMoreBtnClicked(review)">
-                    <v-icon color="grey">
-                      mdi-dots-vertical
-                    </v-icon>
-                  </v-btn>
+              <v-row align="center" no-gutters
+                ><v-col align="center">
+                  <detail-review-more
+                    :store="store"
+                    :review="review"
+                    @updateReviewBtnClicked="updateReviewBtnClicked"
+                  >
+                  </detail-review-more>
                 </v-col>
               </v-row>
             </v-container>
@@ -91,47 +91,12 @@
       </v-list-item>
     </v-card>
 
-    <detail-review-more
-      v-if="reviewMoreSheet"
-      :store="store"
-      :selectedReview="selectedReview"
-      :reviewMoreSheet="reviewMoreSheet"
-      @closeBtnClicked="closeReviewMoreSheet"
-      @updateReviewBtnClicked="updateReviewBtnClicked"
-      @deleteReviewBtnClicked="deleteReviewBtnClicked"
-    >
-    </detail-review-more>
-    <!-- <v-bottom-sheet v-if="reviewMoreSheet && fireUser" v-model="reviewMoreSheet">
-      <v-list>
-        <v-list-item v-if="fireUser.uid == reviewMoreApprovedUser" @click="updateReviewBtnClicked">
-          <v-list-item-avatar>
-            <v-icon small>mdi-pencil</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-title>수정</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item v-if="fireUser.uid == reviewMoreApprovedUser" @click="deleteReviewBtbClicked">
-          <v-list-item-avatar>
-            <v-icon small>mdi-delete</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-title>삭제</v-list-item-title>
-        </v-list-item>
-
-        <v-divider></v-divider>
-        <v-list-item @click="closeReviewMoreSheet">
-          <v-list-item-avatar>
-            <v-icon small>mdi-close</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-title>취소</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-bottom-sheet> -->
-
     <detail-review-update
       v-if="updateDialog"
       :store="store"
       :selectedReview="selectedReview"
       :dialog="updateDialog"
+      @updateUserPage="updateUserPage"
       @closeBtnClicked="closeUpdateDialog"
     ></detail-review-update>
 
@@ -202,38 +167,31 @@ export default {
     },
   },
   methods: {
-    // updatedToggle(review) {
-    //   if (String(review.createdAt) != String(review.updatedAt)) {
-    //     return true
-    //   } else {
-    //     return false
-    //   }
-    // },
-    openUpdateDialog() {
-      this.updateDialog = true
+    updateReviewBtnClicked(review) {
+      if (this.fireUser.uid == review.uid) {
+        this.selectedReview = review
+        this.reviewMoreSheet = false
+        this.updateDialog = true
+      }
     },
     closeUpdateDialog() {
       this.updateDialog = false
     },
-
+    updateUserPage(updatedAt, updatedReviewContent) {
+      const updateIndex = this.reviewList.findIndex((item) => {
+        return item.id == this.selectedReview.id
+      })
+      if (updateIndex >= 0) {
+        this.reviewList[updateIndex].updatedAt = updatedAt
+        this.reviewList[updateIndex].reviewContent = updatedReviewContent
+      }
+    },
     reviewFieldClicked() {
       if (this.fireUser) {
         this.showReviewBtns = true
       } else {
         this.$toast.error("로그인이 필요해요")
       }
-    },
-    reviewMoreBtnClicked(review) {
-      if (this.fireUser) {
-        this.selectedReview = review
-        this.reviewMoreApprovedUser = review.uid
-        this.reviewMoreSheet = true
-      } else {
-        this.$toast.error("로그인이 필요해요")
-      }
-    },
-    closeReviewMoreSheet() {
-      this.reviewMoreSheet = false
     },
     async save() {
       if (this.newReviewContent.length <= 10) {
@@ -328,16 +286,6 @@ export default {
         return false
       }
       return review.likeUserList?.includes(this.fireUser.uid)
-    },
-    updateReviewBtnClicked() {
-      console.log("update!!")
-      if (this.fireUser.uid == this.reviewMoreApprovedUser) {
-        this.reviewMoreSheet = false
-        this.updateDialog = true
-      }
-    },
-    deleteReviewBtnClicked() {
-      console.log("delete!!")
     },
     async like(review) {
       if (!this.fireUser) {
