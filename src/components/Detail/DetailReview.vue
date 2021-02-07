@@ -17,9 +17,9 @@
           </v-textarea>
           <v-expand-transition>
             <div v-if="showReviewBtns" class="d-inline-block text-right">
-              <v-btn text @click=";[(showReviewBtns = !showReviewBtns), (newReviewContent = '')]">
-                취소
-              </v-btn>
+              <v-btn text @click=";[(showReviewBtns = !showReviewBtns), (newReviewContent = '')]"
+                >취소</v-btn
+              >
               <v-btn
                 class="primary white--text"
                 depressed
@@ -48,6 +48,7 @@
               <span>{{ review.user.displayName }}</span>
               <span> · </span>
               <display-time :time="review.createdAt"></display-time>
+              <!-- <span v-if="updatedToggle(review)"> · (수정됨)</span> -->
               <!-- TimeStamp 비교를 위해 String() type 변환 -->
               <span v-if="String(review.createdAt) != String(review.updatedAt)"> · (수정됨)</span>
             </v-list-item-subtitle>
@@ -69,14 +70,13 @@
                 </v-col>
               </v-row>
 
-              <v-row align="center" no-gutters
-                ><v-col align="center">
-                  <detail-review-more
-                    :store="store"
-                    :review="review"
-                    @updateReviewBtnClicked="updateReviewBtnClicked"
-                  >
-                  </detail-review-more>
+              <v-row align="center" no-gutters>
+                <v-col align="center">
+                  <v-btn icon dark @click="reviewMoreBtnClicked(review)">
+                    <v-icon color="grey">
+                      mdi-dots-vertical
+                    </v-icon>
+                  </v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -91,12 +91,23 @@
       </v-list-item>
     </v-card>
 
+    <detail-review-more
+      v-if="reviewMoreSheet"
+      :store="store"
+      :selectedReview="selectedReview"
+      :reviewMoreSheet="reviewMoreSheet"
+      @closeBtnClicked="closeReviewMoreSheet"
+      @updateReviewBtnClicked="updateReviewBtnClicked"
+      @reviewDeleteComplete="deleteUserPageReview"
+    >
+    </detail-review-more>
+
     <detail-review-update
       v-if="updateDialog"
       :store="store"
       :selectedReview="selectedReview"
-      :dialog="updateDialog"
-      @updateUserPage="updateUserPage"
+      :updateDialog="updateDialog"
+      @reviewUpdateComplete="updateUserPageReview"
       @closeBtnClicked="closeUpdateDialog"
     ></detail-review-update>
 
@@ -129,6 +140,7 @@ export default {
     return {
       updateDialog: false,
       reviewMoreSheet: false,
+
       snackbar: false,
 
       showReviewBtns: false,
@@ -167,25 +179,7 @@ export default {
     },
   },
   methods: {
-    updateReviewBtnClicked(review) {
-      if (this.fireUser.uid == review.uid) {
-        this.selectedReview = review
-        this.reviewMoreSheet = false
-        this.updateDialog = true
-      }
-    },
-    closeUpdateDialog() {
-      this.updateDialog = false
-    },
-    updateUserPage(updatedAt, updatedReviewContent) {
-      const updateIndex = this.reviewList.findIndex((item) => {
-        return item.id == this.selectedReview.id
-      })
-      if (updateIndex >= 0) {
-        this.reviewList[updateIndex].updatedAt = updatedAt
-        this.reviewList[updateIndex].reviewContent = updatedReviewContent
-      }
-    },
+    // Create : Write & Save Review
     reviewFieldClicked() {
       if (this.fireUser) {
         this.showReviewBtns = true
@@ -200,8 +194,6 @@ export default {
       }
 
       let doc = {
-        // To Do
-        // createdAt, updatedAt에 대한 고찰. 두 값은 과연 같은가.
         createdAt: new Date(),
         updatedAt: new Date(),
         reviewContent: this.newReviewContent,
@@ -232,6 +224,23 @@ export default {
       this.showReviewBtns = false
     },
 
+    // Read : subscribe, snapshot, readmore review
+    subscribe() {
+      if (this.unsubscribe) {
+        this.unsubscribe()
+      }
+      this.unsubscribe = this.ref
+        .collection("review")
+        .orderBy("createdAt", "desc")
+        .limit(LIMIT)
+        .onSnapshot((sn) => {
+          if (sn.empty) {
+            this.reviewList = []
+            return
+          }
+          this.snapshotToReviewList(sn)
+        })
+    },
     snapshotToReviewList(sn) {
       this.lastDoc = last(sn.docs)
       sn.docs.forEach((doc) => {
@@ -250,22 +259,6 @@ export default {
         return afterId - beforeId
       })
     },
-    subscribe() {
-      if (this.unsubscribe) {
-        this.unsubscribe()
-      }
-      this.unsubscribe = this.ref
-        .collection("review")
-        .orderBy("createdAt", "desc")
-        .limit(LIMIT)
-        .onSnapshot((sn) => {
-          if (sn.empty) {
-            this.reviewList = []
-            return
-          }
-          this.snapshotToReviewList(sn)
-        })
-    },
     async readMoreReview() {
       if (!this.lastDoc) {
         return
@@ -281,6 +274,40 @@ export default {
     onIntersect(entries, observer, isIntersecting) {
       if (isIntersecting) this.readMoreReview()
     },
+
+    // Review More Btn
+    reviewMoreBtnClicked(review) {
+      if (this.fireUser) {
+        this.selectedReview = review
+        this.reviewMoreSheet = true
+      } else {
+        this.$toast.error("로그인이 필요해요")
+      }
+    },
+    closeReviewMoreSheet() {
+      this.reviewMoreSheet = false
+    },
+
+    // Update : Update Review
+    updateReviewBtnClicked() {
+      if (this.fireUser.uid == this.selectedReview.uid) {
+        this.updateDialog = true
+      }
+    },
+    closeUpdateDialog() {
+      this.updateDialog = false
+    },
+    updateUserPageReview(reviewId, updatedAt, updatedReviewContent) {
+      const updateIndex = this.reviewList.findIndex((item) => {
+        return item.id == reviewId
+      })
+      if (updateIndex >= 0) {
+        this.reviewList[updateIndex].updatedAt = updatedAt
+        this.reviewList[updateIndex].reviewContent = updatedReviewContent
+      }
+    },
+
+    // like review
     liked(review) {
       if (!this.fireUser) {
         return false
@@ -316,6 +343,16 @@ export default {
       const item = doc.data()
       review.likeCount = item.likeCount
       review.likeUserList = item.likeUserList
+    },
+
+    // Delete :
+    deleteUserPageReview(reviewId) {
+      const deleteIndex = this.reviewList.findIndex((item) => {
+        return item.id == reviewId
+      })
+      if (deleteIndex >= 0) {
+        this.reviewList.splice(deleteIndex, 1)
+      }
     },
   },
 }

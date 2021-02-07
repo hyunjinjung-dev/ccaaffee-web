@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-sheet v-model="dialog" persistent>
+  <v-bottom-sheet v-model="updateDialog" persistent>
     <!-- <template v-slot:activator="{ on, attrs }">
       <v-btn color="green" dark v-bind="attrs" v-on="on">
         Open Persistent
@@ -39,8 +39,7 @@
 
 <script>
 export default {
-  props: ["store", "selectedReview", "dialog"],
-
+  props: ["store", "selectedReview", "updateDialog"],
   data() {
     return {
       updatedReviewContent: "",
@@ -73,10 +72,10 @@ export default {
     closeBtnClicked() {
       this.$emit("closeBtnClicked")
     },
-    save() {
+    async save() {
       // 변경된 내용이 없을 경우 sheet 닫기
       if (this.selectedReview.reviewContent == this.updatedReviewContent) {
-        this.closeBtnClicked()
+        this.$emit("closeBtnClicked")
         return
       }
       if (this.updatedReviewContent.length <= 10) {
@@ -88,15 +87,22 @@ export default {
         updatedAt: updatedAt,
         reviewContent: this.updatedReviewContent,
       }
-      this.ref
+      await this.ref
         .collection("review")
         .doc(this.selectedReview.id)
         .update(doc)
-      this.$emit("updateUserPage", updatedAt, this.updatedReviewContent)
-      this.closeBtnClicked()
+
+      this.$emit(
+        "reviewUpdateComplete",
+        this.selectedReview.id,
+        updatedAt,
+        this.updatedReviewContent
+      )
+      this.$emit("closeBtnClicked")
     },
   },
 }
 </script>
 
 <style></style>
+ㅡ

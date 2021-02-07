@@ -1,22 +1,14 @@
 <template>
-  <v-bottom-sheet v-if="reviewMoreSheet" v-model="reviewMoreSheet" @click:outside="closeBtnClicked">
-    <template v-slot:activator="{ on, attrs }">
-      <v-btn icon dark @click="reviewMoreBtnClicked(review)" v-bind="attrs" v-on="on">
-        <v-icon color="grey">
-          mdi-dots-vertical
-        </v-icon>
-      </v-btn>
-    </template>
-
+  <v-bottom-sheet v-model="reviewMoreSheet" @click:outside="closeBtnClicked">
     <v-list>
-      <v-list-item v-if="fireUser.uid == review.uid" @click="updateReviewBtnClicked">
+      <v-list-item v-if="fireUser.uid == selectedReview.uid" @click="updateReviewBtnClicked">
         <v-list-item-avatar>
           <v-icon small>mdi-pencil</v-icon>
         </v-list-item-avatar>
         <v-list-item-title>수정</v-list-item-title>
       </v-list-item>
 
-      <v-dialog v-model="dialog" persistent max-width="290">
+      <v-dialog v-model="confirmDialog" persistent max-width="290">
         <template v-slot:activator="{ on, attrs }">
           <v-list-item v-if="fireUser.uid == review.uid" @click="deleteReviewBtnClicked">
             <v-list-item-avatar v-bind="attrs" v-on="on">
@@ -34,22 +26,23 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="dialog = false">
+            <v-btn text @click="confirmDialog = false">
               취소
             </v-btn>
-            <v-btn class="primary white--text" text @click="dialog = false">
+            <v-btn class="primary white--text" text @click="deleteReview">
               삭제
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
-      <v-list-item @click="reportReviewBtnClicked">
+      <!-- To Do : 리뷰 신고 기능 -->
+      <!-- <v-list-item @click="reportReviewBtnClicked">
         <v-list-item-avatar>
-          <v-icon small>mdi-flag</v-icon>
+          <v-icon small>mdi-delete</v-icon>
         </v-list-item-avatar>
         <v-list-item-title>신고</v-list-item-title>
-      </v-list-item>
+      </v-list-item> -->
 
       <v-divider></v-divider>
       <v-list-item @click="closeBtnClicked">
@@ -64,11 +57,17 @@
 
 <script>
 export default {
-  props: ["store", "review"],
+  props: ["store", "selectedReview", "reviewMoreSheet"],
   data() {
     return {
-      reviewMoreSheet: false,
-      dialog: false,
+      review: {},
+      confirmDialog: false,
+      ref: this.$firebase
+        .firestore()
+        .collection("store")
+        .doc("cafes")
+        .collection("cafe")
+        .doc(this.store.storeId),
     }
   },
   computed: {
@@ -83,36 +82,42 @@ export default {
     },
   },
   mounted() {
-    //To Do
-    console.log("mounted reveiw", this.review)
+    this.fetch()
   },
-  destroyed() {
-    console.log("detailReviewMore Destroyed")
-  },
+  destroyed() {},
   methods: {
-    reviewMoreBtnClicked() {
-      if (this.fireUser) {
-        this.reviewMoreSheet = true
-      } else {
-        this.$toast.error("로그인이 필요해요")
-      }
-    },
-    updateReviewBtnClicked() {
-      if (this.fireUser.uid == this.review.uid) {
-        this.$emit("updateReviewBtnClicked", this.review)
-        this.closeBtnClicked()
-      }
+    fetch() {
+      this.review = this.selectedReview
     },
     closeBtnClicked() {
-      this.reviewMoreSheet = false
+      this.$emit("closeBtnClicked")
+    },
+    updateReviewBtnClicked() {
+      this.$emit("closeBtnClicked")
+      this.$emit("updateReviewBtnClicked")
     },
     deleteReviewBtnClicked() {
-      this.dialog = true
-      console.log("delete!!")
+      this.confirmDialog = true
     },
-    reportReviewBtnClicked() {
-      console.log("report!!")
+    async deleteReview() {
+      try {
+        const batch = await this.$firebase.firestore().batch()
+
+        batch.update(this.ref, {
+          reviewCount: this.$firebase.firestore.FieldValue.increment(-1),
+        })
+        batch.delete(this.ref.collection("review").doc(this.selectedReview.id))
+        await batch.commit()
+      } finally {
+        this.confirmDialog = false
+        this.$emit("reviewDeleteComplete", this.selectedReview.id)
+        this.$emit("closeBtnClicked")
+      }
     },
+    // To Do : 리뷰 신고 기능
+    // reportReviewBtnClicked() {
+    //   console.log("report!!")
+    // },
   },
 }
 </script>
