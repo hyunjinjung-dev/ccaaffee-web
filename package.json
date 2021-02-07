@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "firebase": "^8.2.3",
+    "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-daum-postcode": "^0.9.0",
     "vue-naver-maps": "^0.14.1",
