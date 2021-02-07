@@ -101,13 +101,16 @@ export default {
     },
     async deleteReview() {
       try {
-        const batch = await this.$firebase.firestore().batch()
-
-        batch.update(this.ref, {
-          reviewCount: this.$firebase.firestore.FieldValue.increment(-1),
-        })
-        batch.delete(this.ref.collection("review").doc(this.selectedReview.id))
-        await batch.commit()
+        //   const batch = await this.$firebase.firestore().batch()
+        //   batch.update(this.ref, {
+        //     reviewCount: this.$firebase.firestore.FieldValue.increment(-1),
+        //   })
+        //   batch.delete(this.ref.collection("review").doc(this.selectedReview.id))
+        //   await batch.commit()
+        this.ref
+          .collection("review")
+          .doc(this.selectedReview.id)
+          .delete()
       } finally {
         this.confirmDialog = false
         this.$emit("reviewDeleteComplete", this.selectedReview.id)
