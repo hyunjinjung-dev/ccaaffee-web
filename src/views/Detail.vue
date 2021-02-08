@@ -64,29 +64,11 @@
               </v-flex> -->
 
               <v-flex xs3 style="text-align: center;">
-                <v-btn height="56" fab>
-                  <div class="pa-1">
-                    <div class="pb-1">
-                      <v-icon>mdi-heart-outline</v-icon>
-                    </div>
-                    <small style="display: block;">
-                      1200
-                    </small>
-                  </div>
-                </v-btn>
+                <detail-like :store="store"></detail-like>
               </v-flex>
 
               <v-flex xs3 style="text-align: center;">
-                <v-btn height="56" fab>
-                  <div class="pa-1">
-                    <div class="pb-1">
-                      <v-icon>mdi-bookmark-outline</v-icon>
-                    </div>
-                    <small style="display: block;">
-                      1200
-                    </small>
-                  </div>
-                </v-btn>
+                <detail-bookmark :store="store"></detail-bookmark>
               </v-flex>
 
               <v-flex xs3 style="text-align: center;">
@@ -96,22 +78,17 @@
                       class="included"
                       v-bind="attrs"
                       v-on="on"
-                      :color="sentimentColor"
                       height="56"
                       fab
-                      @click="selectSentimentClicked"
+                      :color="userSentiments[userSentiment].color"
+                      :dark="!pinLoading"
                       :loading="pinLoading"
                       :disabled="pinLoading"
+                      @click="sentimentBtnClicked"
                     >
                       <div class="pa-1">
                         <div class="pb-1">
-                          <v-icon v-if="userSentiment == 1">mdi-emoticon-sad-outline</v-icon>
-                          <v-icon v-else-if="userSentiment == 2"
-                            >mdi-emoticon-neutral-outline</v-icon
-                          >
-                          <v-icon v-else-if="userSentiment == 3">mdi-emoticon-happy-outline</v-icon>
-                          <v-icon v-else-if="userSentiment == 4">mdi-emoticon-kiss-outline</v-icon>
-                          <v-icon v-else>mdi-pin-outline</v-icon>
+                          <v-icon>{{ userSentiments[userSentiment].icon }}</v-icon>
                         </div>
                         <small style="display: block;">
                           {{ store.sentimentUserCount }}
@@ -126,14 +103,14 @@
           </v-flex>
         </v-layout>
 
-        <v-expand-transition>
+        <!-- <v-expand-transition>
           <v-layout v-show="showQuickActions" style="border: 2px solid blue">
             <quick-actions></quick-actions>
           </v-layout>
-        </v-expand-transition>
+        </v-expand-transition> -->
 
         <v-expand-transition>
-          <v-layout v-if="showMobileSentiment">
+          <v-layout v-if="showSelectSentiment">
             <detail-select-sentiment
               v-click-outside="{
                 handler: onClickOutside,
@@ -169,7 +146,9 @@
 
 <script>
 import { mapState } from "vuex"
-import QuickActions from "../components/modules/Dashboard/QuickActions.vue"
+// import QuickActions from "../components/modules/Dashboard/QuickActions.vue"
+import DetailLike from "@/components/Detail/DetailLike.vue"
+import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
 import DetailSelectSentiment from "@/components/Detail/DetailSelectSentiment.vue"
 
 import DetailImage from "@/components/Detail/DetailImage.vue"
@@ -185,7 +164,9 @@ import DetailReview from "@/components/Detail/DetailReview.vue"
 export default {
   props: {},
   components: {
-    QuickActions,
+    // QuickActions,
+    DetailLike,
+    DetailBookmark,
     DetailSelectSentiment,
 
     DetailImage,
@@ -202,10 +183,17 @@ export default {
     return {
       pageTitle: "Today",
       showQuickActions: false,
-      showMobileSentiment: false,
+      showSelectSentiment: false,
       visitTooltip: false,
       pinLoading: true,
       userSentiment: 0,
+      userSentiments: [
+        { color: "black", icon: "mdi-pin-outline" },
+        { color: "error", icon: "mdi-emoticon-sad-outline" },
+        { color: "warning", icon: "mdi-emoticon-neutral-outline" },
+        { color: "info", icon: "mdi-emoticon-happy-outline" },
+        { color: "success", icon: "mdi-emoticon-kiss-outline" },
+      ],
 
       storeId: this.$route.params.storeId,
       store: {},
@@ -308,29 +296,23 @@ export default {
   },
   computed: {
     ...mapState(["fireUser", "parkingTags", "offerTags", "policyTags", "amenityTags", "themeTags"]),
-    sentimentColor() {
-      if (this.userSentiment == 0) {
-        return "white"
-      } else {
-        return "error"
-      }
-    },
   },
   methods: {
-    selectSentimentClicked() {
+    bookmarkBtnClicked() {},
+    sentimentBtnClicked() {
       if (this.fireUser) {
-        this.showMobileSentiment = !this.showMobileSentiment
+        this.showSelectSentiment = !this.showSelectSentiment
         this.pinLoading = true
       } else {
         this.$toast.error("로그인이 필요해요")
       }
     },
     sentimentSelected() {
-      this.showMobileSentiment = false
+      this.showSelectSentiment = false
       this.pinLoading = false
     },
     onClickOutside() {
-      this.showMobileSentiment = false
+      this.showSelectSentiment = false
       this.pinLoading = false
     },
     include() {
