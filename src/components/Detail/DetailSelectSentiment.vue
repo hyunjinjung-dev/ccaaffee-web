@@ -5,7 +5,6 @@
         <v-layout align-center justify-space-between wrap>
           <v-flex sm6 xs12 class="font-weight-medium subheading" style="text-align:center;">
             <small v-if="store.storeNameKor"> {{ store.storeNameKor }}에 </small>
-
             <small>방문하신 적이 있나요?</small>
           </v-flex>
           <v-flex sm6 xs12 shrink style="text-align:center;">
