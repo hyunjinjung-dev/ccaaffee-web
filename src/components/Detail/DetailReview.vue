@@ -10,6 +10,7 @@
           <v-textarea
             v-model="newReviewContent"
             placeholder="카페가 마음에 드셨나요?"
+            hint="맛 · 분위기 · 재방문 의사 등을 평가해주세요"
             @click="reviewFieldClicked"
             rows="1"
             auto-grow

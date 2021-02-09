@@ -1,22 +1,24 @@
 <template>
-  <v-btn
-    v-if="store.likeUserList"
-    height="56"
-    fab
-    @click="like"
-    :color="liked() ? 'error' : 'white'"
-  >
-    <div class="pa-1">
-      <div class="pb-1">
-        <v-icon>
-          mdi-heart-outline
-        </v-icon>
+  <v-sheet class="pa-1">
+    <v-btn
+      v-if="store.likeUserList"
+      block
+      height="56"
+      @click="like"
+      :color="liked() ? 'error' : 'white'"
+    >
+      <div class="pa-1">
+        <div class="pb-1">
+          <v-icon>
+            mdi-heart-outline
+          </v-icon>
+        </div>
+        <small style="display: block;">
+          {{ this.store.likeUserCount }}
+        </small>
       </div>
-      <small style="display: block;">
-        {{ this.store.likeUserCount }}
-      </small>
-    </div>
-  </v-btn>
+    </v-btn>
+  </v-sheet>
 </template>
 
 <script>

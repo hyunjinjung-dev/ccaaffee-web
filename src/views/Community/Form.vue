@@ -48,7 +48,9 @@ export default {
     this.subscribe()
   },
   destroyed() {
-    if (this.unsubscribe) this.unsubscribe()
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
   },
   methods: {
     subscribe() {

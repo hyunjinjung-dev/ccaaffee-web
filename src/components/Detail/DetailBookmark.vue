@@ -1,22 +1,24 @@
 <template>
-  <v-btn
-    v-if="store.bookmarkUserList"
-    height="56"
-    fab
-    @click="bookmark"
-    :color="bookmarked() ? 'error' : 'white'"
-  >
-    <div class="pa-1">
-      <div class="pb-1">
-        <v-icon>
-          mdi-bookmark-outline
-        </v-icon>
+  <v-sheet class="pa-1">
+    <v-btn
+      v-if="store.bookmarkUserList"
+      block
+      height="56"
+      @click="bookmark"
+      :color="bookmarked() ? 'error' : 'white'"
+    >
+      <div class="pa-1">
+        <div class="pb-1">
+          <v-icon>
+            mdi-bookmark-outline
+          </v-icon>
+        </div>
+        <small style="display: block;">
+          {{ this.store.bookmarkUserCount }}
+        </small>
       </div>
-      <small style="display: block;">
-        {{ this.store.bookmarkUserCount }}
-      </small>
-    </div>
-  </v-btn>
+    </v-btn>
+  </v-sheet>
 </template>
 
 <script>

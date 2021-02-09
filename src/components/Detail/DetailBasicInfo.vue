@@ -22,7 +22,6 @@
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <!-- To Do 전화 번호 복사 기능 만들기-->
                   <v-list-item-title>
                     오픈 일자
                   </v-list-item-title>
@@ -69,11 +68,15 @@
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <!-- To Do 전화 번호 복사 기능 만들기-->
                   <v-list-item-title>
                     전화 번호
                   </v-list-item-title>
-                  <v-list-item-subtitle class="info--text" v-if="store.phoneNumber">
+                  <v-list-item-subtitle
+                    class="info--text"
+                    v-if="store.phoneNumber"
+                    @click="copyText(store.phoneNumber)"
+                    style="cursor:pointer"
+                  >
                     {{ store.phoneNumber }}
                   </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
@@ -93,11 +96,15 @@
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <!-- To Do 인스타그램 연결 링크 만들기 -->
                   <v-list-item-title>
                     인스타그램
                   </v-list-item-title>
-                  <v-list-item-subtitle class="info--text" v-if="store.instagram">
+                  <v-list-item-subtitle
+                    class="info--text"
+                    v-if="store.instagram"
+                    @click="copyText(store.instagram)"
+                    style="cursor:pointer"
+                  >
                     @{{ store.instagram }}
                   </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
@@ -125,7 +132,6 @@
                   </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
                     정보를 입력해주세요
-                    <!-- 곰팡이마트에서 구매하신 음식은 공그로트에서 이용하실 수 있습니다. -->
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -169,6 +175,17 @@ export default {
     },
   },
   methods: {
+    copyText(val) {
+      console.log("hell")
+      const tempElem = document.createElement("textarea")
+      tempElem.value = val
+      document.body.appendChild(tempElem)
+
+      tempElem.select()
+      document.execCommand("copy")
+      document.body.removeChild(tempElem)
+      this.$toast("클립보드로 복사되었어요 🤓")
+    },
     expandToggle() {
       this.expand = !this.expand
     },

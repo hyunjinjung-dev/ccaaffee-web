@@ -10,7 +10,7 @@
 
     <v-expand-transition>
       <v-card-text class="pa-0" v-show="expand">
-        <v-layout wrap class="py-2 px-4">
+        <v-layout wrap class="py-2">
           <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
             <v-flex xs12>
               <v-list dense>
@@ -95,7 +95,7 @@
                         :class="{ 'font-weight-black': boldToday(index) }"
                       >
                         <template v-if="item.open">
-                          <v-col class="mb-1">
+                          <v-col>
                             <span class="mr-2">{{ dayLabels[index] }}</span>
                             <span>{{ stringfyTime(item.openTime) }}</span>
                             <span class="mx-1">-</span>
@@ -103,7 +103,7 @@
                           </v-col>
                         </template>
                         <template v-else>
-                          <v-col class="mb-1">
+                          <v-col>
                             <span class="mr-2">{{ dayLabels[index] }}</span>
                             <span class="error--text">휴무</span>
                           </v-col>

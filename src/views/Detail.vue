@@ -16,7 +16,7 @@
               {{ store.storeNameKor }}
             </span>
             <span style="font-size: 1.5rem">{{ store.branchName }}</span>
-            <span style="font-size: 1rem"> {{ $moment().format("YYYY-MM-DD HH:mm") }} 기준 </span>
+            <span style="font-size: 1rem"> {{ baseTime }} 기준 </span>
             <!-- <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span> -->
             <!-- <v-btn color="info" fab dark x-small class="mx-3" depressed>
               <v-icon dark>mdi-clock-fast</v-icon>
@@ -63,38 +63,40 @@
                 </v-btn>
               </v-flex> -->
 
-              <v-flex xs3 style="text-align: center;">
-                <detail-like :store="store"></detail-like>
+              <v-flex xs4 style="text-align: center;">
+                <detail-like :store="store" class="pa-1"></detail-like>
               </v-flex>
 
-              <v-flex xs3 style="text-align: center;">
+              <v-flex xs4 style="text-align: center;">
                 <detail-bookmark :store="store"></detail-bookmark>
               </v-flex>
 
-              <v-flex xs3 style="text-align: center;">
+              <v-flex xs4 style="text-align: center;">
                 <v-tooltip v-model="visitTooltip" bottom>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="included"
-                      v-bind="attrs"
-                      v-on="on"
-                      height="56"
-                      fab
-                      :color="userSentiments[userSentiment].color"
-                      :dark="!pinLoading"
-                      :loading="pinLoading"
-                      :disabled="pinLoading"
-                      @click="sentimentBtnClicked"
-                    >
-                      <div class="pa-1">
-                        <div class="pb-1">
-                          <v-icon>{{ userSentiments[userSentiment].icon }}</v-icon>
+                    <v-sheet class="pa-1">
+                      <v-btn
+                        class="included"
+                        block
+                        v-bind="attrs"
+                        v-on="on"
+                        height="56"
+                        :color="userSentiments[userSentiment].color"
+                        :dark="!pinLoading"
+                        :loading="pinLoading"
+                        :disabled="pinLoading"
+                        @click="sentimentBtnClicked"
+                      >
+                        <div class="pa-1">
+                          <div class="pb-1">
+                            <v-icon>{{ userSentiments[userSentiment].icon }}</v-icon>
+                          </div>
+                          <small style="display: block;">
+                            {{ store.sentimentUserCount }}
+                          </small>
                         </div>
-                        <small style="display: block;">
-                          {{ store.sentimentUserCount }}
-                        </small>
-                      </div>
-                    </v-btn>
+                      </v-btn>
+                    </v-sheet>
                   </template>
                   <span>방문하신 적이 있나요?</span>
                 </v-tooltip>
@@ -125,7 +127,7 @@
 
         <v-layout wrap style="border: 2px solid blue">
           <v-flex md8 sm12 xs12 style="border: 2px solid red" class="pa-1">
-            <detail-image></detail-image>
+            <!-- <detail-image></detail-image> -->
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
             <detail-options :store="store"></detail-options>
@@ -151,7 +153,7 @@ import DetailLike from "@/components/Detail/DetailLike.vue"
 import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
 import DetailSelectSentiment from "@/components/Detail/DetailSelectSentiment.vue"
 
-import DetailImage from "@/components/Detail/DetailImage.vue"
+// import DetailImage from "@/components/Detail/DetailImage.vue"
 import DetailBasicInfo from "@/components/Detail/DetailBasicInfo.vue"
 import DetailOperatingTime from "@/components/Detail/DetailOperatingTime.vue"
 import DetailOptions from "@/components/Detail/DetailOptions.vue"
@@ -169,7 +171,7 @@ export default {
     DetailBookmark,
     DetailSelectSentiment,
 
-    DetailImage,
+    // DetailImage,
     DetailBasicInfo,
     DetailOperatingTime,
     DetailOptions,
@@ -181,7 +183,8 @@ export default {
   },
   data() {
     return {
-      pageTitle: "Today",
+      pageTitle: "Detail",
+      baseTime: "",
       showQuickActions: false,
       showSelectSentiment: false,
       visitTooltip: false,
@@ -273,11 +276,20 @@ export default {
       ],
     }
   },
+  watch: {
+    store: {
+      deep: true,
+      handler() {
+        this.fetchBaseTime()
+      },
+    },
+  },
   async created() {
     await this.readCountUpdate()
     await this.subscribe()
   },
   mounted() {
+    this.fetchBaseTime()
     setTimeout(() => {
       if (this.userSentiment === null) {
         this.visitTooltip = true
@@ -298,7 +310,9 @@ export default {
     ...mapState(["fireUser", "parkingTags", "offerTags", "policyTags", "amenityTags", "themeTags"]),
   },
   methods: {
-    bookmarkBtnClicked() {},
+    fetchBaseTime() {
+      this.baseTime = String(this.$moment().format("YYYY-MM-DD HH:mm:ss"))
+    },
     sentimentBtnClicked() {
       if (this.fireUser) {
         this.showSelectSentiment = !this.showSelectSentiment

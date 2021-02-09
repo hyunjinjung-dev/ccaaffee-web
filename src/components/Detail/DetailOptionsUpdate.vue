@@ -208,7 +208,6 @@ export default {
         .collection("store")
         .doc("cafes")
       try {
-        console.log(this.parkingTip)
         await ref
           .collection("cafe")
           .doc(this.store.storeId)
