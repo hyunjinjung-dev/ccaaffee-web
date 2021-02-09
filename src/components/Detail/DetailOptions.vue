@@ -103,7 +103,7 @@ export default {
         // { icon: "mdi-camera-iris", title: "테마", type: "selectedThemeTags" },
         { icon: "🚘", title: "주차", type: "selectedParkingTags" },
         { icon: "🤲🏼", title: "제공", type: "selectedOfferTags" },
-        { icon: "🔖", title: "정책", type: "selectedPolicyTags" },
+        { icon: "📚", title: "정책", type: "selectedPolicyTags" },
         { icon: "🎛", title: "편의", type: "selectedAmenityTags" },
         { icon: "🎞", title: "테마", type: "selectedThemeTags" },
       ],
