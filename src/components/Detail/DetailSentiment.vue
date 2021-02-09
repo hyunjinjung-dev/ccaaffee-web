@@ -1,13 +1,10 @@
 <template>
-  <v-card color="primary" dark>
+  <!-- <v-card color="accent" dark> -->
+  <v-card>
     <v-card-title>
       <v-layout wrap align-center justify-space-between>
-        <v-tooltip
-          v-for="sentiment in sentiments"
-          :key="`sentiment-key-${sentiment.id}`"
-          :color="sentiment.color"
-          top
-        >
+        <v-tooltip v-for="sentiment in sentiments" :key="`sentiment-key-${sentiment.id}`" top>
+          <!-- :color="sentiment.color" -->
           <template v-slot:activator="{ on }">
             <v-flex xs3 style="text-align:center;">
               <v-btn class="pa-0" height="56" plain :ripple="false" v-on="on" text>
@@ -40,13 +37,13 @@ export default {
         id: "first",
         icon: "mdi-emoticon-sad-outline",
         title: "별로",
-        color: "error",
+        color: "info",
       },
       {
         id: "second",
         icon: "mdi-emoticon-neutral-outline",
         title: "쏘쏘",
-        color: "warning",
+        color: "info",
       },
       {
         id: "third",
@@ -58,7 +55,7 @@ export default {
         id: "fourth",
         icon: "mdi-emoticon-kiss-outline",
         title: "추천",
-        color: "success",
+        color: "info",
       },
     ],
   }),

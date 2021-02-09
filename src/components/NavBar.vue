@@ -1,12 +1,21 @@
 <template>
   <nav id="navbar">
-    <v-app-bar class="white" flat app clipped-left>
+    <!-- <v-app-bar class="white" flat app clipped-left> -->
+    <v-app-bar flat app clipped-left color="background">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title class="font-weight-bold">
+
+      <!-- <v-toolbar-title class="font-weight-bold">
         <router-link to="/" class="black--text" style="text-decoration: none">
           ccaaffee ☕️
         </router-link>
+      </v-toolbar-title> -->
+      <!-- Dark Mode 적용을 위한 조치 -->
+      <v-toolbar-title class="font-weight-bold" style="cursor:pointer">
+        <span @click="goToHome()">
+          ccaaffee ☕️
+        </span>
       </v-toolbar-title>
+
       <v-spacer></v-spacer>
       <v-text-field
         flat
@@ -38,10 +47,11 @@
           <v-list-item
             :class="{
               'hidden-lg-and-up': $route.name === 'Watch' ? false : true,
+              'my-2': true,
             }"
           >
             <v-app-bar-nav-icon @click="drawer = !drawer" class="mr-5"></v-app-bar-nav-icon>
-            <v-toolbar-title class="font-weight-bold">ccaaffee</v-toolbar-title>
+            <v-toolbar-title class="font-weight-bold">ccaaffee ☕️</v-toolbar-title>
           </v-list-item>
           <v-divider class="hidden-lg-and-up"></v-divider>
 
@@ -49,8 +59,9 @@
             <v-subheader
               v-if="parentItem.header"
               class="pl-3 py-4 subtitle-1 font-weight-bold text-uppercase"
-              >{{ parentItem.header }}</v-subheader
             >
+              {{ parentItem.header }}
+            </v-subheader>
             <v-list-item
               v-for="(item, i) in parentItem.pages"
               :key="item.title"
@@ -68,9 +79,9 @@
                 <img :src="`https://randomuser.me/api/portraits/men/${i}.jpg`" />
               </v-list-item-avatar>
               <v-list-item-content>
-                <v-list-item-title class=" font-weight-medium subtitle-2">{{
-                  item.title
-                }}</v-list-item-title>
+                <v-list-item-title class=" font-weight-medium subtitle-2">
+                  {{ item.title }}
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-divider class="mt-2 mb-2"></v-divider>
@@ -85,11 +96,26 @@
         </v-list>
       </div>
       <template v-slot:append>
-        <div class="pa-2">
-          <v-btn block>
-            Setting
-          </v-btn>
+        <v-list class="mb-5">
+          <v-list-item>
+            <v-list-item-content class="px-5">
+              <v-switch
+                v-model="$vuetify.theme.dark"
+                hide-details
+                :label="`${$vuetify.theme.dark ? 'Dark' : 'Light'} Mode`"
+              ></v-switch>
+            </v-list-item-content>
+          </v-list-item>
+          <!-- <v-list-item>
+            <v-btn block>
+              Setting
+            </v-btn>
+          </v-list-item> -->
+        </v-list>
+        <!-- <div>
         </div>
+        <div class="pa-2">
+        </div> -->
       </template>
     </v-navigation-drawer>
   </nav>
@@ -105,6 +131,7 @@ export default {
     SignInDialog,
   },
   data: () => ({
+    mode: false,
     drawer: false,
     isLogin: false,
     items: [
@@ -193,7 +220,17 @@ export default {
     // ],
     searchText: "",
   }),
+  mounted() {
+    this.drawer = this.$vuetify.breakpoint.mdAndDown ? false : true
+    this.drawer = this.$route.name === "Watch" ? false : this.drawer
+  },
   methods: {
+    goToHome() {
+      const currentPage = this.$router.history.current.name
+      if (currentPage != "Home") {
+        this.$router.push({ name: "Home" })
+      }
+    },
     search() {
       if (!this.searchText) return
       this.$router.push({
@@ -202,15 +239,13 @@ export default {
       })
     },
   },
-  mounted() {
-    this.drawer = this.$vuetify.breakpoint.mdAndDown ? false : true
-    this.drawer = this.$route.name === "Watch" ? false : this.drawer
-  },
 }
 </script>
 
 <style lang="scss">
 #navbar {
+  z-index: 999999 !important;
+
   .active-item {
     .v-list-item__icon {
       color: red !important;

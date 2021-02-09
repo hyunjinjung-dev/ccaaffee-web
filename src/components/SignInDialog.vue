@@ -20,7 +20,7 @@
         </v-card-title>
 
         <v-card-text>
-          <v-btn color="error" block @click="signInWithGoogle">
+          <v-btn color="primary" block @click="signInWithGoogle">
             <v-icon left>mdi-google</v-icon>
             <span>구글로 시작하기</span>
           </v-btn>

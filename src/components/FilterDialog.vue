@@ -13,8 +13,8 @@
       </v-btn>
     </template>
 
-    <v-card>
-      <v-toolbar dark color="primary">
+    <v-card flat>
+      <v-toolbar flat>
         <v-toolbar-title>필터</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon dark @click="closeBtnClicked">
@@ -288,7 +288,7 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn block large color="secondary" @click="applyBtnClicked">
+        <v-btn block large color="primary" @click="applyBtnClicked">
           필터 적용
         </v-btn>
       </v-card-actions>

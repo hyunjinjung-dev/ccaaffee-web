@@ -12,12 +12,12 @@
       <v-card-text class="pa-0" v-show="expand">
         <v-list dense>
           <v-layout wrap>
-            <v-flex sm6 xs12 v-if="store.menusLeft">
+            <v-flex sm6 xs12 v-if="store.menusLeft" class="my-3">
               <v-list-item v-for="(menu, index) in store.menusLeft" :key="index">
                 <v-list-item-content class="py-1" v-if="menu.name == '구분선'">
-                  <v-listitem-title>
+                  <v-list-item-title>
                     <v-divider></v-divider>
-                  </v-listitem-title>
+                  </v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-content class="py-1" v-else>
@@ -33,12 +33,22 @@
               </v-list-item>
             </v-flex>
 
-            <v-flex sm6 xs12 v-if="store.menusRight">
+            <v-flex xs12 v-if="breakPointXs">
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <v-divider></v-divider>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-flex>
+
+            <v-flex sm6 xs12 v-if="store.menusRight" class="my-3">
               <v-list-item v-for="(menu, index) in store.menusRight" :key="index">
                 <v-list-item-content class="py-1" v-if="menu.name == '구분선'">
-                  <v-listitem-title>
+                  <v-list-item-title>
                     <v-divider></v-divider>
-                  </v-listitem-title>
+                  </v-list-item-title>
                 </v-list-item-content>
 
                 <v-list-item-content class="py-1" v-else>
@@ -63,10 +73,14 @@
                 </v-list-item-content>
               </v-list-item>
             </v-flex>
-            <v-flex>
+            <!-- <v-flex style="border-top: 1px solid  #eeee;"> -->
+            <v-flex xs12>
+              <v-list-item>
+                <v-divider></v-divider>
+              </v-list-item>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>
+                  <v-list-item-title class="text-wrap">
                     📌 메뉴 및 가격은 매장의 사정에 따라 기재된 내용과 달라질 수 있어요
                   </v-list-item-title>
                 </v-list-item-content>
@@ -167,8 +181,4 @@ export default {
 }
 </script>
 
-<style>
-.borderRight {
-  border-right: 1px solid #eeee;
-}
-</style>
+<style></style>

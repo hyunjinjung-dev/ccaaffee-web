@@ -92,7 +92,6 @@ export default {
     //   }
     // },
     // onSuccessGeolocation(position) {
-    //   console.log("here11")
     //   this.currentLat = position.coords.latitude
     //   this.currentLng = position.coords.longitude
     //   this.subscribe()

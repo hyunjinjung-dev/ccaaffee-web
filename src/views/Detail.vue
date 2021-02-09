@@ -1,21 +1,17 @@
 <template>
   <div>
-    <v-layout
-      :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'"
-      style="border: 2px solid red;"
-      fill-height
-    >
-      <v-flex xs12 style="border: 2px solid green">
-        <v-layout wrap align-center style="border: 2px solid blue">
+    <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" fill-height>
+      <v-flex xs12>
+        <v-layout wrap align-center>
           <!-- v-layout align-end -->
-          <v-flex md8 sm12 xs12 shrink style="border: 2px solid red">
+          <v-flex md8 sm12 xs12 shrink>
             <v-btn icon color="info" class="mb-3" @click="$router.go(-1)">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <span class="mx-2 font-weight-bold" style="font-size: 2.0rem">
+            <span class="mx-2 font-weight-bold" style="font-size: 1.5rem">
               {{ store.storeNameKor }}
             </span>
-            <span style="font-size: 1.5rem">{{ store.branchName }}</span>
+            <span style="font-size: 1.25rem">{{ store.branchName }}</span>
             <span style="font-size: 1rem"> {{ baseTime }} 기준 </span>
             <!-- <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span> -->
             <!-- <v-btn color="info" fab dark x-small class="mx-3" depressed>
@@ -23,7 +19,7 @@
             </v-btn> -->
           </v-flex>
 
-          <v-flex md4 sm12 xs12 shrink style="border: 2px solid red" class="py-1">
+          <v-flex md4 sm12 xs12 shrink class="py-1">
             <!-- <v-menu offset-y left>
               <template #activator="{ on }">
                 <v-btn color="info" v-on="on" class="mx-2">
@@ -82,11 +78,11 @@
                         v-on="on"
                         height="56"
                         :color="userSentiments[userSentiment].color"
-                        :dark="!pinLoading"
                         :loading="pinLoading"
                         :disabled="pinLoading"
                         @click="sentimentBtnClicked"
                       >
+                        <!-- :dark="!pinLoading" -->
                         <div class="pa-1">
                           <div class="pb-1">
                             <v-icon>{{ userSentiments[userSentiment].icon }}</v-icon>
@@ -125,8 +121,8 @@
           </v-layout>
         </v-expand-transition>
 
-        <v-layout wrap style="border: 2px solid blue">
-          <v-flex md8 sm12 xs12 style="border: 2px solid red" class="pa-1">
+        <v-layout wrap>
+          <v-flex md8 sm12 xs12 class="pa-1">
             <!-- <detail-image></detail-image> -->
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
@@ -134,7 +130,7 @@
             <detail-location :store="store"></detail-location>
             <detail-menu :store="store"></detail-menu>
           </v-flex>
-          <v-flex md4 sm12 xs12 style="border: 2px solid red" class="pa-1">
+          <v-flex md4 sm12 xs12 class="pa-1">
             <detail-sentiment :store="store"></detail-sentiment>
             <detail-review v-if="store && store.storeId" :store="store"></detail-review>
             <!-- <dashboard-whos-got-time-off></dashboard-whos-got-time-off> -->
@@ -191,11 +187,11 @@ export default {
       pinLoading: true,
       userSentiment: 0,
       userSentiments: [
-        { color: "black", icon: "mdi-pin-outline" },
-        { color: "error", icon: "mdi-emoticon-sad-outline" },
-        { color: "warning", icon: "mdi-emoticon-neutral-outline" },
-        { color: "info", icon: "mdi-emoticon-happy-outline" },
-        { color: "success", icon: "mdi-emoticon-kiss-outline" },
+        { color: "", icon: "mdi-pin-outline" },
+        { color: "accent", icon: "mdi-emoticon-sad-outline" },
+        { color: "accent", icon: "mdi-emoticon-neutral-outline" },
+        { color: "accent", icon: "mdi-emoticon-happy-outline" },
+        { color: "accent", icon: "mdi-emoticon-kiss-outline" },
       ],
 
       storeId: this.$route.params.storeId,
@@ -445,7 +441,7 @@ export default {
 
 <style scoped>
 .v-card {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .v-list-item {
   height: 22px !important;

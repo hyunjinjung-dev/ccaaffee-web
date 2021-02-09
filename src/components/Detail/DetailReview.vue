@@ -1,5 +1,5 @@
 <template>
-  <v-sheet>
+  <v-sheet class="mt-2">
     <v-card class="transparent">
       <v-list-item three-line>
         <v-list-item-avatar class="mt-7" size="36" v-if="fireUser">
@@ -24,7 +24,6 @@
               <v-btn
                 class="primary white--text"
                 depressed
-                tile
                 :disabled="newReviewContent === ''"
                 @click="save"
               >
@@ -73,8 +72,8 @@
 
               <v-row align="center" no-gutters>
                 <v-col align="center">
-                  <v-btn icon dark @click="reviewMoreBtnClicked(review)">
-                    <v-icon color="grey">
+                  <v-btn icon @click="reviewMoreBtnClicked(review)">
+                    <v-icon>
                       mdi-dots-vertical
                     </v-icon>
                   </v-btn>
@@ -115,7 +114,7 @@
     <v-snackbar v-model="snackbar" :timeout="3500">
       로그인이 필요해요 👉🏻
       <template v-slot:action="{ attrs }">
-        <v-btn color="error" text v-bind="attrs" @click="$router.push({ name: 'login' })">
+        <v-btn color="primary" text v-bind="attrs" @click="$router.push({ name: 'login' })">
           로그인하러 가기
         </v-btn>
       </template>

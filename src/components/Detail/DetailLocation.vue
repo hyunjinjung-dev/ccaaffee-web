@@ -21,8 +21,25 @@
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>주소</v-list-item-title>
-              <v-list-item-subtitle class="info--text" v-if="store.address">
-                {{ store.address }}
+              <v-list-item-subtitle
+                class="info--text"
+                v-if="store.address"
+                @click="copyText(store.address, '주소가')"
+                style="cursor:pointer"
+              >
+                <span v-if="store.lowFloor !== store.highFloor">
+                  {{ store.address }}
+                  <span v-if="store.lowFloor > 0"> {{ store.lowFloor }}층 </span>
+                  <span v-else>지하 {{ -store.lowFloor }}층</span>
+                  ~
+                  <span v-if="store.highFloor > 0"> {{ store.highFloor }}층 </span>
+                  <span v-else>지하 {{ -store.highFloor }}층</span>
+                </span>
+                <span v-else>
+                  {{ store.address }}
+                  <span v-if="store.lowFloor > 0"> {{ store.lowFloor }}층 </span>
+                  <span v-else>지하 {{ -store.lowFloor }}층</span>
+                </span>
               </v-list-item-subtitle>
               <v-list-item-subtitle class="info--text" v-else>
                 정보를 입력해주세요
@@ -127,10 +144,15 @@ export default {
     },
   },
   methods: {
-    setCenterMap(lat, lng) {
-      if (this.map) {
-        this.map.setCenter(lat, lng)
-      }
+    copyText(val, subject) {
+      const tempElem = document.createElement("textarea")
+      tempElem.value = val
+      document.body.appendChild(tempElem)
+
+      tempElem.select()
+      document.execCommand("copy")
+      document.body.removeChild(tempElem)
+      this.$toast(subject + " 클립보드로 복사되었어요 🤓")
     },
     expandToggle() {
       this.expand = !this.expand
@@ -142,6 +164,12 @@ export default {
       this.updateDialog = false
     },
     // 네이버 지도
+    setCenterMap(lat, lng) {
+      if (this.map) {
+        this.map.setCenter(lat, lng)
+      }
+    },
+
     onLoad(vue) {
       this.map = vue
     },

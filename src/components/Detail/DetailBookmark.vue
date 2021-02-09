@@ -5,7 +5,7 @@
       block
       height="56"
       @click="bookmark"
-      :color="bookmarked() ? 'error' : 'white'"
+      :color="bookmarked() ? 'secondary' : ''"
     >
       <div class="pa-1">
         <div class="pb-1">

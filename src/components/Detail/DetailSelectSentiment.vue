@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-card color="primary" dark>
+    <v-card color="accent" dark>
       <v-card-title>
         <v-layout align-center justify-space-between wrap>
           <v-flex sm6 xs12 class="font-weight-medium subheading" style="text-align:center;">
@@ -16,12 +16,8 @@
               tile
               active-class="active-sentiment"
             >
-              <v-tooltip
-                v-for="sentiment in sentiments"
-                :key="`sentiment-key-${sentiment.id}`"
-                :color="sentiment.color"
-                top
-              >
+              <v-tooltip v-for="sentiment in sentiments" :key="`sentiment-key-${sentiment.id}`" top>
+                <!-- :color="sentiment.color" -->
                 <template v-slot:activator="{ on }">
                   <v-btn
                     icon
@@ -55,19 +51,19 @@ export default {
         id: 0,
         icon: "mdi-close-circle-outline",
         title: "미방문",
-        color: "black",
+        color: "info",
       },
       {
         id: 1,
         icon: "mdi-emoticon-sad-outline",
         title: "별로",
-        color: "error",
+        color: "info",
       },
       {
         id: 2,
         icon: "mdi-emoticon-neutral-outline",
         title: "쏘쏘",
-        color: "warning",
+        color: "info",
       },
       {
         id: 3,
@@ -79,7 +75,7 @@ export default {
         id: 4,
         icon: "mdi-emoticon-kiss-outline",
         title: "추천",
-        color: "success",
+        color: "info",
       },
     ],
   }),
@@ -196,7 +192,7 @@ export default {
 .v-btn-toggle--selected {
   box-shadow: none;
 }
-.active-sentiment {
+/* .active-sentiment {
   background-color: #e57373;
-}
+} */
 </style>
