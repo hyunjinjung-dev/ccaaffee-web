@@ -200,6 +200,7 @@ export default {
         reviewCount: 0,
         rating: 0,
         seatCount: 0,
+        noticeTip: "",
         operatingTimeInfo: false,
         operatingTimeTip: "",
         options: [],

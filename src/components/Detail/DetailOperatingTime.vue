@@ -15,35 +15,52 @@
             <v-flex xs12>
               <v-list dense>
                 <v-list-item>
+                  <v-list-item-avatar>
+                    <v-avatar size="40px">
+                      👋🏼
+                    </v-avatar>
+                  </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>
                       이 시각 운영
                     </v-list-item-title>
-                    <v-list-item-subtitle v-if="store.operatingTimeInfo" class="pa-2 text-wrap">
+                    <v-list-item-subtitle
+                      v-if="store.operatingTimeInfo"
+                      class="text-wrap info--text"
+                    >
                       <detail-operating-time-calc
                         :operatingTime="store.operatingTime"
                       ></detail-operating-time-calc>
                       <!-- <span>(상황에 따라 운영 시간이 변경 될 수 있음)</span> -->
                     </v-list-item-subtitle>
-                    <v-list-item-subtitle class="info--text pa-lg-12" v-else>
+                    <v-list-item-subtitle class="info--text" v-else>
                       정보를 입력해주세요
                     </v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-flex>
+
             <v-flex xs12 style="border-bottom:1px solid #EEEE;"></v-flex>
             <v-flex xs12>
               <v-list dense>
                 <v-list-item>
+                  <v-list-item-avatar>
+                    <v-avatar size="40px">
+                      🎙
+                    </v-avatar>
+                  </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title>
                       운영 정보 팁
                     </v-list-item-title>
-                    <v-list-item-subtitle v-if="store.operatingTimeTip" class="pa-2 text-wrap">
+                    <v-list-item-subtitle
+                      v-if="store.operatingTimeTip"
+                      class="text-wrap info--text"
+                    >
                       {{ store.operatingTimeTip }}
                     </v-list-item-subtitle>
-                    <v-list-item-subtitle class="info--text pa-2" v-else>
+                    <v-list-item-subtitle class="info--text" v-else>
                       정보를 입력해주세요
                     </v-list-item-subtitle>
                   </v-list-item-content>
@@ -59,11 +76,17 @@
           <v-flex sm6 xs12>
             <v-list dense>
               <v-list-item>
+                <v-list-item-avatar>
+                  <v-avatar size="40px">
+                    ⏱
+                  </v-avatar>
+                </v-list-item-avatar>
+
                 <v-list-item-content>
                   <v-list-item-title>
                     요일별 운영시간
                   </v-list-item-title>
-                  <v-list-item-subtitle v-if="store.operatingTimeInfo" class="pa-2">
+                  <v-list-item-subtitle v-if="store.operatingTimeInfo" class="info--text">
                     <v-container class="pa-0 ma-0">
                       <v-row
                         v-for="(item, index) in store.operatingTime"

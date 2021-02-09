@@ -13,8 +13,10 @@
         <v-list dense>
           <v-list-item v-for="(item, index) in options" :key="index">
             <v-list-item-avatar>
-              <v-avatar color="secondary" size="40px">
-                <v-icon color="white">{{ item.icon }}</v-icon>
+              <!-- <v-avatar color="secondary" size="40px">
+                <v-icon color="white">{{ item.icon }}</v-icon> -->
+              <v-avatar size="40px">
+                {{ item.icon }}
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content>
@@ -35,7 +37,14 @@
                   >
                     {{ store.parkingTip }}
                   </v-list-item-subtitle> -->
-                  <v-btn
+                  <span
+                    class="mr-1 info-text"
+                    v-for="(tag, index) in store[item.type]"
+                    :key="index"
+                  >
+                    {{ tag }}
+                  </span>
+                  <!-- <v-btn
                     class="mr-1 mb-1"
                     depressed
                     small
@@ -46,7 +55,7 @@
                     :key="index"
                     :value="tag"
                     >{{ tag }}
-                  </v-btn>
+                  </v-btn> -->
                 </v-list-item-subtitle>
               </v-sheet>
               <v-sheet v-else>
@@ -87,11 +96,16 @@ export default {
       expand: true,
       updateDialog: false,
       options: [
-        { icon: "mdi-car-arrow-right", title: "주차", type: "selectedParkingTags" },
-        { icon: "mdi-offer", title: "제공", type: "selectedOfferTags" },
-        { icon: "mdi-bookshelf", title: "정책", type: "selectedPolicyTags" },
-        { icon: "mdi-bulletin-board", title: "편의", type: "selectedAmenityTags" },
-        { icon: "mdi-camera-iris", title: "테마", type: "selectedThemeTags" },
+        // { icon: "mdi-car-arrow-right", title: "주차", type: "selectedParkingTags" },
+        // { icon: "mdi-offer", title: "제공", type: "selectedOfferTags" },
+        // { icon: "mdi-bookshelf", title: "정책", type: "selectedPolicyTags" },
+        // { icon: "mdi-bulletin-board", title: "편의", type: "selectedAmenityTags" },
+        // { icon: "mdi-camera-iris", title: "테마", type: "selectedThemeTags" },
+        { icon: "🚘", title: "주차", type: "selectedParkingTags" },
+        { icon: "🤲🏼", title: "제공", type: "selectedOfferTags" },
+        { icon: "🔖", title: "정책", type: "selectedPolicyTags" },
+        { icon: "🎛", title: "편의", type: "selectedAmenityTags" },
+        { icon: "🎞", title: "테마", type: "selectedThemeTags" },
       ],
     }
   },

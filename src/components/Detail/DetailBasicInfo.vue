@@ -15,8 +15,10 @@
             <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
               <v-list-item>
                 <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-door-open</v-icon>
+                  <!-- <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-door-open</v-icon> -->
+                  <v-avatar size="40px">
+                    🎊
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
@@ -37,8 +39,10 @@
             <v-flex sm6 xs12>
               <v-list-item>
                 <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-seat</v-icon>
+                  <!-- <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-seat</v-icon> -->
+                  <v-avatar size="40px">
+                    🪑
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
@@ -58,8 +62,10 @@
             <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
               <v-list-item>
                 <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-phone</v-icon>
+                  <!-- <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-phone</v-icon> -->
+                  <v-avatar size="40px">
+                    📞
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
@@ -80,8 +86,10 @@
             <v-flex sm6 xs12>
               <v-list-item>
                 <v-list-item-avatar>
-                  <v-avatar color="secondary" size="40px">
-                    <v-icon color="white">mdi-instagram</v-icon>
+                  <!-- <v-avatar color="secondary" size="40px">
+                    <v-icon color="white">mdi-instagram</v-icon> -->
+                  <v-avatar size="40px">
+                    🌏
                   </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
@@ -94,6 +102,30 @@
                   </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
                     정보를 입력해주세요
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-flex>
+
+            <v-flex xs12>
+              <v-list-item>
+                <v-list-item-avatar>
+                  <!-- <v-avatar color="secondary" size="40px"> -->
+                  <!-- <v-icon color="white">mdi-instagram</v-icon> -->
+                  <v-avatar size="40px">
+                    📌
+                  </v-avatar>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    참고 사항
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="info--text text-wrap" v-if="store.noticeTip">
+                    {{ store.noticeTip }}
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle class="info--text" v-else>
+                    정보를 입력해주세요
+                    <!-- 곰팡이마트에서 구매하신 음식은 공그로트에서 이용하실 수 있습니다. -->
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>

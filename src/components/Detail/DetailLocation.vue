@@ -13,8 +13,10 @@
         <v-list dense>
           <v-list-item>
             <v-list-item-avatar>
-              <v-avatar color="secondary" size="40px">
-                <v-icon color="white">mdi-map-marker</v-icon>
+              <!-- <v-avatar color="secondary" size="40px">
+                <v-icon color="white">mdi-map-marker</v-icon> -->
+              <v-avatar size="40px">
+                📍
               </v-avatar>
             </v-list-item-avatar>
             <v-list-item-content>

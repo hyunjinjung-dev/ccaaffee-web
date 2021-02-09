@@ -56,6 +56,14 @@
               label="인스타그램 아이디"
               outlined
             ></v-text-field>
+
+            <v-text-field
+              v-model="form.noticeTip"
+              :rules="noticeTipRules"
+              hint="참고할 내용을 입력해주세요"
+              label="참고 사항"
+              outlined
+            ></v-text-field>
           </v-container>
         </v-form>
       </v-card-text>
@@ -80,11 +88,13 @@ export default {
         seatCount: null,
         phoneNumber: "",
         instagram: "",
+        noticeTip: "",
       },
       valid: false,
       seatCountRules: [(v) => v >= 0 || "좌석 수를 확인해주세요"],
       phoneNumberRules: [(v) => v.length <= 11 || "입력하신 전화번호를 확인해주세요"],
       instagramRules: [(v) => v.length <= 20 || "인스타그램 아이디는 20자 이하로 입력 가능합니다"],
+      noticeTipRules: [(v) => v.length <= 100 || "참고 사항을 100자 이하로 입력해주세요"],
     }
   },
   mounted() {
@@ -107,6 +117,9 @@ export default {
       if (this.store.instagram) {
         this.form.instagram = this.store.instagram
       }
+      if (this.store.noticeTip) {
+        this.form.noticeTip = this.store.noticeTip
+      }
     },
     async updateBtnClicked() {
       await this.removeHyphen()
@@ -116,7 +129,8 @@ export default {
         this.store.since === this.form.since &&
         this.store.seatCount === this.form.seatCount &&
         this.store.phoneNumber === this.form.phoneNumber &&
-        this.store.instagram === this.form.instagram
+        this.store.instagram === this.form.instagram &&
+        this.store.noticeTip === this.form.noticeTip
       ) {
         this.$toast.error("변경된 내용이 없습니다.")
         return
