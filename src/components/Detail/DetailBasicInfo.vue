@@ -12,7 +12,8 @@
       <v-card-text class="pa-0" v-show="expand">
         <v-list dense>
           <v-layout wrap>
-            <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
+            <!-- <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }"> -->
+            <v-flex sm6 xs12>
               <v-list-item>
                 <v-list-item-avatar>
                   <!-- <v-avatar color="secondary" size="40px">
@@ -58,7 +59,8 @@
               </v-list-item>
             </v-flex>
 
-            <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
+            <!-- <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }"> -->
+            <v-flex sm6 xs12>
               <v-list-item>
                 <v-list-item-avatar>
                   <!-- <v-avatar color="secondary" size="40px">
@@ -74,7 +76,7 @@
                   <v-list-item-subtitle
                     class="info--text"
                     v-if="store.phoneNumber"
-                    @click="copyText(store.phoneNumber)"
+                    @click="copyText(store.phoneNumber, '전화번호가')"
                     style="cursor:pointer"
                   >
                     {{ store.phoneNumber }}
@@ -102,9 +104,10 @@
                   <v-list-item-subtitle
                     class="info--text"
                     v-if="store.instagram"
-                    @click="copyText(store.instagram)"
+                    @click="goToInstagram(store.instagram)"
                     style="cursor:pointer"
                   >
+                    <!-- @click="copyText(store.instagram, '인스타그램 아이디가')" -->
                     @{{ store.instagram }}
                   </v-list-item-subtitle>
                   <v-list-item-subtitle class="info--text" v-else>
@@ -175,8 +178,7 @@ export default {
     },
   },
   methods: {
-    copyText(val) {
-      console.log("hell")
+    copyText(val, subject) {
       const tempElem = document.createElement("textarea")
       tempElem.value = val
       document.body.appendChild(tempElem)
@@ -184,7 +186,10 @@ export default {
       tempElem.select()
       document.execCommand("copy")
       document.body.removeChild(tempElem)
-      this.$toast("클립보드로 복사되었어요 🤓")
+      this.$toast(subject + " 클립보드로 복사되었어요 🤓")
+    },
+    goToInstagram(account) {
+      window.open("https://www.instagram.com/" + account)
     },
     expandToggle() {
       this.expand = !this.expand
@@ -201,6 +206,6 @@ export default {
 
 <style>
 .borderRight {
-  border-right: 1px solid #eeee;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 </style>

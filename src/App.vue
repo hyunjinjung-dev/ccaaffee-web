@@ -12,7 +12,7 @@
           : false,
       }"
     > -->
-    <v-main class="content-bg">
+    <v-main color="backgroundDarken">
       <transition name="moveInUp">
         <router-view></router-view>
       </transition>
@@ -27,12 +27,12 @@ export default {
 </script>
 
 <style lang="scss">
-.content-bg {
+/* .content-bg {
   background-color: #f9f9f9;
-}
-.card {
+} */
+/* .card {
   background: #f9f9f9 !important;
-}
+} */
 .moveInUp-enter-active {
   animation: fadeIn 0.9s ease-in;
 }

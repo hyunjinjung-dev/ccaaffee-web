@@ -24,7 +24,7 @@
                 </v-textarea>
                 <div class="d-inline-block text-right">
                   <v-btn text @click="closeBtnClicked">취소</v-btn>
-                  <v-btn class="primary white--text" depressed tile @click="save">
+                  <v-btn class="primary white--text" depressed @click="save">
                     수정
                   </v-btn>
                 </div>

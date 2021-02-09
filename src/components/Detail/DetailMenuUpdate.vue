@@ -105,7 +105,7 @@
                     <v-divider></v-divider>
                   </v-col>
                   <v-col cols="2">
-                    <v-btn icon @click="removeMenuConfirm(index, 'left')">
+                    <v-btn icon @click="removeMenuConfirm(index, 'right')">
                       <v-icon>mdi-minus-circle</v-icon>
                     </v-btn>
                   </v-col>
@@ -270,12 +270,15 @@ export default {
       }
     },
     removeMenuConfirm(index, column) {
+      console.log("index", index)
+      console.log("column", column)
       // index가 0일 경우 v-if에서 false로 받아들임을 주의
       this.removeColumn = column
       this.removeMenuIndex = index
       this.removeConfirmDialog = true
     },
     removeMenu(index, column) {
+      console.log("column", column)
       if (column == "left") {
         this.formLeft.splice(index, 1)
         this.removeMenuIndex = -1 // v-if 오류를 해결하기 위에 -1로 초기화

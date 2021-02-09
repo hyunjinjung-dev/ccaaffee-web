@@ -8,7 +8,8 @@
         <v-tooltip left>
           <template v-slot:activator="{ on }">
             <v-btn class="ml-2 mr-0 my-0" icon v-on="on" @click="editBtnClicked">
-              <v-icon color="primary" dark>mdi-pencil-circle</v-icon>
+              <!-- <v-icon color="info" dark>mdi-pencil-circle</v-icon> -->
+              <v-icon>mdi-pencil-circle</v-icon>
             </v-btn>
           </template>
           <span>{{ title }} 수정</span>

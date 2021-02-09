@@ -5,7 +5,7 @@
       block
       height="56"
       @click="like"
-      :color="liked() ? 'error' : 'white'"
+      :color="liked() ? 'primary' : ''"
     >
       <div class="pa-1">
         <div class="pb-1">

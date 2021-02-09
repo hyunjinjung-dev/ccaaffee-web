@@ -11,7 +11,8 @@
     <v-expand-transition>
       <v-card-text class="pa-0" v-show="expand">
         <v-layout wrap class="py-2">
-          <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }">
+          <!-- <v-flex sm6 xs12 :class="{ borderRight: !breakPointXs }"> -->
+          <v-flex sm6 xs12>
             <v-flex xs12>
               <v-list dense>
                 <v-list-item>
@@ -41,7 +42,7 @@
               </v-list>
             </v-flex>
 
-            <v-flex xs12 style="border-bottom:1px solid #EEEE;"></v-flex>
+            <!-- <v-flex xs12 style="border-bottom:1px solid #EEEE;"></v-flex> -->
             <v-flex xs12>
               <v-list dense>
                 <v-list-item>
@@ -68,7 +69,7 @@
               </v-list>
             </v-flex>
           </v-flex>
-          <v-flex xs12 v-if="breakPointXs" style="border-bottom:1px solid #EEEE;"></v-flex>
+          <!-- <v-flex xs12 v-if="breakPointXs" style="border-bottom:1px solid #EEEE;"></v-flex> -->
 
           <!-- 시간 받을 때
                     https://wickedmagic.tistory.com/578 -->
