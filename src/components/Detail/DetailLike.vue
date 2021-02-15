@@ -9,8 +9,8 @@
     >
       <div class="pa-1">
         <div class="pb-1">
-          <v-icon>
-            mdi-heart-outline
+          <v-icon color="white">
+            mdi-heart
           </v-icon>
         </div>
         <small style="display: block;">

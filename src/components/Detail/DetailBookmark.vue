@@ -9,8 +9,8 @@
     >
       <div class="pa-1">
         <div class="pb-1">
-          <v-icon>
-            mdi-bookmark-outline
+          <v-icon color="white">
+            mdi-bookmark
           </v-icon>
         </div>
         <small style="display: block;">
