@@ -123,7 +123,7 @@
 
         <v-layout wrap>
           <v-flex md8 sm12 xs12 class="pa-1">
-            <detail-photo :store="store"></detail-photo>
+            <detail-photo v-if="store && store.storeId" :store="store"></detail-photo>
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
             <detail-options :store="store"></detail-options>

@@ -10,7 +10,7 @@
       <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 추가</v-card-title>
       <v-card-text>
         <v-file-input
-          v-model="url"
+          v-model="inputFile"
           accept="image/*"
           label="사진 선택"
           prepend-icon="mdi-camera"
@@ -18,10 +18,9 @@
           :loading="resizeLoading"
           @change="resize"
         />
-        <!-- <v-img :src="originalImg" v-if="originalImg" /> -->
-        <!-- <v-img :src="resizedImg" v-if="resizedImg"></v-img> -->
 
         <!-- resizing이 완료되면, 원본 이미지를 미리보기로 제공 -->
+        <v-img :src="originalImg" style="border: 1px solid red;" />
         <v-img :src="originalImg" v-if="resizedImg" />
 
         <!-- 내가 올린 이미지 삭제 버튼 추가 버튼 업로드 용량 제한 유저 기록 등등 -->
@@ -41,7 +40,7 @@ export default {
   props: ["title", "store", "dialog"],
   data() {
     return {
-      url: null,
+      inputFile: null,
       originalImg: null,
       resizedImg: null,
       uploadFile: null,
@@ -61,27 +60,47 @@ export default {
     closeBtnClicked() {
       this.$emit("closeBtnClicked")
     },
+    getFile(file) {
+      return new Promise((resolve, reject) => {
+        let contents = ""
+        const reader = new FileReader()
+        reader.onloadend = function(e) {
+          contents = e.target.result
+          resolve(contents)
+        }
+        reader.onerror = function(e) {
+          reject(e)
+        }
+        reader.readAsDataURL(file)
+      })
+    },
 
     // 출처 : https://stackoverflow.com/questions/53708278/how-to-resize-the-image-in-vue
     async resize(file) {
+      // init Data
       this.originalImg = null
       this.resizedImg = null
-
+      this.uploadFile = null
       if (!file) {
         return
       }
-      this.resizeLoading = true
+      this.resizeLoading = true // 로딩 on
 
-      const reader = new FileReader()
-      reader.onload = (e) => (this.originalImg = e.target.result)
-      reader.readAsDataURL(file) // convert to base64 string
+      // START: preview original
+      let result = await this.getFile(file)
+      this.originalImg = result
       // END: preview original
 
+      // Check File Size : 1MB이하이면 resize를 하지 않음
       const size = file.size
       let base_size = 1024000 //1MB (썸네일 작업 유무 기준 사이즈)
       if (size <= base_size) {
         this.resizedImg = this.originalImg
+        this.uploadFile = file
+        this.resizeLoading = false // 로딩 off
+        return
       }
+
       // START: preview resized
       await this.resizeImage({ file: file })
         .then((resizedImage) => {
@@ -92,7 +111,7 @@ export default {
           console.error(err)
         })
       // END: preview resized
-      this.resizeLoading = false
+      this.resizeLoading = false // 로딩 off
     },
 
     dataURItoBlob(dataUrl) {
@@ -134,8 +153,7 @@ export default {
 
       return new Promise((ok, no) => {
         if (!file.type.match(/image.*/)) {
-          // no(new Error("Not an image"))
-          no(this.$toast.error("이미지 파일만 업로드 가능해요"))
+          no(new Error("Not an image"))
           return
         }
 

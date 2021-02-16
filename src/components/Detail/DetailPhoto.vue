@@ -12,9 +12,8 @@
 
     <v-expand-transition>
       <v-card-text v-show="expand">
-        <!-- <v-col cols="4" v-for="(photo, index) in photoList" :key="index" ref="photoSquare">
-            <v-img :src="photo" :height="squareHeight" />
-          </v-col> -->
+        <v-btn @click="sortBtn">sortBtn</v-btn>
+
         <v-row>
           <v-col
             v-for="(photo, index) in photoList"
@@ -22,7 +21,7 @@
             class="d-flex child-flex"
             cols="4"
           >
-            <v-img :src="photo" aspect-ratio="1" class="grey lighten-2">
+            <v-img :src="photo.link" aspect-ratio="1" class="grey lighten-2">
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
                   <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
@@ -31,7 +30,6 @@
             </v-img>
           </v-col>
         </v-row>
-        <v-btn @click="read">read</v-btn>
       </v-card-text>
     </v-expand-transition>
 
@@ -56,8 +54,6 @@
 </template>
 
 <script>
-// import axios from "axios"
-
 import DetailCardBar from "@/components/Detail/DetailCardBar.vue"
 import DetailPhotoAdd from "@/components/Detail/DetailPhotoAdd.vue"
 import DetailPhotoDelete from "@/components/Detail/DetailPhotoDelete.vue"
@@ -78,6 +74,7 @@ export default {
       deleteDialog: false,
 
       photoList: [],
+      photoListLoading: true,
 
       url: "",
       imgUrl: null,
@@ -89,6 +86,11 @@ export default {
   computed: {
     breakPointXs() {
       return this.$vuetify.breakpoint.xs ? true : false
+    },
+  },
+  watch: {
+    photoList(nv, ov) {
+      console.log("new", nv, " // old", ov)
     },
   },
   methods: {
@@ -110,29 +112,49 @@ export default {
     async read() {
       const storageRef = this.$firebase.storage().ref()
       const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo")
-      let photoList = []
-      await listRef
+      let storagePhotoList = await listRef
         .listAll()
         .then(function(res) {
+          let list = []
           res.items.forEach(function(itemRef) {
+            // storage file의 이름 가져오기 >> createdAt, uid 세팅
+            let fileName = itemRef.name.split("-")
+            let createdAt = Number(fileName[0])
+            let uid = fileName[1]
+
+            // storage file의 링크 가져오기
             itemRef.getDownloadURL().then(function(url) {
-              console.log(url)
-              photoList.push(url)
+              let link = url
+              list.push({
+                createdAt: createdAt,
+                uid: uid,
+                link: link,
+              })
             })
           })
+          return list
+          // list.sort((a, b) => {
+          //   return b.createdAt - a.createdAt
+          // })
         })
         .catch(function(error) {
           console.log("error", error)
-          // Uh-oh, an error occurred!
         })
-      this.photoList = photoList
-
-      // 메타데이터 > 파일명 > 유저 > 유저정보 뿌리기
-      // 메타데이터 > 파일명 > 유저 > 업로드 일시 확인해서 sort에 활용
-
-      // const result = await axios.get(this.url)
-      // console.log(result)
+      this.photoList = storagePhotoList
+      console.log("hell", this.photoList)
+      // To Do
+      // sort를 비동기로 하는 방법을 당췌 모르겠다. 하..
+      // this.sortBtn()
     },
+
+    sortBtn() {
+      console.log("Sort!!")
+      this.photoList.sort((a, b) => {
+        return b.createdAt - a.createdAt
+      })
+    },
+    // 메타데이터 > 파일명 > 유저 > 유저정보 뿌리기
+    // 메타데이터 > 파일명 > 유저 > 업로드 일시 확인해서 sort에 활용
   },
 }
 </script>
