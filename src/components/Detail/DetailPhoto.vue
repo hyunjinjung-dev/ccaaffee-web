@@ -12,21 +12,26 @@
 
     <v-expand-transition>
       <v-card-text v-show="expand">
-        <v-btn @click="sortBtn">sortBtn</v-btn>
+        <!-- <v-btn @click="sortBtn">sortBtn</v-btn> -->
 
         <v-row>
           <v-col
             v-for="(photo, index) in photoList"
             :key="index"
-            class="d-flex child-flex"
+            class="d-flex child-flex pa-2"
             cols="4"
+            @click="photoClicked(index)"
           >
+            <!-- v-img 'aspect-ratio' element로 가로/세로 비율 조절 가능 -->
             <v-img :src="photo.link" aspect-ratio="1" class="grey lighten-2">
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                </v-row>
-              </template>
+              <div>
+                <div
+                  class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-1 white--text"
+                  style="height: 100%;"
+                >
+                  더보기
+                </div>
+              </div>
             </v-img>
           </v-col>
         </v-row>
@@ -50,11 +55,21 @@
       @closeBtnClicked="closeDeletePhotoDialog"
     >
     </detail-photo-delete>
+
+    <detail-photo-dialog
+      v-if="photoDialog"
+      :store="store"
+      :dialog="photoDialog"
+      :photoList="photoList"
+      :selectedPhoto="selectedPhoto"
+      @closeBtnClicked="closePhotoDialog"
+    ></detail-photo-dialog>
   </v-card>
 </template>
 
 <script>
 import DetailCardBar from "@/components/Detail/DetailCardBar.vue"
+import DetailPhotoDialog from "@/components/Detail/DetailPhotoDialog.vue"
 import DetailPhotoAdd from "@/components/Detail/DetailPhotoAdd.vue"
 import DetailPhotoDelete from "@/components/Detail/DetailPhotoDelete.vue"
 
@@ -63,6 +78,7 @@ export default {
   props: ["store"],
   components: {
     DetailCardBar,
+    DetailPhotoDialog,
     DetailPhotoAdd,
     DetailPhotoDelete,
   },
@@ -74,7 +90,9 @@ export default {
       deleteDialog: false,
 
       photoList: [],
-      photoListLoading: true,
+      waitingPhotoList: [],
+      photoDialog: false,
+      selectedPhoto: "",
 
       url: "",
       imgUrl: null,
@@ -88,12 +106,19 @@ export default {
       return this.$vuetify.breakpoint.xs ? true : false
     },
   },
-  watch: {
-    photoList(nv, ov) {
-      console.log("new", nv, " // old", ov)
-    },
-  },
+  // watch: {
+  //   photoList(nv, ov) {
+  //     console.log("new", nv, " // old", ov)
+  //   },
+  // },
   methods: {
+    photoClicked(index) {
+      this.selectedPhoto = index
+      this.photoDialog = true
+    },
+    closePhotoDialog() {
+      this.photoDialog = false
+    },
     expandToggle() {
       this.expand = !this.expand
     },
@@ -140,8 +165,8 @@ export default {
         .catch(function(error) {
           console.log("error", error)
         })
-      this.photoList = storagePhotoList
-      console.log("hell", this.photoList)
+      this.waitingPhotoList = storagePhotoList
+
       // To Do
       // sort를 비동기로 하는 방법을 당췌 모르겠다. 하..
       // this.sortBtn()
@@ -159,4 +184,13 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+}
+</style>

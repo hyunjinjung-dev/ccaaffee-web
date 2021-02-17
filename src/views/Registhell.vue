@@ -5,8 +5,6 @@
       <v-img :src="url"></v-img>
     </div>
 
-    <div>hell</div>
-
     <!-- 출처 : https://lovemewithoutall.github.io/it/vue-image-upload-to-firestorage/ -->
     <v-btn @click.native="selectFile" v-if="!uploadEnd && !uploading">
       Upload a cover image
@@ -55,6 +53,14 @@ export default {
       uploading: false,
       uploadEnd: false,
       downloadURL: "",
+
+      images: [
+        "https://picsum.photos/500/300?image=10",
+        "https://picsum.photos/500/300?image=11",
+        "https://picsum.photos/500/300?image=12",
+        "https://picsum.photos/500/300?image=13",
+        "https://picsum.photos/500/300?image=14",
+      ],
     }
   },
   methods: {
