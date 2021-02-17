@@ -19,8 +19,9 @@
           @change="resize"
         />
 
+        <!-- <v-img :src="originalImg" style="border: 1px solid red;" /> -->
+
         <!-- resizing이 완료되면, 원본 이미지를 미리보기로 제공 -->
-        <v-img :src="originalImg" style="border: 1px solid red;" />
         <v-img :src="originalImg" v-if="resizedImg" />
 
         <!-- 내가 올린 이미지 삭제 버튼 추가 버튼 업로드 용량 제한 유저 기록 등등 -->
@@ -29,7 +30,7 @@
       <v-card-actions class="mt-5">
         <v-btn text @click="closeBtnClicked">취소</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="updateBtnClicked">업로드</v-btn>
+        <v-btn color="primary" @click="updateBtnClicked" :disabled="!resizedImg">업로드</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

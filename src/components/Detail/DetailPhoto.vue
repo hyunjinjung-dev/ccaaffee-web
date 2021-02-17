@@ -12,27 +12,47 @@
 
     <v-expand-transition>
       <v-card-text v-show="expand">
-        <!-- <v-btn @click="sortBtn">sortBtn</v-btn> -->
+        <!-- <v-row v-if="photoList && photoList.length > 0"> -->
+        <!-- <v-btn @click="loadMorePhoto">더보기</v-btn> -->
 
-        <v-row>
+        <v-row v-if="sortedPhotoList">
+          <!-- v-for 와 v-if를 함께 쓸 수 없어서 v-col은 그리되, pa-0으로 여백을 없애서 선택할 수 없게 만듦 -->
           <v-col
-            v-for="(photo, index) in photoList"
-            :key="index"
-            class="d-flex child-flex pa-2"
+            v-for="(photo, index) in sortedPhotoList"
+            :key="photo.createdAt"
+            class="d-flex child-flex pa-0"
             cols="4"
             @click="photoClicked(index)"
           >
             <!-- v-img 'aspect-ratio' element로 가로/세로 비율 조절 가능 -->
-            <v-img :src="photo.link" aspect-ratio="1" class="grey lighten-2">
-              <div>
+            <v-img
+              :src="photo.link"
+              aspect-ratio="1"
+              class="grey lighten-2 ma-1"
+              v-if="index < exposedPhotoCount"
+            >
+              <div v-if="index == exposedPhotoCount - 1 && totalPhotoCount != exposedPhotoCount">
+                <!-- @click="loadMorePhoto" click 이벤트가 동시에 두개가 걸려서 로직에 오류. 하나로 결합-->
                 <div
-                  class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-1 white--text"
+                  class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal subtitle-1 font-weight-bold white--text"
                   style="height: 100%;"
                 >
                   더보기
                 </div>
               </div>
             </v-img>
+          </v-col>
+        </v-row>
+        <v-row v-else>
+          <v-col>
+            <span class="info--text">
+              사진을 등록해주세요
+            </span>
+          </v-col>
+        </v-row>
+        <v-row v-if="exposedPhotoCount != totalPhotoCount" justify="end">
+          <v-col cols="4" style="text-align:right;">
+            {{ exposedPhotoCount }} / {{ totalPhotoCount }}
           </v-col>
         </v-row>
       </v-card-text>
@@ -60,7 +80,7 @@
       v-if="photoDialog"
       :store="store"
       :dialog="photoDialog"
-      :photoList="photoList"
+      :photoList="sortedPhotoList"
       :selectedPhoto="selectedPhoto"
       @closeBtnClicked="closePhotoDialog"
     ></detail-photo-dialog>
@@ -68,6 +88,8 @@
 </template>
 
 <script>
+import { sortBy } from "lodash"
+
 import DetailCardBar from "@/components/Detail/DetailCardBar.vue"
 import DetailPhotoDialog from "@/components/Detail/DetailPhotoDialog.vue"
 import DetailPhotoAdd from "@/components/Detail/DetailPhotoAdd.vue"
@@ -89,10 +111,13 @@ export default {
       addDialog: false,
       deleteDialog: false,
 
+      storagePhotoList: [],
       photoList: [],
       waitingPhotoList: [],
       photoDialog: false,
       selectedPhoto: "",
+
+      exposedPhotoCount: 3,
 
       url: "",
       imgUrl: null,
@@ -105,16 +130,29 @@ export default {
     breakPointXs() {
       return this.$vuetify.breakpoint.xs ? true : false
     },
+    totalPhotoCount() {
+      return this.storagePhotoList.length
+    },
+    sortedPhotoList() {
+      return sortBy(this.storagePhotoList, "createdAt").reverse()
+    },
   },
-  // watch: {
-  //   photoList(nv, ov) {
-  //     console.log("new", nv, " // old", ov)
-  //   },
-  // },
   methods: {
     photoClicked(index) {
-      this.selectedPhoto = index
-      this.photoDialog = true
+      if (index == this.exposedPhotoCount - 1 && this.totalPhotoCount != this.exposedPhotoCount) {
+        this.loadMorePhoto()
+        return
+      } else {
+        this.selectedPhoto = index
+        this.photoDialog = true
+      }
+    },
+    loadMorePhoto() {
+      for (let i = 0; i < 3; i++) {
+        if (this.totalPhotoCount > this.exposedPhotoCount) {
+          this.exposedPhotoCount++
+        }
+      }
     },
     closePhotoDialog() {
       this.photoDialog = false
@@ -137,7 +175,7 @@ export default {
     async read() {
       const storageRef = this.$firebase.storage().ref()
       const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo")
-      let storagePhotoList = await listRef
+      let storageData = await listRef
         .listAll()
         .then(function(res) {
           let list = []
@@ -158,28 +196,12 @@ export default {
             })
           })
           return list
-          // list.sort((a, b) => {
-          //   return b.createdAt - a.createdAt
-          // })
         })
         .catch(function(error) {
           console.log("error", error)
         })
-      this.waitingPhotoList = storagePhotoList
-
-      // To Do
-      // sort를 비동기로 하는 방법을 당췌 모르겠다. 하..
-      // this.sortBtn()
+      this.storagePhotoList = storageData
     },
-
-    sortBtn() {
-      console.log("Sort!!")
-      this.photoList.sort((a, b) => {
-        return b.createdAt - a.createdAt
-      })
-    },
-    // 메타데이터 > 파일명 > 유저 > 유저정보 뿌리기
-    // 메타데이터 > 파일명 > 유저 > 업로드 일시 확인해서 sort에 활용
   },
 }
 </script>
@@ -189,8 +211,9 @@ export default {
   align-items: center;
   bottom: 0;
   justify-content: center;
-  opacity: 0.5;
+  opacity: 0.4;
   position: absolute;
   width: 100%;
+  background-color: black;
 }
 </style>
