@@ -12,7 +12,7 @@
           : false,
       }"
     > -->
-    <v-main color="backgroundDarken">
+    <v-main :class="$vuetify.theme.dark ? '' : 'content-bg-light'">
       <transition name="moveInUp">
         <router-view></router-view>
       </transition>
@@ -33,6 +33,9 @@ export default {
 /* .card {
   background: #f9f9f9 !important;
 } */
+.content-bg-light {
+  background-color: #f9f9f9;
+}
 .moveInUp-enter-active {
   animation: fadeIn 0.9s ease-in;
 }

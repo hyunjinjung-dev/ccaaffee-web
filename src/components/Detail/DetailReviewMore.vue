@@ -22,7 +22,12 @@
             리뷰 삭제
           </v-card-title>
           <v-card-text>
-            리뷰를 완전히 삭제할까요?
+            <div>
+              리뷰를 완전히 삭제할까요?
+            </div>
+            <div>
+              (삭제를 누르시면 되돌릴 수 없어요!)
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>

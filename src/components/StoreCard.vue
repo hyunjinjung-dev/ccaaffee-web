@@ -1,5 +1,6 @@
 <template>
-  <v-card class="content-bg card mx-auto pa-2" :max-width="card.maxWidth">
+  <!-- <v-card class="content-bg card mx-auto pa-2" :max-width="card.maxWidth"> -->
+  <v-card class="card mx-auto pa-2" :max-width="card.maxWidth">
     <v-carousel
       :continuous="true"
       :show-arrows="true"
@@ -48,15 +49,8 @@
         </v-card-subtitle>
       </v-col>
       <v-col cols="2" class="pl-0 pt-3">
-        <v-btn
-          fab
-          small
-          dark
-          depressed
-          :color="liked ? 'error' : 'grey lighten-2'"
-          @click="heartBtnClicked"
-        >
-          <v-icon>mdi-heart</v-icon>
+        <v-btn fab small depressed :color="liked ? 'primary' : ''" @click="heartBtnClicked">
+          <v-icon color="white">mdi-heart</v-icon>
         </v-btn>
       </v-col>
     </v-row>

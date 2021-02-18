@@ -4,16 +4,39 @@
       <v-flex class="font-weight-bold subheading" :shrink="sizeXS ? true : false">
         {{ title }}
       </v-flex>
-      <v-flex class="py-0" shrink>
+      <!-- <v-flex class="py-0" shrink>
         <v-tooltip left>
           <template v-slot:activator="{ on }">
             <v-btn class="ml-2 mr-0 my-0" icon v-on="on" @click="editBtnClicked">
-              <!-- <v-icon color="info" dark>mdi-pencil-circle</v-icon> -->
               <v-icon>mdi-pencil-circle</v-icon>
             </v-btn>
           </template>
           <span>{{ title }} 수정</span>
         </v-tooltip>
+      </v-flex> -->
+      <v-flex class="py-0" shrink v-if="!menuOption">
+        <v-btn class="ml-2 mr-0 my-0" icon @click="editBtnClicked">
+          <v-icon>mdi-pencil-circle</v-icon>
+        </v-btn>
+      </v-flex>
+      <v-flex class="py-0" shrink v-else>
+        <div class="text-center">
+          <!-- <v-menu offset-y left> -->
+          <v-menu bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn class="ml-2 mr-0 my-0" icon v-bind="attrs" v-on="on">
+                <v-icon>mdi-pencil-circle</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <!-- <v-list-item v-for="(item, index) in menuOptions" :key="index">
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item> -->
+              <v-list-item @click="addPhotoBtnClicked">추가</v-list-item>
+              <v-list-item @click="deletePhotoBtnClicked">삭제</v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
       </v-flex>
       <v-flex v-if="sizeXS">
         <!-- 중간 정렬용 v-flex -->
@@ -31,9 +54,19 @@
 <script>
 export default {
   name: "DetailCardBar",
-  props: ["title", "store", "expand"],
+  props: {
+    title: String,
+    store: Object,
+    expand: Boolean,
+    menuOption: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
-    return {}
+    return {
+      // menuOptions: [{ title: "사진 추가하기" }, { title: "내가 업로드한 사진 보기" }],
+    }
   },
   computed: {
     sizeXS() {
@@ -46,6 +79,12 @@ export default {
     },
     editBtnClicked() {
       this.$emit("updateBtnClicked")
+    },
+    addPhotoBtnClicked() {
+      this.$emit("addPhotoBtnClicked")
+    },
+    deletePhotoBtnClicked() {
+      this.$emit("deletePhotoBtnClicked")
     },
   },
 }

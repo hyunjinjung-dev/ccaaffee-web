@@ -10,7 +10,11 @@
         </router-link>
       </v-toolbar-title> -->
       <!-- Dark Mode 적용을 위한 조치 -->
-      <v-toolbar-title class="font-weight-bold" style="cursor:pointer">
+      <v-toolbar-title
+        class="font-weight-bold pr-5 py-2"
+        style="cursor:pointer"
+        v-ripple="{ class: `primary--text` }"
+      >
         <span @click="goToHome()">
           ccaaffee ☕️
         </span>
@@ -244,7 +248,8 @@ export default {
 
 <style lang="scss">
 #navbar {
-  z-index: 999999 !important;
+  /* z-index: 999999 !important; */
+  z-index: 101 !important;
 
   .active-item {
     .v-list-item__icon {

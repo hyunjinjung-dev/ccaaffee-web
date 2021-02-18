@@ -1,102 +1,132 @@
 <template>
-  <div id="app">
-    <v-app id="inspire">
-      <v-content>
-        <v-container fluid>
-          <v-layout align-start justify-center>
-            <v-flex xs4 class="elevation-1 pa-3 ma-2">
-              <v-list two-line>
-                <v-subheader>
-                  FIRST LIST
-                </v-subheader>
-                <draggable v-model="items" :options="{ group: 'people' }" style="min-height: 10px">
-                  <template v-for="item in items">
-                    <v-list-item :key="item.id" avatar>
-                      <v-list-item-avatar>
-                        <img :src="item.avatar" />
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title v-html="item.title"></v-list-item-title>
-                        <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </draggable>
-              </v-list>
-            </v-flex>
-            <v-flex xs4 class="elevation-1 pa-3 ma-2">
-              <v-list two-line>
-                <v-subheader>
-                  SECOND LIST
-                </v-subheader>
-                <draggable v-model="items2" :options="{ group: 'people' }" style="min-height: 10px">
-                  <template v-for="item in items2">
-                    <v-list-item :key="item.id" avatar>
-                      <v-list-item-avatar>
-                        <img :src="item.avatar" />
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title v-html="item.title"></v-list-item-title>
-                        <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </draggable>
-              </v-list>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-content>
-    </v-app>
+  <div>
+    <div>
+      <v-file-input @change="Preview_image" v-model="image"> </v-file-input>
+      <v-img :src="url"></v-img>
+    </div>
+
+    <!-- 출처 : https://lovemewithoutall.github.io/it/vue-image-upload-to-firestorage/ -->
+    <v-btn @click.native="selectFile" v-if="!uploadEnd && !uploading">
+      Upload a cover image
+      <v-icon right aria-hidden="true">mdi-camera</v-icon>
+    </v-btn>
+    <form ref="form">
+      <input
+        id="files"
+        type="file"
+        name="file"
+        ref="uploadInput"
+        accept="image/*"
+        :multiple="false"
+        @change="detectFiles($event)"
+      />
+    </form>
+    <v-progress-circular
+      v-if="uploading && !uploadEnd"
+      :size="100"
+      :width="15"
+      :rotate="360"
+      :value="progressUpload"
+      color="primary"
+    >
+      %
+    </v-progress-circular>
+    <img v-if="uploadEnd" :src="downloadURL" width="100%" />
+    <div v-if="uploadEnd">
+      <v-btn class="ma-0" dark small color="error" @click="deleteImage()">
+        Delete
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
-import draggable from "vuedraggable"
-
 export default {
-  components: {
-    draggable,
-  },
   data() {
     return {
-      items: [
-        {
-          id: 1,
-          avatar: "https://s3.amazonaws.com/vuetify-docs/images/lists/1.jpg",
-          title: "Brunch this life?",
-          subtitle: "Subtitle 1",
-        },
-        {
-          id: 2,
-          avatar: "https://s3.amazonaws.com/vuetify-docs/images/lists/2.jpg",
-          title: "Winter Lunch",
-          subtitle: "Subtitle 2",
-        },
-        {
-          id: 3,
-          avatar: "https://s3.amazonaws.com/vuetify-docs/images/lists/3.jpg",
-          title: "Oui oui",
-          subtitle: "Subtitle 3",
-        },
-      ],
-      items2: [
-        {
-          id: 4,
-          avatar: "https://s3.amazonaws.com/vuetify-docs/images/lists/4.jpg",
-          title: "Brunch this weekend?",
-          subtitle: "Subtitle 4",
-        },
-        {
-          id: 5,
-          avatar: "https://s3.amazonaws.com/vuetify-docs/images/lists/5.jpg",
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "Subtitle 5",
-        },
+      url: null,
+      image: null,
+
+      progressUpload: 0,
+      fileName: "",
+      uploadTask: "",
+      uploading: false,
+      uploadEnd: false,
+      downloadURL: "",
+
+      images: [
+        "https://picsum.photos/500/300?image=10",
+        "https://picsum.photos/500/300?image=11",
+        "https://picsum.photos/500/300?image=12",
+        "https://picsum.photos/500/300?image=13",
+        "https://picsum.photos/500/300?image=14",
       ],
     }
+  },
+  methods: {
+    Preview_image() {
+      this.url = URL.createObjectURL(this.image)
+    },
+    selectFile() {
+      this.$refs.uploadInput.click()
+    },
+    detectFiles(e) {
+      let fileList = e.target.files || e.dataTransfer.files
+      Array.from(Array(fileList.length).keys()).map((x) => {
+        this.upload(fileList[x])
+      })
+    },
+    upload(file) {
+      this.fileName = file.name
+      this.uploading = true
+      this.uploadTask = this.$firebase
+        .storage()
+        .ref("images/" + file.name)
+        .put(file)
+    },
+    deleteImage() {
+      this.$firebase
+        .storage()
+        .ref("images/" + this.fileName)
+        .delete()
+        .then(() => {
+          this.uploading = false
+          this.uploadEnd = false
+          this.downloadURL = ""
+        })
+        .catch((error) => {
+          console.error(`file delete error occured: ${error}`)
+        })
+      this.$refs.form.reset()
+    },
+  },
+  watch: {
+    uploadTask: function() {
+      this.uploadTask.on(
+        "state_changed",
+        (sp) => {
+          this.progressUpload = Math.floor((sp.bytesTransferred / sp.totalBytes) * 100)
+        },
+        null,
+        () => {
+          this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.uploadEnd = true
+            this.downloadURL = downloadURL
+            this.$emit("downloadURL", downloadURL)
+          })
+        }
+      )
+    },
   },
 }
 </script>
 
-<style></style>
+<style>
+.progress-bar {
+  margin: 10px 0;
+}
+input[type="file"] {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+}
+</style>

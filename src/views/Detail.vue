@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" fill-height>
+    <v-layout :class="this.$vuetify.breakpoint.xs ? 'mx-0 my-3' : 'ma-5'" fill-height>
       <v-flex xs12>
         <v-layout wrap align-center>
           <!-- v-layout align-end -->
@@ -85,7 +85,7 @@
                         <!-- :dark="!pinLoading" -->
                         <div class="pa-1">
                           <div class="pb-1">
-                            <v-icon>{{ userSentiments[userSentiment].icon }}</v-icon>
+                            <v-icon color="white">{{ userSentiments[userSentiment].icon }}</v-icon>
                           </div>
                           <small style="display: block;">
                             {{ store.sentimentUserCount }}
@@ -123,7 +123,7 @@
 
         <v-layout wrap>
           <v-flex md8 sm12 xs12 class="pa-1">
-            <!-- <detail-image></detail-image> -->
+            <detail-photo v-if="store && store.storeId" :store="store"></detail-photo>
             <detail-basic-info :store="store"></detail-basic-info>
             <detail-operating-time :store="store"></detail-operating-time>
             <detail-options :store="store"></detail-options>
@@ -149,7 +149,7 @@ import DetailLike from "@/components/Detail/DetailLike.vue"
 import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
 import DetailSelectSentiment from "@/components/Detail/DetailSelectSentiment.vue"
 
-// import DetailImage from "@/components/Detail/DetailImage.vue"
+import DetailPhoto from "@/components/Detail/DetailPhoto.vue"
 import DetailBasicInfo from "@/components/Detail/DetailBasicInfo.vue"
 import DetailOperatingTime from "@/components/Detail/DetailOperatingTime.vue"
 import DetailOptions from "@/components/Detail/DetailOptions.vue"
@@ -167,7 +167,7 @@ export default {
     DetailBookmark,
     DetailSelectSentiment,
 
-    // DetailImage,
+    DetailPhoto,
     DetailBasicInfo,
     DetailOperatingTime,
     DetailOptions,
@@ -187,7 +187,7 @@ export default {
       pinLoading: true,
       userSentiment: 0,
       userSentiments: [
-        { color: "", icon: "mdi-pin-outline" },
+        { color: "", icon: "mdi-pin" },
         { color: "accent", icon: "mdi-emoticon-sad-outline" },
         { color: "accent", icon: "mdi-emoticon-neutral-outline" },
         { color: "accent", icon: "mdi-emoticon-happy-outline" },
