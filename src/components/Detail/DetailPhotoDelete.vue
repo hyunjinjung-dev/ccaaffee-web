@@ -7,29 +7,73 @@
     transition="scroll-x-transition"
   >
     <v-card class="pa-2">
-      <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 삭제</v-card-title>
+      <v-card-title class="font-weight-bold subheading mb-5">
+        내가 업로드한 {{ title }} 삭제
+      </v-card-title>
       <v-card-text>
-        <v-file-input v-model="image" label="사진 선택" prepend-icon="mdi-camera" show-size />
-        <v-img :src="url" />
-        내가 올린 이미지 삭제 버튼 추가 버튼 업로드 용량 제한 유저 기록 등등
+        <v-row>
+          <v-col
+            v-for="(photo, index) in optionList"
+            :key="index"
+            class="d-flex child-flex pa-0"
+            cols="4"
+            @click="photoClicked(photo.fileName)"
+          >
+            <v-img
+              :src="photo.link"
+              aspect-ratio="1"
+              class="grey lighten-2 ma-1"
+              style="border-radius: 4px;"
+            >
+              <div style="cursor:pointer">
+                <div
+                  class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal subtitle-1 font-weight-bold white--text"
+                  style="height: 100%;"
+                >
+                  삭제
+                </div>
+              </div>
+            </v-img>
+          </v-col>
+        </v-row>
       </v-card-text>
 
+      <confirm-dialog
+        v-if="confirmDialogToggle"
+        :dialog="confirmDialogToggle"
+        :confirmDialog="confirmDialogToggle"
+        :title="confirmDialogTitle"
+        :firstLineText="confirmDialogText"
+        @closeBtnClicked="closeConfirmDialog"
+        @confirmBtnClicked="deletePhoto"
+      />
+
       <v-card-actions class="mt-5">
-        <v-btn text @click="closeBtnClicked">취소</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="updateBtnClicked" :disabled="!valid">수정</v-btn>
+        <v-btn text @click="closeBtnClicked">닫기</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import ConfirmDialog from "@/components/ConfirmDialog"
+
 export default {
-  props: ["title", "store", "dialog"],
+  components: {
+    ConfirmDialog,
+  },
+  props: ["title", "store", "dialog", "photoList"],
   data() {
     return {
-      image: null,
-      valid: false,
+      optionList: [],
+
+      selectedFileName: "",
+      selectedFileId: "",
+
+      confirmDialogToggle: false,
+      confirmDialogTitle: "사진 삭제",
+      confirmDialogText: "사진을 완전히 삭제할까요?",
     }
   },
   mounted() {
@@ -46,33 +90,57 @@ export default {
       return this.$vuetify.breakpoint.xs ? true : false
     },
   },
+  // watch: {
+  //   photoList: {
+  //     deep: true,
+  //     handler() {
+  //       console.log("watch child")
+  //       this.fetch()
+  //     },
+  //   },
+  // },
   methods: {
+    fetch() {
+      this.optionList = this.photoList
+    },
     closeBtnClicked() {
       this.$emit("closeBtnClicked")
     },
-    fetch() {
-      console.log("fetch")
+    closeConfirmDialog() {
+      this.confirmDialogToggle = false
     },
-    async updateBtnClicked() {
-      if (
-        this.store.since === this.form.since &&
-        this.store.seatCount === this.form.seatCount &&
-        this.store.phoneNumber === this.form.phoneNumber &&
-        this.store.instagram === this.form.instagram &&
-        this.store.noticeTip === this.form.noticeTip
-      ) {
-        this.$toast.error("변경된 내용이 없습니다.")
-        return
-      }
-
-      if (this.valid) {
-        this.update()
-      } else {
-        this.$toast.error("입력한 내용을 확인해주세요")
-      }
+    photoClicked(fileName) {
+      this.selectedFileName = fileName
+      this.selectedFileId = Number(fileName.split("-")[0])
+      this.confirmDialogToggle = true
+    },
+    deletePhoto() {
+      this.$firebase
+        .storage()
+        .ref("cafes/" + this.store.storeId + "/photo/" + this.selectedFileName)
+        .delete()
+        .then(() => {
+          this.$emit("deletePhotoComplete", this.selectedFileId)
+          this.selectedFileName = ""
+          this.selectedFileId = ""
+          this.closeConfirmDialog()
+        })
+        .catch((error) => {
+          console.error(`file delete error occured: ${error}`)
+        })
     },
   },
 }
 </script>
 
-<style></style>
+<style scoped>
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: 0.4;
+  position: absolute;
+  width: 100%;
+  background-color: black;
+}
+</style>

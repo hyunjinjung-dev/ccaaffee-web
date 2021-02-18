@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-layout :class="this.$vuetify.breakpoint.xs ? 'ma-0' : 'ma-5'" fill-height>
+    <v-layout :class="this.$vuetify.breakpoint.xs ? 'mx-0 my-3' : 'ma-5'" fill-height>
       <v-flex xs12>
         <v-layout wrap align-center>
           <!-- v-layout align-end -->

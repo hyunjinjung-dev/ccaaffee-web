@@ -5,6 +5,8 @@
     scrollable
     max-width="500px"
     transition="scroll-x-transition"
+    :fullscreen="breakPointXs ? true : false"
+    :hide-overlay="breakPointXs ? true : false"
   >
     <v-card class="pa-2">
       <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 수정</v-card-title>
@@ -74,6 +76,11 @@ export default {
   },
   mounted() {
     this.fetch()
+  },
+  computed: {
+    breakPointXs() {
+      return this.$vuetify.breakpoint.xs ? true : false
+    },
   },
   methods: {
     closeBtnClicked() {

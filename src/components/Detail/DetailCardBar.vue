@@ -21,7 +21,8 @@
       </v-flex>
       <v-flex class="py-0" shrink v-else>
         <div class="text-center">
-          <v-menu offset-y left>
+          <!-- <v-menu offset-y left> -->
+          <v-menu bottom left>
             <template v-slot:activator="{ on, attrs }">
               <v-btn class="ml-2 mr-0 my-0" icon v-bind="attrs" v-on="on">
                 <v-icon>mdi-pencil-circle</v-icon>

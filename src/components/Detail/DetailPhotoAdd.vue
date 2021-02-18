@@ -18,19 +18,19 @@
           :loading="resizeLoading"
           @change="resize"
         />
-
-        <!-- <v-img :src="originalImg" style="border: 1px solid red;" /> -->
-
         <!-- resizing이 완료되면, 원본 이미지를 미리보기로 제공 -->
         <v-img :src="originalImg" v-if="resizedImg" />
-
-        <!-- 내가 올린 이미지 삭제 버튼 추가 버튼 업로드 용량 제한 유저 기록 등등 -->
       </v-card-text>
 
       <v-card-actions class="mt-5">
         <v-btn text @click="closeBtnClicked">취소</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="updateBtnClicked" :disabled="!resizedImg">업로드</v-btn>
+        <v-btn color="primary" @click="updateBtnClicked" :disabled="!resizedImg || uploadLoading">
+          <div v-if="!uploadLoading">업로드</div>
+          <div v-else>
+            <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
+          </div>
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -47,6 +47,7 @@ export default {
       uploadFile: null,
 
       resizeLoading: false,
+      uploadLoading: false,
     }
   },
   computed: {
@@ -171,16 +172,21 @@ export default {
         this.$toast.error("이미지 파일을 업로드해주세요")
         return
       }
+      this.uploadLoading = true
       const file = this.uploadFile
       const storeId = this.store.storeId
+
+      const createdAt = new Date().getTime().toString()
       const uid = this.fireUser.uid
-      const fileName = new Date().getTime().toString() + "-" + uid
+      const fileName = createdAt + "-" + uid
 
       await this.$firebase
         .storage()
         .ref("cafes/" + storeId + "/photo/" + fileName)
         .put(file)
 
+      this.$emit("addPhotoComplete", fileName, createdAt, this.resizedImg, uid)
+      this.uploadLoading = false
       this.closeBtnClicked()
     },
   },

@@ -248,7 +248,8 @@ export default {
 
 <style lang="scss">
 #navbar {
-  z-index: 999999 !important;
+  /* z-index: 999999 !important; */
+  z-index: 101 !important;
 
   .active-item {
     .v-list-item__icon {
