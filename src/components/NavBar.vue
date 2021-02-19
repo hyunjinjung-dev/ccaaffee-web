@@ -20,7 +20,7 @@
         </span>
       </v-toolbar-title>
 
-      <v-spacer></v-spacer>
+      <!-- <v-spacer></v-spacer>
       <v-text-field
         flat
         hide-details
@@ -32,7 +32,7 @@
         @click:append="search"
         class="hidden-sm-and-down"
       ></v-text-field>
-
+ -->
       <v-spacer></v-spacer>
 
       <account-menu v-if="$store.state.fireUser"></account-menu>

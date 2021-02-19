@@ -288,8 +288,10 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-btn block large color="primary" @click="applyBtnClicked">
-          필터 적용
+        <v-btn text @click="closeBtnClicked">취소</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn large color="primary" @click="applyBtnClicked">
+          적용
         </v-btn>
       </v-card-actions>
     </v-card>

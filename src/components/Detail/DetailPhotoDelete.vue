@@ -41,7 +41,6 @@
       <confirm-dialog
         v-if="confirmDialogToggle"
         :dialog="confirmDialogToggle"
-        :confirmDialog="confirmDialogToggle"
         :title="confirmDialogTitle"
         :firstLineText="confirmDialogText"
         @closeBtnClicked="closeConfirmDialog"
@@ -57,7 +56,7 @@
 </template>
 
 <script>
-import ConfirmDialog from "@/components/ConfirmDialog"
+import ConfirmDialog from "@/components/Module/ConfirmDialog"
 
 export default {
   components: {

@@ -5,6 +5,16 @@
       <v-img :src="url"></v-img>
     </div>
 
+    <v-btn @click="openDialogg">알림</v-btn>
+
+    <alert-dialog
+      emoji="hh"
+      :dialog="tempDialog"
+      title="hh"
+      firstLineText="hh"
+      timeout="3000"
+    ></alert-dialog>
+
     <!-- 출처 : https://lovemewithoutall.github.io/it/vue-image-upload-to-firestorage/ -->
     <v-btn @click.native="selectFile" v-if="!uploadEnd && !uploading">
       Upload a cover image
@@ -44,6 +54,8 @@
 export default {
   data() {
     return {
+      tempDialog: false,
+
       url: null,
       image: null,
 
@@ -64,6 +76,11 @@ export default {
     }
   },
   methods: {
+    openDialogg() {
+      this.tempDialog = true
+      console.log(this.tempDialog)
+    },
+
     Preview_image() {
       this.url = URL.createObjectURL(this.image)
     },

@@ -1,6 +1,6 @@
 <template>
   <div :class="this.$vuetify.breakpoint.xs ? '' : 'ma-5'">
-    <v-app-bar flat>
+    <v-app-bar flat style="background-color: inherit;">
       <v-text-field
         flat
         hide-details

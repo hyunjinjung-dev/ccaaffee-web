@@ -5,14 +5,20 @@
         <v-layout wrap align-center>
           <!-- v-layout align-end -->
           <v-flex md8 sm12 xs12 shrink>
+            <v-layout>
+              <v-flex></v-flex>
+            </v-layout>
+
             <v-btn icon color="info" class="mb-3" @click="$router.go(-1)">
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <span class="mx-2 font-weight-bold" style="font-size: 1.5rem">
+            <span class="font-weight-bold" style="font-size: 1.5rem">
               {{ store.storeNameKor }}
             </span>
-            <span style="font-size: 1.25rem">{{ store.branchName }}</span>
-            <span style="font-size: 1rem"> {{ baseTime }} 기준 </span>
+            <span style="font-size: 1.5rem">{{ store.branchName }}</span>
+
+            <!-- <span style="font-size: 1rem"> {{ baseTime }} 기준 </span> -->
+
             <!-- <span class="grey--text lighten-2">Wed 11 Sep 2019 OPEN</span> -->
             <!-- <v-btn color="info" fab dark x-small class="mx-3" depressed>
               <v-icon dark>mdi-clock-fast</v-icon>
@@ -180,7 +186,7 @@ export default {
   data() {
     return {
       pageTitle: "Detail",
-      baseTime: "",
+      // baseTime: "",
       showQuickActions: false,
       showSelectSentiment: false,
       visitTooltip: false,
@@ -272,20 +278,20 @@ export default {
       ],
     }
   },
-  watch: {
-    store: {
-      deep: true,
-      handler() {
-        this.fetchBaseTime()
-      },
-    },
-  },
+  // watch: {
+  //   store: {
+  //     deep: true,
+  //     handler() {
+  //       this.fetchBaseTime()
+  //     },
+  //   },
+  // },
   async created() {
     await this.readCountUpdate()
     await this.subscribe()
   },
   mounted() {
-    this.fetchBaseTime()
+    // this.fetchBaseTime()
     setTimeout(() => {
       if (this.userSentiment === null) {
         this.visitTooltip = true
@@ -306,9 +312,9 @@ export default {
     ...mapState(["fireUser", "parkingTags", "offerTags", "policyTags", "amenityTags", "themeTags"]),
   },
   methods: {
-    fetchBaseTime() {
-      this.baseTime = String(this.$moment().format("YYYY-MM-DD HH:mm:ss"))
-    },
+    // fetchBaseTime() {
+    //   this.baseTime = String(this.$moment().format("YYYY-MM-DD HH:mm:ss"))
+    // },
     sentimentBtnClicked() {
       if (this.fireUser) {
         this.showSelectSentiment = !this.showSelectSentiment
@@ -396,7 +402,7 @@ export default {
           this.store.lng = Number(this.store.lng)
         }
         if (this.store.sentimentUserList) {
-          // sentimentCount setting
+          // sentimentUserCount setting
           this.store.sentiment = {
             first: 0,
             second: 0,

@@ -1,7 +1,7 @@
 <template>
   <v-sheet :class="this.$vuetify.breakpoint.xs ? 'mt-5' : 'ma-5'">
     <v-alert border="left" color="primary" dark class="mb-2">
-      * 표시가 되어있는 항목은 필수로 입력해주세요
+      ☑️ 표시가 되어있는 항목은 필수로 입력해주세요
     </v-alert>
 
     <v-stepper v-model="e1">
@@ -29,7 +29,7 @@
                 <v-text-field
                   v-model="form.storeNameKor"
                   :rules="storeNameKorRules"
-                  label="카페명(국문) *"
+                  label="카페명(국문) ☑️"
                   hint="한글로 입력해주세요🇰🇷"
                   outlined
                   required
@@ -66,7 +66,7 @@
                 <v-text-field
                   v-model="form.address"
                   :rules="addressRules"
-                  label="주소 *"
+                  label="주소 ☑️"
                   readonly
                   outlined
                   required
@@ -80,7 +80,7 @@
                         v-model="form.lowFloor"
                         :rules="lowFloorRules"
                         hint="한 층인 경우 최고층과 동일하게 입력해주세요."
-                        label="최저층 *"
+                        label="최저층 ☑️"
                         outlined
                         required
                         type="number"
@@ -99,7 +99,7 @@
                         v-model="form.highFloor"
                         :rules="highFloorRules"
                         hint="한 층인 경우, 최저층과 동일하게 입력해주세요."
-                        label="최고층 *"
+                        label="최고층 ☑️"
                         outlined
                         required
                       >
@@ -135,7 +135,6 @@
                   label="전화번호"
                   outlined
                 ></v-text-field>
-                <div>{{ form.phoneNumber }}</div>
                 <v-text-field
                   v-model="form.instagram"
                   :rules="instagramRules"
@@ -209,7 +208,7 @@ export default {
         likeUserList: [],
         bookmarkUserCount: 0,
         bookmarkUserList: [],
-        sentimentCount: 0,
+        sentimentUserCount: 0,
         sentimentUserList: [],
       },
       storeNameKorRules: [
@@ -305,9 +304,9 @@ export default {
         .collection("store")
         .doc("cafes")
 
+      const createdAt = new Date()
+      const id = createdAt.getTime().toString()
       try {
-        const createdAt = new Date()
-        const id = createdAt.getTime().toString()
         this.form.createdAt = createdAt
         this.form.uid = this.$store.state.fireUser.uid // 등록 유저 저장
         this.form.user = this.$store.state.fireUser.email
@@ -326,7 +325,11 @@ export default {
       } finally {
         // To Do
         // 등록된 카페 디테일 페이지로 router 이동 필요
+        this.goToDetail(id)
       }
+    },
+    goToDetail(storeId) {
+      this.$router.push({ name: "Detail", params: { storeId: storeId } })
     },
   },
 }

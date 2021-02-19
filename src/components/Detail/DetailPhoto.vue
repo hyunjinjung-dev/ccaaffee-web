@@ -15,7 +15,7 @@
         <!-- <v-row v-if="photoList && photoList.length > 0"> -->
         <!-- <v-btn @click="loadMorePhoto">더보기</v-btn> -->
 
-        <v-row v-if="sortedPhotoList">
+        <v-row v-if="sortedPhotoList && sortedPhotoList.length > 0">
           <!-- v-for 와 v-if를 함께 쓸 수 없어서 v-col은 그리되, pa-0으로 여백을 없애서 클릭할 수 없게 만듦 -->
           <v-col
             v-for="(photo, index) in sortedPhotoList"
@@ -129,7 +129,7 @@ export default {
       userPhotoList: [],
       photoDialog: false,
       selectedPhoto: "",
-      exposedPhotoCount: 3,
+      exposedPhotoCount: 0,
 
       url: "",
       imgUrl: null,
@@ -159,19 +159,13 @@ export default {
       return sortBy(this.storagePhotoList, "createdAt").reverse()
     },
   },
-  // watch: {
-  //   sortedPhotoList: {
-  //     deep: true,
-  //     handler() {
-  //       console.log("watch parent")
-  //     },
-  //   },
-  // },
 
   methods: {
     async read() {
       const storageRef = this.$firebase.storage().ref()
       const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo")
+
+      let storageDataLength = 0
       let storageData = await listRef
         .listAll()
         .then(function(res) {
@@ -183,7 +177,7 @@ export default {
             let createdAt = Number(fileNameSplit[0])
             let uid = fileNameSplit[1]
 
-            // storage file의 링크 가져오기
+            // storage file의 링크 가져오고 Data Setting
             itemRef.getDownloadURL().then(function(url) {
               let link = url
               list.push({
@@ -193,12 +187,19 @@ export default {
                 uid: uid,
               })
             })
+            storageDataLength++
           })
           return list
         })
         .catch(function(error) {
           console.log("error", error)
         })
+
+      if (storageDataLength < 3) {
+        this.exposedPhotoCount = storageDataLength
+      } else {
+        this.exposedPhotoCount = 3
+      }
       this.storagePhotoList = storageData
     },
     photoClicked(index) {
