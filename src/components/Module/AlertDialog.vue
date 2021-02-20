@@ -1,30 +1,19 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="290">
+  <v-dialog v-model="dialog" persistent max-width="250">
     <v-card>
-      <v-card-title class="">
-        {{ emoji }}
+      <v-card-title class="justify-center mb-4" style="font-size: 2rem;">
+        <div>{{ emoji }}</div>
       </v-card-title>
-      <v-card-subtitle class="">
-        {{ title }}
+
+      <v-card-subtitle class="text-center pb-2 font-weight-bold">
+        <div>{{ title }}</div>
       </v-card-subtitle>
-      <v-card-text>
-        <div v-if="firstLineText">
-          {{ firstLineText }}
-        </div>
-        <div v-if="secondLineText">
-          {{ secondLineText }}
-        </div>
-        <div v-if="ThirdLineText">
-          {{ ThirdLineText }}
-        </div>
+
+      <v-card-text class="text-center">
+        <div v-if="firstLineText">{{ firstLineText }}</div>
+        <div v-if="secondLineText">{{ secondLineText }}</div>
+        <div v-if="thirdLineText">{{ thirdLineText }}</div>
       </v-card-text>
-      <!-- <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="closeBtnClicked">
-          취소
-        </v-btn>
-        <v-btn class="primary white--text" text @click="confirmBtnClicked">{{ btnText }}</v-btn>
-      </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
@@ -33,36 +22,26 @@
 export default {
   // props: ["title", "firstLineText", "secondLineText", "ThirdLineText", "btnText", "dialog"],
   props: {
+    dialog: Boolean,
+    timeout: {
+      type: Number,
+      default: 1500,
+    },
+
     emoji: String,
     title: String,
-    firstLineText: {
-      type: String,
-    },
-    secondLineText: {
-      type: String,
-    },
-    ThirdLineText: String,
-    // btnText: {
-    //   type: String,
-    // },
-    timeout: String,
-    dialog: Boolean,
+    firstLineText: String,
+    secondLineText: String,
+    thirdLineText: String,
   },
   mounted() {
-    this.setTimer()
+    setTimeout(() => {
+      this.$store.dispatch("closeAlertDialog")
+    }, this.timeout)
   },
-  methods: {
-    setTimer() {
-      let seconds = Number(this.timeout)
-      setTimeout(() => {}, seconds)
-    },
-    closeBtnClicked() {
-      // this.$emit("closeBtnClicked")
-    },
-    confirmBtnClicked() {
-      // this.$emit("confirmBtnClicked")
-    },
-  },
+  // destroyed() {
+  //   console.log("destoyed")
+  // },
 }
 </script>
 
