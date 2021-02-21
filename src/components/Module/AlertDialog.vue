@@ -1,5 +1,6 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="250">
+  <v-dialog v-model="dialog" max-width="250" @click:outside="onClickOutside">
+    <!-- v-click-outside="onClickOutside" -->
     <v-card>
       <v-card-title class="justify-center mb-4" style="font-size: 2rem;">
         <div>{{ emoji }}</div>
@@ -38,6 +39,11 @@ export default {
     setTimeout(() => {
       this.$store.dispatch("closeAlertDialog")
     }, this.timeout)
+  },
+  methods: {
+    onClickOutside() {
+      this.$store.dispatch("closeAlertDialog")
+    },
   },
   // destroyed() {
   //   console.log("destoyed")
