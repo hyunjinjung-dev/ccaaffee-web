@@ -334,7 +334,7 @@ export default {
     },
     openAlert() {
       let alertDialogInfo = {
-        // timeout: 5000,
+        timeout: 2000,
         emoji: "🙏🏻",
         title: "카페가 성공적으로 등록되었어요!",
         firstLineText: "도움에 감사드립니다",

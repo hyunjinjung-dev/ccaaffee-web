@@ -1,7 +1,7 @@
 <template>
-  <v-sheet class="pa-1">
+  <v-sheet class="pa-1" style="background-color: inherit;">
     <v-btn
-      v-if="store.likeUserList"
+      v-if="store.likeUserList && type == 'detail'"
       block
       height="56"
       @click="like"
@@ -18,12 +18,36 @@
         </small>
       </div>
     </v-btn>
+
+    <v-btn
+      v-else-if="store.likeUserList && type == 'card'"
+      icon
+      fab
+      class="white--text"
+      @click="like"
+    >
+      <v-icon v-if="liked()">
+        mdi-heart
+      </v-icon>
+      <v-icon v-else>
+        mdi-heart-outline
+      </v-icon>
+    </v-btn>
   </v-sheet>
 </template>
 
 <script>
 export default {
-  props: ["store"],
+  props: {
+    store: {
+      type: Object,
+      required: true,
+    },
+    type: {
+      type: String,
+      default: "detail",
+    },
+  },
   computed: {
     fireUser() {
       return this.$store.state.fireUser

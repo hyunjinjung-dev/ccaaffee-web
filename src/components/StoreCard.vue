@@ -1,35 +1,86 @@
 <template>
-  <!-- <v-card class="content-bg card mx-auto pa-2" :max-width="card.maxWidth"> -->
-  <v-card class="card mx-auto pa-2" :max-width="card.maxWidth">
-    <v-carousel
-      :continuous="true"
-      :show-arrows="true"
-      hide-delimiters
-      hide-delimiter-background
-      show-arrows-on-hover
-      height="200px"
+  <v-card>
+    <v-img
+      :src="src"
+      class="white--text"
+      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+      aspect-ratio="0.7"
     >
-      <!-- <template v-slot:prev="{ on, attrs }">
-        <v-btn color="white" v-bind="attrs" v-on="on" icon small>
-          <v-icon small>mdi-chevron-left</v-icon>
-        </v-btn>
-      </template>
-      <template v-slot:next="{ on, attrs }">
-        <v-btn color="white" v-bind="attrs" v-on="on" icon small>
-          <v-icon small>mdi-chevron-right</v-icon>
-        </v-btn>
-      </template> -->
+      <v-card
+        class="d-flex flex-column white--text"
+        height="100%"
+        style="background-color: inherit;"
+      >
+        <div class="" style="text-align:right;">
+          <!-- <v-btn icon fab class="white--text mr-1">
+            <v-icon>
+              mdi-heart-outline
+            </v-icon>
+          </v-btn> -->
+          <detail-like :store="store" type="card"></detail-like>
+        </div>
+        <div style="text-align:right;">
+          <detail-bookmark :store="store" type="card"></detail-bookmark>
+          <!-- <v-btn icon fab class="white--text">
+            <v-icon>
+              mdi-bookmark-outline
+            </v-icon>
+          </v-btn> -->
+        </div>
+        <div style="text-align:right;">
+          <v-btn icon fab class="white--text">
+            <v-icon>
+              mdi-pin-outline
+            </v-icon>
+          </v-btn>
+        </div>
 
-      <v-carousel-item v-for="(slide, i) in slides" :key="i" @click="goToDetail(store.storeId)">
-        <v-sheet :color="colors[i]" height="200px" tile>
-          <v-row class="fill-height" align="center" justify="center">
-            <div class="display-3">{{ slide }} Slide</div>
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
-    <!-- <v-img :src="store.thumb" height="200px"></v-img> -->
+        <v-spacer></v-spacer>
 
+        <v-card-title class="white--text">
+          {{ store.storeNameKor }}
+        </v-card-title>
+
+        <v-card-subtitle class="white--text" v-if="store.branchName">
+          {{ store.branchName }}
+        </v-card-subtitle>
+
+        <v-card-text class="white--text">
+          Open
+          <v-icon class="white--text">mdi-circle-small</v-icon>
+          <v-icon class="white--text" x-small>mdi-eye</v-icon>
+          <display-count :count="store.viewCount"></display-count>
+
+          <v-icon class="white--text">mdi-circle-small</v-icon>
+          <v-icon class="white--text" x-small>mdi-heart</v-icon>
+          <display-count :count="store.likeUserCount"></display-count>
+
+          <v-icon class="white--text">mdi-circle-small</v-icon>
+          <v-icon class="white--text" x-small>mdi-bookmark</v-icon>
+          <display-count :count="store.bookmarkUserCount"></display-count>
+        </v-card-text>
+      </v-card>
+    </v-img>
+
+    <!-- <v-card-actions>
+      <v-spacer></v-spacer>
+
+      <v-btn icon>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-bookmark</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-share-variant</v-icon>
+      </v-btn>
+    </v-card-actions> -->
+  </v-card>
+
+  <!-- <v-card class="card mx-auto pa-2" :max-width="card.maxWidth">
+    <v-img src> </v-img>
     <v-row no-gutters>
       <v-col cols="10" @click="goToDetail(store.storeId)">
         <v-card-title class="pt-3 pl-2 subtitle-1 font-weight-bold">
@@ -54,11 +105,20 @@
         </v-btn>
       </v-col>
     </v-row>
-  </v-card>
+  </v-card> -->
 </template>
 
 <script>
+import DisplayCount from "@/components/DisplayCount"
+import DetailLike from "@/components/Detail/DetailLike.vue"
+import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
+
 export default {
+  components: {
+    DisplayCount,
+    DetailLike,
+    DetailBookmark,
+  },
   props: {
     store: {
       type: Object,
@@ -68,6 +128,7 @@ export default {
   },
   data() {
     return {
+      src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
       liked: false,
       colors: ["green", "secondary", "yellow darken-4", "red lighten-2", "orange darken-1"],
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],

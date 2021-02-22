@@ -1,7 +1,7 @@
 <template>
-  <v-sheet class="pa-1">
+  <v-sheet class="pa-1" style="background-color: inherit;">
     <v-btn
-      v-if="store.bookmarkUserList"
+      v-if="store.bookmarkUserList && type == 'detail'"
       block
       height="56"
       @click="bookmark"
@@ -18,12 +18,36 @@
         </small>
       </div>
     </v-btn>
+
+    <v-btn
+      v-else-if="store.bookmarkUserList && type == 'card'"
+      icon
+      fab
+      class="white--text"
+      @click="bookmark"
+    >
+      <v-icon v-if="bookmarked()">
+        mdi-bookmark
+      </v-icon>
+      <v-icon v-else>
+        mdi-bookmark-outline
+      </v-icon>
+    </v-btn>
   </v-sheet>
 </template>
 
 <script>
 export default {
-  props: ["store"],
+  props: {
+    store: {
+      type: Object,
+      required: true,
+    },
+    type: {
+      type: String,
+      default: "detail",
+    },
+  },
   computed: {
     fireUser() {
       return this.$store.state.fireUser

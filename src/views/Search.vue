@@ -31,7 +31,7 @@
           <!-- v-for="i in loading ? 10 : 12"
           :key="i" -->
           <!-- <v-skeleton-loader type="card-avatar" :loading="loading"> -->
-          <store-card :card="{ maxWidth: 350 }" :store="store"></store-card>
+          <store-card :card="{ maxWidth: 350 }" :store="store" :fireUser="fireUser"></store-card>
           <!-- </v-skeleton-loader> -->
         </v-col>
       </v-row>
@@ -81,6 +81,11 @@ export default {
     if (this.unsubscribe) {
       this.unsubscribe()
     }
+  },
+  computed: {
+    fireUser() {
+      return this.$store.state.fireUser
+    },
   },
   methods: {
     // getCurrentLocation() {
@@ -135,6 +140,10 @@ export default {
             seatCount: store.seatCount,
             likeUserCount: store.likeUserCount,
             likeUserList: store.likeUserList,
+            bookmarkUserCount: store.bookmarkUserCount,
+            bookmarkUserList: store.bookmarkUserList,
+            sentimentUserCount: store.sentimentUserCount,
+            sentimentUserList: store.sentimentUserList,
 
             operatingTimeInfo: store.operatingTimeInfo,
             operatingTimeTip: store.operatingTimeTip,
