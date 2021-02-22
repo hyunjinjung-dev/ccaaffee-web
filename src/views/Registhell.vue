@@ -5,15 +5,11 @@
       <v-img :src="url"></v-img>
     </div>
 
-    <v-btn @click="openDialogg">알림</v-btn>
+    <!-- <v-btn @click="openDialogg">알림</v-btn>
 
-    <alert-dialog
-      emoji="hh"
-      :dialog="tempDialog"
-      title="hh"
-      firstLineText="hh"
-      timeout="3000"
-    ></alert-dialog>
+    <v-btn @click="movemove">넘어가보자</v-btn> -->
+
+    <v-btn @click="openAlert">openAlert</v-btn>
 
     <!-- 출처 : https://lovemewithoutall.github.io/it/vue-image-upload-to-firestorage/ -->
     <v-btn @click.native="selectFile" v-if="!uploadEnd && !uploading">
@@ -76,9 +72,26 @@ export default {
     }
   },
   methods: {
+    openAlert() {
+      let alertDialogInfo = {
+        // timeout: 5000,
+        emoji: "🙏🏻",
+        title: "카페가 성공적으로 등록되었어요!",
+        firstLineText: "도움에 감사드립니다",
+        secondLineText: "by.ccaaffee",
+        // thirdLineText: "셋째줄",
+      }
+      this.$store.dispatch("openAlertDialog", alertDialogInfo)
+    },
+    closeDialog() {
+      this.tempDialog = false
+    },
     openDialogg() {
       this.tempDialog = true
       console.log(this.tempDialog)
+    },
+    movemove() {
+      this.tempDialog = true
     },
 
     Preview_image() {

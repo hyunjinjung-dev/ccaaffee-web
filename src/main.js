@@ -23,5 +23,3 @@ Vue.use(naver, {
   useGovAPI: false, //공공 클라우드 API 사용 (선택)
   subModules: "", // 서브모듈 (선택)
 })
-
-Vue.component("AlertDialog", () => import("@/components/Module/AlertDialog.vue"))

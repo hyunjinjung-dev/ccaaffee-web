@@ -325,11 +325,23 @@ export default {
       } finally {
         // To Do
         // 등록된 카페 디테일 페이지로 router 이동 필요
+        this.openAlert()
         this.goToDetail(id)
       }
     },
     goToDetail(storeId) {
       this.$router.push({ name: "Detail", params: { storeId: storeId } })
+    },
+    openAlert() {
+      let alertDialogInfo = {
+        // timeout: 5000,
+        emoji: "🙏🏻",
+        title: "카페가 성공적으로 등록되었어요!",
+        firstLineText: "도움에 감사드립니다",
+        secondLineText: "by.ccaaffee",
+        // thirdLineText: "셋째줄",
+      }
+      this.$store.dispatch("openAlertDialog", alertDialogInfo)
     },
   },
 }

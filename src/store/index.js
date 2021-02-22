@@ -9,6 +9,9 @@ export default new Vuex.Store({
     user: null,
     isLogin: false,
 
+    alertDialogToggle: false,
+    alertDialogInfo: null,
+
     sortTags: ["거리순", "평점순", "리뷰순", "신규오픈순"],
     dayOfWeek: ["월", "화", "수", "목", "금", "토", "일"],
     distance: ["100m", "300m", "500m", "1km", "3km"],
@@ -86,6 +89,14 @@ export default new Vuex.Store({
     setLogout(state) {
       state.isLogin = false
     },
+    openAlertDialog(state, payload) {
+      state.alertDialogInfo = payload
+      state.alertDialogToggle = true
+    },
+    closeAlertDialog(state) {
+      state.alertDialogInfo = null
+      state.alertDialogToggle = false
+    },
   },
   actions: {
     // Login && Logout
@@ -94,6 +105,13 @@ export default new Vuex.Store({
     },
     logout({ commit }) {
       commit("setLogout")
+    },
+    // Alert Dialog
+    openAlertDialog({ commit }, alertDialogInfo) {
+      commit("openAlertDialog", alertDialogInfo)
+    },
+    closeAlertDialog({ commit }) {
+      commit("closeAlertDialog")
     },
   },
   modules: {},

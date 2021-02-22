@@ -122,17 +122,40 @@
         </div> -->
       </template>
     </v-navigation-drawer>
+
+    <alert-dialog
+      v-if="alertDialogToggle"
+      :dialog="alertDialogToggle"
+      :timeout="alertDialogInfo.timeout"
+      :emoji="alertDialogInfo.emoji"
+      :title="alertDialogInfo.title"
+      :firstLineText="alertDialogInfo.firstLineText"
+      :secondLineText="alertDialogInfo.secondLineText"
+      :thirdLineText="alertDialogInfo.thirdLineText"
+    ></alert-dialog>
   </nav>
 </template>
 
 <script>
+import { mapState } from "vuex"
 import AccountMenu from "@/components/AccountMenu"
 import SignInDialog from "@/components/SignInDialog"
+import AlertDialog from "@/components/Module/AlertDialog"
 
 export default {
   components: {
     AccountMenu,
     SignInDialog,
+    AlertDialog,
+  },
+  computed: {
+    ...mapState(["alertDialogToggle", "alertDialogInfo"]),
+    //   alertDialogToggle() {
+    //     return this.$store.state.alertDialogToggle
+    //   },
+    //   alertDialogInfo() {
+    //     return this.$store.state.alertDialogInfo
+    //   },
   },
   data: () => ({
     mode: false,
