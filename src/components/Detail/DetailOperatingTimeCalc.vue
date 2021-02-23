@@ -1,30 +1,12 @@
 <template>
-  <div class="operating-time-outer">
-    <div v-if="isOpen">
-      <span class="text-green">영업중</span> · 영업종료시간 : {{ stringfyTime(noticeTime) }}
-    </div>
+  <div class="operating-time-outer" v-if="operatingTime">
+    <div v-if="isOpen"><span>영업중</span> · 영업종료시간 : {{ stringfyTime(noticeTime) }}</div>
     <div v-else>
       <span class="text-red">영업종료</span>
       <span> · 영업시작시간 : </span>
       <span v-if="noticeDay">{{ noticeDay }}요일 </span>
       <span>{{ stringfyTime(noticeTime) }}</span>
     </div>
-    <!-- <div>
-      {{ calcNowTime }}
-    </div> -->
-
-    <!-- {{ operatingTime }} -->
-
-    <!-- 0~6 오늘의 요일 받고
-    operatingTime을 받고
-
-    operatingTime이 없으면
-    정보없음으로 return
-    
-    operatingTime이 있으면
-    해당 인덱스로 가서 영업시간 확인하고
-    영업중 >>  종료시간
-    영업종료 >> 다음 영업시작 시간 확인 -->
   </div>
 </template>
 

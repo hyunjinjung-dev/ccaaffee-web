@@ -31,7 +31,12 @@
           <!-- v-for="i in loading ? 10 : 12"
           :key="i" -->
           <!-- <v-skeleton-loader type="card-avatar" :loading="loading"> -->
-          <store-card :card="{ maxWidth: 350 }" :store="store" :fireUser="fireUser"></store-card>
+          <store-card
+            v-if="store"
+            :card="{ maxWidth: 350 }"
+            :store="store"
+            :fireUser="fireUser"
+          ></store-card>
           <!-- </v-skeleton-loader> -->
         </v-col>
       </v-row>
@@ -119,6 +124,7 @@ export default {
         }
         this.storeList = sn.docs.map((v) => {
           const store = v.data()
+          const ot = store.operatingTime
           return {
             storeId: v.id,
             createdAt: store.createdAt.toDate(),
@@ -148,13 +154,13 @@ export default {
             operatingTimeInfo: store.operatingTimeInfo,
             operatingTimeTip: store.operatingTimeTip,
             operatingTime: [
-              { open: store.openSun, openTime: store.openTimeSun, closeTime: store.closeTimeSun },
-              { open: store.openMon, openTime: store.openTimeMon, closeTime: store.closeTimeMon },
-              { open: store.openTue, openTime: store.openTimeTue, closeTime: store.closeTimeTue },
-              { open: store.openWed, openTime: store.openTimeWed, closeTime: store.closeTimeWed },
-              { open: store.openThu, openTime: store.openTimeThu, closeTime: store.closeTimeThu },
-              { open: store.openFri, openTime: store.openTimeFri, closeTime: store.closeTimeFri },
-              { open: store.openSat, openTime: store.openTimeSat, closeTime: store.closeTimeSat },
+              { open: ot?.openSun, openTime: ot?.openTimeSun, closeTime: ot?.closeTimeSun },
+              { open: ot?.openMon, openTime: ot?.openTimeMon, closeTime: ot?.closeTimeMon },
+              { open: ot?.openTue, openTime: ot?.openTimeTue, closeTime: ot?.closeTimeTue },
+              { open: ot?.openWed, openTime: ot?.openTimeWed, closeTime: ot?.closeTimeWed },
+              { open: ot?.openThu, openTime: ot?.openTimeThu, closeTime: ot?.closeTimeThu },
+              { open: ot?.openFri, openTime: ot?.openTimeFri, closeTime: ot?.closeTimeFri },
+              { open: ot?.openSat, openTime: ot?.openTimeSat, closeTime: ot?.closeTimeSat },
             ],
             options: store.options,
             parkingTip: store.parkingTip,

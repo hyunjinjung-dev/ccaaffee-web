@@ -31,7 +31,7 @@ export default {
   name: "DetailSentiment",
   props: ["store"],
   data: () => ({
-    selectedSentiment: null,
+    // selectedSentiment: null,
     sentiments: [
       {
         id: "first",

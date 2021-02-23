@@ -21,6 +21,7 @@
 
     <v-btn
       v-else-if="store.likeUserList && type == 'card'"
+      small
       icon
       fab
       class="white--text"

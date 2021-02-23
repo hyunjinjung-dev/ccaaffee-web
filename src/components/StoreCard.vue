@@ -12,27 +12,13 @@
         style="background-color: inherit;"
       >
         <div class="" style="text-align:right;">
-          <!-- <v-btn icon fab class="white--text mr-1">
-            <v-icon>
-              mdi-heart-outline
-            </v-icon>
-          </v-btn> -->
           <detail-like :store="store" type="card"></detail-like>
         </div>
         <div style="text-align:right;">
           <detail-bookmark :store="store" type="card"></detail-bookmark>
-          <!-- <v-btn icon fab class="white--text">
-            <v-icon>
-              mdi-bookmark-outline
-            </v-icon>
-          </v-btn> -->
         </div>
         <div style="text-align:right;">
-          <v-btn icon fab class="white--text">
-            <v-icon>
-              mdi-pin-outline
-            </v-icon>
-          </v-btn>
+          <store-card-sentiment :store="store"></store-card-sentiment>
         </div>
 
         <v-spacer></v-spacer>
@@ -45,79 +31,53 @@
           {{ store.branchName }}
         </v-card-subtitle>
 
-        <v-card-text class="white--text">
-          Open
-          <v-icon class="white--text">mdi-circle-small</v-icon>
+        <v-card-text class="white--text py-0">
+          <detail-operating-time-calc
+            v-if="store.operatingTimeInfo"
+            :operatingTime="store.operatingTime"
+          ></detail-operating-time-calc>
+        </v-card-text>
+
+        <v-card-text class="white--text py-0">
           <v-icon class="white--text" x-small>mdi-eye</v-icon>
           <display-count :count="store.viewCount"></display-count>
 
           <v-icon class="white--text">mdi-circle-small</v-icon>
+          <v-icon class="white--text" x-small>mdi-pencil</v-icon>
+          <display-count :count="store.reviewCount"></display-count>
+        </v-card-text>
+
+        <v-card-text class="white--text pt-0">
           <v-icon class="white--text" x-small>mdi-heart</v-icon>
           <display-count :count="store.likeUserCount"></display-count>
 
           <v-icon class="white--text">mdi-circle-small</v-icon>
           <v-icon class="white--text" x-small>mdi-bookmark</v-icon>
           <display-count :count="store.bookmarkUserCount"></display-count>
+
+          <v-icon class="white--text">mdi-circle-small</v-icon>
+          <v-icon class="white--text" x-small>mdi-pin</v-icon>
+          <display-count :count="store.sentimentUserCount"></display-count>
         </v-card-text>
       </v-card>
     </v-img>
-
-    <!-- <v-card-actions>
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-bookmark</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
-    </v-card-actions> -->
   </v-card>
-
-  <!-- <v-card class="card mx-auto pa-2" :max-width="card.maxWidth">
-    <v-img src> </v-img>
-    <v-row no-gutters>
-      <v-col cols="10" @click="goToDetail(store.storeId)">
-        <v-card-title class="pt-3 pl-2 subtitle-1 font-weight-bold">
-          {{ store.storeNameKor }}
-          {{ store.branchName }}
-        </v-card-title>
-
-        <v-card-subtitle class="pl-2 pb-0">
-          Open
-          <v-icon>mdi-circle-small</v-icon>
-          <v-icon x-small>mdi-eye</v-icon>
-          2.3k
-
-          <v-icon>mdi-circle-small</v-icon>
-          <v-icon x-small>mdi-heart</v-icon>
-          320
-        </v-card-subtitle>
-      </v-col>
-      <v-col cols="2" class="pl-0 pt-3">
-        <v-btn fab small depressed :color="liked ? 'primary' : ''" @click="heartBtnClicked">
-          <v-icon color="white">mdi-heart</v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-card> -->
 </template>
 
 <script>
 import DisplayCount from "@/components/DisplayCount"
+import DetailOperatingTimeCalc from "@/components/Detail/DetailOperatingTimeCalc.vue"
 import DetailLike from "@/components/Detail/DetailLike.vue"
 import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
+import StoreCardSentiment from "@/components/StoreCardSentiment.vue"
 
 export default {
   components: {
     DisplayCount,
+    DetailOperatingTimeCalc,
     DetailLike,
     DetailBookmark,
+    StoreCardSentiment,
   },
   props: {
     store: {
@@ -134,6 +94,7 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     }
   },
+  mounted() {},
   methods: {
     heartBtnClicked() {
       this.liked = !this.liked

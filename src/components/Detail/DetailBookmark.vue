@@ -21,6 +21,7 @@
 
     <v-btn
       v-else-if="store.bookmarkUserList && type == 'card'"
+      small
       icon
       fab
       class="white--text"
