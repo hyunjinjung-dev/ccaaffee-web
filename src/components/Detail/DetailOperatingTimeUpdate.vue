@@ -72,6 +72,7 @@ export default {
       dayLabels: ["일", "월", "화", "수", "목", "금", "토"],
       formTip: "",
       form: [],
+      operatingTimeInfoToggle: false,
     }
   },
   mounted() {
@@ -152,7 +153,7 @@ export default {
           .doc(this.store.storeId)
           .update({
             operatingTime: updateForm,
-            operatingTimeInfo: true,
+            operatingTimeInfo: this.operatingTimeInfoToggle,
             operatingTimeTip: this.formTip,
           })
       } finally {
@@ -161,6 +162,7 @@ export default {
     },
     mapping() {
       let day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+      let infoToggleOff = false
       let updateForm = {}
       for (let i = 0; i < 7; i++) {
         let open = "open" + day[i]
@@ -171,10 +173,16 @@ export default {
         if (this.form[i].open === true) {
           updateForm[openTime] = this.form[i].openTime
           updateForm[closeTime] = this.form[i].closeTime
+          infoToggleOff = true
         } else {
           updateForm[openTime] = null
           updateForm[closeTime] = null
         }
+      }
+      if (infoToggleOff == true) {
+        this.operatingTimeInfoToggle = true
+      } else {
+        this.operatingTimeInfoToggle = false
       }
       return updateForm
     },

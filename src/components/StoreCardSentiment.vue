@@ -1,100 +1,101 @@
 <template>
-  <v-container fluid>
-    <v-card color="accent" dark>
-      <v-card-title>
-        <v-layout align-center justify-space-between wrap>
-          <v-flex sm6 xs12 class="font-weight-medium subheading" style="text-align:center;">
-            <small v-if="store.storeNameKor"> {{ store.storeNameKor }}에 </small>
-            <small>방문하신 적이 있나요?</small>
-          </v-flex>
-          <v-flex sm6 xs12 shrink style="text-align:center;">
-            <v-btn-toggle
-              class="transparent"
-              v-model="oldSentiment"
-              borderless
-              mandatory
-              tile
-              active-class="active-sentiment"
-            >
-              <v-tooltip v-for="sentiment in sentiments" :key="`sentiment-key-${sentiment.id}`" top>
-                <!-- :color="sentiment.color" -->
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    icon
-                    :ripple="false"
-                    v-on="on"
-                    text
-                    @click="sentimentSelected(sentiment.id, oldSentiment)"
-                  >
-                    <v-icon>{{ sentiment.icon }}</v-icon>
-                  </v-btn>
-                </template>
-                {{ sentiment.title }}
-              </v-tooltip>
-            </v-btn-toggle>
-          </v-flex>
-        </v-layout>
-      </v-card-title>
-    </v-card>
-  </v-container>
+  <v-sheet class="pa-1" style="background-color: inherit;">
+    <v-menu offset-y left nudge-top="70" nudge-left="50" content-class="elevation-0">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn v-bind="attrs" v-on="on" small icon fab @click="loginCheck">
+          <v-icon v-if="userSentiment" color="white">
+            mdi-pin
+          </v-icon>
+          <v-icon v-else color="white">
+            mdi-pin-outline
+          </v-icon>
+        </v-btn>
+      </template>
+
+      <div v-if="fireUser">
+        <div class="white--text font-weight-bold" style="text-align: center;">
+          방문하신 적이 있나요?
+        </div>
+        <v-btn-toggle v-model="userSentiment" style="background-color: inherit;">
+          <span v-for="(sentiment, index) in sentiments" :key="index">
+            <v-btn icon text @click="sentimentSelected(sentiment.id, userSentiment)">
+              <v-icon v-if="userSentiment != sentiment.id" color="white">
+                {{ sentiment.icon + "-outline" }}
+              </v-icon>
+              <v-icon v-else color="white">{{ sentiment.icon }}</v-icon>
+            </v-btn>
+          </span>
+        </v-btn-toggle>
+      </div>
+    </v-menu>
+  </v-sheet>
 </template>
 
 <script>
 export default {
-  name: "DetailSelectSentiment",
-  props: ["store", "userSentiment"],
+  props: ["store"],
   data: () => ({
-    oldSentiment: null,
+    userSentiment: null,
     sentiments: [
       {
         id: 0,
-        icon: "mdi-close-circle-outline",
+        icon: "mdi-close-circle",
         title: "미방문",
-        color: "info",
       },
       {
         id: 1,
-        icon: "mdi-emoticon-sad-outline",
+        icon: "mdi-emoticon-sad",
         title: "별로",
         color: "info",
       },
       {
         id: 2,
-        icon: "mdi-emoticon-neutral-outline",
+        icon: "mdi-emoticon-neutral",
         title: "쏘쏘",
         color: "info",
       },
       {
         id: 3,
-        icon: "mdi-emoticon-happy-outline",
+        icon: "mdi-emoticon-happy",
         title: "만족",
         color: "info",
       },
       {
         id: 4,
-        icon: "mdi-emoticon-kiss-outline",
+        icon: "mdi-emoticon-kiss",
         title: "추천",
         color: "info",
       },
     ],
   }),
+  mounted() {
+    this.patch()
+  },
   computed: {
-    breakPointXs() {
-      return this.$vuetify.breakpoint.xs ? true : false
-    },
     fireUser() {
       return this.$store.state.fireUser
     },
-    user() {
-      return this.$store.state.user
-    },
-  },
-  mounted() {
-    this.fetch()
   },
   methods: {
-    fetch() {
-      this.oldSentiment = this.userSentiment
+    patch() {
+      if (this.store.sentimentUserList && this.fireUser) {
+        const userSentimentData = this.store.sentimentUserList.find((item) => {
+          if (this.fireUser.uid) {
+            return item.uid === this.fireUser.uid
+          }
+        })
+        if (userSentimentData) {
+          this.userSentiment = userSentimentData.sentiment
+        } else {
+          this.userSentiment = 0
+        }
+      }
+    },
+    loginCheck() {
+      if (!this.fireUser) {
+        this.$toast.error("로그인이 필요해요")
+        return
+      }
     },
     async sentimentSelected(newVal, oldVal) {
       if (!this.fireUser) {
@@ -177,21 +178,10 @@ export default {
           }
         }
       } finally {
-        this.$emit("sentimentSelected")
+        this.patch()
+        // this.$emit("sentimentSelected")
       }
     },
   },
 }
 </script>
-
-<style scoped>
-.v-btn-toggle .v-btn.v-btn--icon {
-  width: 37px;
-}
-.v-btn-toggle--selected {
-  box-shadow: none;
-}
-/* .active-sentiment {
-  background-color: #e57373;
-} */
-</style>

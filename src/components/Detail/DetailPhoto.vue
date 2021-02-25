@@ -74,6 +74,7 @@
       :title="title"
       :store="store"
       :dialog="addDialog"
+      :type="addPhotoType"
       @addPhotoComplete="updateUserPagePhoto"
       @closeBtnClicked="closeAddPhotoDialog"
     >
@@ -124,6 +125,8 @@ export default {
       expand: true,
       addDialog: false,
       deleteDialog: false,
+
+      addPhotoType: "",
 
       storagePhotoList: [],
       userPhotoList: [],
@@ -245,10 +248,8 @@ export default {
       this.userPhotoList = []
 
       if (this.user.level == 0) {
-        console.log("manager")
         this.userPhotoList = this.sortedPhotoList
       } else {
-        console.log("normal user")
         let myPhotoList = []
         let myUid = this.fireUser.uid
         this.sortedPhotoList.forEach((item) => {
@@ -286,7 +287,8 @@ export default {
     closePhotoDialog() {
       this.photoDialog = false
     },
-    openAddPhotoDialog() {
+    openAddPhotoDialog(type) {
+      this.addPhotoType = type
       this.addDialog = true
     },
     openDeletePhotoDialog() {

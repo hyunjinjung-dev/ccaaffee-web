@@ -343,7 +343,23 @@ export default {
       this.dialog = false
     },
     applyBtnClicked() {
-      this.$emit("applyFilter")
+      let optionList = []
+      this.selectedParkingTags.forEach((tag) => {
+        optionList.push(tag)
+      })
+      this.selectedOfferTags.forEach((tag) => {
+        optionList.push(tag)
+      })
+      this.selectedPolicyTags.forEach((tag) => {
+        optionList.push(tag)
+      })
+      this.selectedAmenityTags.forEach((tag) => {
+        optionList.push(tag)
+      })
+      this.selectedThemeTags.forEach((tag) => {
+        optionList.push(tag)
+      })
+      this.$emit("applyFilter", optionList)
       this.dialog = false
     },
   },

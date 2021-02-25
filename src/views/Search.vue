@@ -31,7 +31,12 @@
           <!-- v-for="i in loading ? 10 : 12"
           :key="i" -->
           <!-- <v-skeleton-loader type="card-avatar" :loading="loading"> -->
-          <store-card :card="{ maxWidth: 350 }" :store="store"></store-card>
+          <store-card
+            v-if="store"
+            :card="{ maxWidth: 350 }"
+            :store="store"
+            :fireUser="fireUser"
+          ></store-card>
           <!-- </v-skeleton-loader> -->
         </v-col>
       </v-row>
@@ -66,6 +71,7 @@ export default {
       searchText: "",
 
       storeList: [],
+      optionList: [],
     }
   },
   created() {
@@ -81,6 +87,11 @@ export default {
     if (this.unsubscribe) {
       this.unsubscribe()
     }
+  },
+  computed: {
+    fireUser() {
+      return this.$store.state.fireUser
+    },
   },
   methods: {
     // getCurrentLocation() {
@@ -101,56 +112,81 @@ export default {
     // },
 
     subscribe() {
-      const ref = this.$firebase
-        .firestore()
-        .collection("store")
-        .doc("cafes")
-        .collection("cafe")
+      // 1. subscribe로 모든 데이터를 받아서 필터링을 하면 과금 문제
+      // 2. 리뷰 읽듯이 5개씩 끊어서 받으려고 하면 조건이 이미 지어진 상태에서 5개씩 받아야함.
+
+      let ref = null
+      if (this.optionList.length == 0) {
+        ref = this.$firebase
+          .firestore()
+          .collection("store")
+          .doc("cafes")
+          .collection("cafe")
+      } else {
+        ref = this.$firebase
+          .firestore()
+          .collection("store")
+          .doc("cafes")
+          .collection("cafe")
+        this.optionList.forEach((option) => {
+          let optionString = "options." + option
+          ref = ref.where(optionString, "==", true)
+        })
+      }
 
       this.unsubscribe = ref.onSnapshot((sn) => {
         if (sn.empty) {
           this.storeList = []
           return
         }
-        this.storeList = sn.docs.map((v) => {
-          const store = v.data()
-          return {
-            storeId: v.id,
-            createdAt: store.createdAt.toDate(),
-            // createdAt: store.createdAt.toDate().toLocaleString(),
-            storeNameKor: store.storeNameKor,
-            storeNameEng: store.storeNameEng,
-            branchName: store.branchName,
-            address: store.address,
-            lowFloor: store.lowFloor,
-            highFloor: store.highFloor,
-            lat: store.lat,
-            lng: store.lng,
-            distance: this.calcDistance(store.lat, store.lng) || -1,
-            phoneNumber: store.phoneNumber,
-            instagram: store.instagram,
-            viewCount: store.viewCount,
-            reviewCount: store.reviewCount,
-            rating: store.rating,
-            seatCount: store.seatCount,
-            likeUserCount: store.likeUserCount,
-            likeUserList: store.likeUserList,
+        this.setStoreList(sn)
+      })
+    },
+    setStoreList(sn) {
+      this.storeList = sn.docs.map((v) => {
+        const store = v.data()
+        const ot = store.operatingTime
+        return {
+          storeId: v.id,
+          createdAt: store.createdAt.toDate(),
+          // createdAt: store.createdAt.toDate().toLocaleString(),
+          storeNameKor: store.storeNameKor,
+          storeNameEng: store.storeNameEng,
+          branchName: store.branchName,
+          address: store.address,
+          addressLocation: store.addressJibun.split(" ")[2],
+          lowFloor: store.lowFloor,
+          highFloor: store.highFloor,
+          lat: store.lat,
+          lng: store.lng,
+          distance: this.calcDistance(store.lat, store.lng) || -1,
+          phoneNumber: store.phoneNumber,
+          instagram: store.instagram,
+          viewCount: store.viewCount,
+          reviewCount: store.reviewCount,
+          rating: store.rating,
+          seatCount: store.seatCount,
+          likeUserCount: store.likeUserCount,
+          likeUserList: store.likeUserList,
+          bookmarkUserCount: store.bookmarkUserCount,
+          bookmarkUserList: store.bookmarkUserList,
+          sentimentUserCount: store.sentimentUserCount,
+          sentimentUserList: store.sentimentUserList,
 
-            operatingTimeInfo: store.operatingTimeInfo,
-            operatingTimeTip: store.operatingTimeTip,
-            operatingTime: [
-              { open: store.openSun, openTime: store.openTimeSun, closeTime: store.closeTimeSun },
-              { open: store.openMon, openTime: store.openTimeMon, closeTime: store.closeTimeMon },
-              { open: store.openTue, openTime: store.openTimeTue, closeTime: store.closeTimeTue },
-              { open: store.openWed, openTime: store.openTimeWed, closeTime: store.closeTimeWed },
-              { open: store.openThu, openTime: store.openTimeThu, closeTime: store.closeTimeThu },
-              { open: store.openFri, openTime: store.openTimeFri, closeTime: store.closeTimeFri },
-              { open: store.openSat, openTime: store.openTimeSat, closeTime: store.closeTimeSat },
-            ],
-            options: store.options,
-            parkingTip: store.parkingTip,
-          }
-        })
+          operatingTimeInfo: store.operatingTimeInfo,
+          operatingTimeTip: store.operatingTimeTip,
+          operatingTime: [
+            { open: ot?.openSun, openTime: ot?.openTimeSun, closeTime: ot?.closeTimeSun },
+            { open: ot?.openMon, openTime: ot?.openTimeMon, closeTime: ot?.closeTimeMon },
+            { open: ot?.openTue, openTime: ot?.openTimeTue, closeTime: ot?.closeTimeTue },
+            { open: ot?.openWed, openTime: ot?.openTimeWed, closeTime: ot?.closeTimeWed },
+            { open: ot?.openThu, openTime: ot?.openTimeThu, closeTime: ot?.closeTimeThu },
+            { open: ot?.openFri, openTime: ot?.openTimeFri, closeTime: ot?.closeTimeFri },
+            { open: ot?.openSat, openTime: ot?.openTimeSat, closeTime: ot?.closeTimeSat },
+          ],
+          options: store.options,
+          parkingTip: store.parkingTip,
+        }
       })
     },
     calcDistance(lat2, lng2) {
@@ -184,8 +220,9 @@ export default {
     searchBtnClicked() {
       console.log("searchBtnClicked")
     },
-    applyFilter() {
-      console.log("applyFilter")
+    applyFilter(optionList) {
+      this.optionList = optionList
+      this.subscribe()
     },
     // async save() {
     //   console.log("save@@@")
