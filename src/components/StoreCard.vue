@@ -1,11 +1,20 @@
 <template>
   <v-card>
+    <!-- :src="src" -->
     <v-img
-      :src="src"
       class="white--text"
+      :src="coverPhotoSrc"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       aspect-ratio="0.7"
+      @click.once="goToDetail(store.storeId)"
     >
+      <!-- <template v-slot:placeholder>
+        <div style="height:100%; width:100%; background-color: grey;"></div>
+        <v-row class="fill-height ma-0" align="center" justify="center">
+          Cover를 등록해주세요
+          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+        </v-row>
+      </template> -->
       <v-card
         class="d-flex flex-column white--text"
         height="100%"
@@ -22,6 +31,10 @@
         </div>
 
         <v-spacer></v-spacer>
+
+        <v-card-text class="white--text py-0">
+          <v-chip small>{{ store.addressLocation }} </v-chip>
+        </v-card-text>
 
         <v-card-title class="white--text">
           {{ store.storeNameKor }}
@@ -88,25 +101,68 @@ export default {
   },
   data() {
     return {
-      src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
-      liked: false,
-      colors: ["green", "secondary", "yellow darken-4", "red lighten-2", "orange darken-1"],
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
+      coverPhoto: null,
+      // src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
     }
   },
-  mounted() {},
+  mounted() {
+    this.readCoverPhoto()
+  },
+  watch: {
+    // 필터를 변경했을 때, 이미지가 rerendering되지 않는 문제로 인해 watch 추가
+    store() {
+      this.readCoverPhoto()
+    },
+  },
+  computed: {
+    coverPhotoSrc() {
+      if (this.coverPhoto != null) {
+        return this.coverPhoto[0]?.link
+      } else {
+        return ""
+      }
+    },
+  },
   methods: {
-    heartBtnClicked() {
-      this.liked = !this.liked
+    async readCoverPhoto() {
+      const storageRef = this.$firebase.storage().ref()
+      const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo_cover")
+      let storageData = await listRef
+        .listAll()
+        .then(function(res) {
+          let list = []
+          res.items.forEach(function(itemRef) {
+            // storage file의 이름 가져오기 >> createdAt, uid 세팅
+            let fileName = itemRef.name
+            let fileNameSplit = itemRef.name.split("-")
+            let createdAt = Number(fileNameSplit[0])
+            let uid = fileNameSplit[1]
+
+            // storage file의 링크 가져오고 Data Setting
+            itemRef.getDownloadURL().then(function(url) {
+              let link = url
+              list.push({
+                fileName: fileName,
+                createdAt: createdAt,
+                link: link,
+                uid: uid,
+              })
+            })
+          })
+          // console.log("===========", list)
+          return list
+        })
+        .catch(function(error) {
+          console.log("error", error)
+        })
+      // console.log("here", storageData)
+      this.coverPhoto = storageData
+      // console.log("coverPhoto", this.coverPhoto, this.coverPhoto[0], this.coverPhoto.link)
+      // console.log("coverPhoto[0]", this.coverPhoto[0])
     },
     goToDetail(storeId) {
       this.$router.push({ name: "Detail", params: { storeId: storeId } })
     },
-  },
-  computed: {
-    // liked() {
-    //   return false
-    // },
   },
 }
 </script>

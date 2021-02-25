@@ -32,7 +32,10 @@
               <!-- <v-list-item v-for="(item, index) in menuOptions" :key="index">
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item> -->
-              <v-list-item @click="addPhotoBtnClicked">추가</v-list-item>
+              <v-list-item v-if="fireUser && user.level == 0" @click="addPhotoBtnClicked('cover')">
+                커버
+              </v-list-item>
+              <v-list-item @click="addPhotoBtnClicked('normal')">추가</v-list-item>
               <v-list-item @click="deletePhotoBtnClicked">삭제</v-list-item>
             </v-list>
           </v-menu>
@@ -72,6 +75,12 @@ export default {
     sizeXS() {
       return this.$vuetify.breakpoint.xs
     },
+    fireUser() {
+      return this.$store.state.fireUser
+    },
+    user() {
+      return this.$store.state.user
+    },
   },
   methods: {
     expandToggle() {
@@ -80,8 +89,8 @@ export default {
     editBtnClicked() {
       this.$emit("updateBtnClicked")
     },
-    addPhotoBtnClicked() {
-      this.$emit("addPhotoBtnClicked")
+    addPhotoBtnClicked(type) {
+      this.$emit("addPhotoBtnClicked", type)
     },
     deletePhotoBtnClicked() {
       this.$emit("deletePhotoBtnClicked")

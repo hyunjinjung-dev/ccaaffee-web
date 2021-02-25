@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!-- <detail-cover-photo :store="store"></detail-cover-photo> -->
+
     <v-layout :class="this.$vuetify.breakpoint.xs ? 'mx-0 my-3' : 'ma-5'" fill-height>
       <v-flex xs12>
         <v-layout wrap align-center>
@@ -155,6 +157,7 @@ import DetailLike from "@/components/Detail/DetailLike.vue"
 import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
 import DetailSelectSentiment from "@/components/Detail/DetailSelectSentiment.vue"
 
+// import DetailCoverPhoto from "@/components/Detail/DetailCoverPhoto.vue"
 import DetailPhoto from "@/components/Detail/DetailPhoto.vue"
 import DetailBasicInfo from "@/components/Detail/DetailBasicInfo.vue"
 import DetailOperatingTime from "@/components/Detail/DetailOperatingTime.vue"
@@ -173,6 +176,7 @@ export default {
     DetailBookmark,
     DetailSelectSentiment,
 
+    // DetailCoverPhoto,
     DetailPhoto,
     DetailBasicInfo,
     DetailOperatingTime,

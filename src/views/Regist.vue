@@ -159,7 +159,7 @@
       <v-card>
         <vue-daum-postcode
           style="height: 500px; overflow: scroll;"
-          @complete="addressSelected($event.roadAddress)"
+          @complete="addressSelected($event)"
         />
       </v-card>
     </v-dialog>
@@ -189,6 +189,7 @@ export default {
         storeNameEng: "",
         branchName: "",
         address: "",
+        addressJibun: "",
         lowFloor: 1,
         highFloor: 1,
         lat: 0,
@@ -254,7 +255,8 @@ export default {
       this.addressDialogToggle = true
     },
     addressSelected(selectedAddress) {
-      this.form.address = selectedAddress
+      this.form.addressJibun = selectedAddress.jibunAddress
+      this.form.address = selectedAddress.roadAddress
       this.addressDialogToggle = false
     },
 

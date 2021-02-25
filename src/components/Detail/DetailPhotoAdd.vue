@@ -7,7 +7,10 @@
     transition="scroll-x-transition"
   >
     <v-card class="pa-2">
-      <v-card-title class="font-weight-bold subheading mb-5">{{ title }} 추가</v-card-title>
+      <v-card-title class="font-weight-bold subheading mb-5">
+        <span v-if="type == 'cover'">커버</span>
+        <span> {{ title }} 추가 </span>
+      </v-card-title>
       <v-card-text>
         <v-file-input
           v-model="inputFile"
@@ -38,7 +41,7 @@
 
 <script>
 export default {
-  props: ["title", "store", "dialog"],
+  props: ["title", "store", "type", "dialog"],
   data() {
     return {
       inputFile: null,
@@ -180,12 +183,19 @@ export default {
       const uid = this.fireUser.uid
       const fileName = createdAt + "-" + uid
 
-      await this.$firebase
-        .storage()
-        .ref("cafes/" + storeId + "/photo/" + fileName)
-        .put(file)
+      if (this.type == "normal") {
+        await this.$firebase
+          .storage()
+          .ref("cafes/" + storeId + "/photo/" + fileName)
+          .put(file)
 
-      this.$emit("addPhotoComplete", fileName, createdAt, this.resizedImg, uid)
+        this.$emit("addPhotoComplete", fileName, createdAt, this.resizedImg, uid)
+      } else {
+        await this.$firebase
+          .storage()
+          .ref("cafes/" + storeId + "/photo_cover/" + fileName)
+          .put(file)
+      }
       this.uploadLoading = false
       this.closeBtnClicked()
     },

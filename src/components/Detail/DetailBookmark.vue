@@ -25,7 +25,7 @@
       icon
       fab
       class="white--text"
-      @click="bookmark"
+      @click.stop="bookmark"
     >
       <v-icon v-if="bookmarked()">
         mdi-bookmark

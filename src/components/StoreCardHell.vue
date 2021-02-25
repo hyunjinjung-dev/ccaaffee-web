@@ -9,7 +9,7 @@
       show-arrows-on-hover
       height="200px"
     >
-      <!-- <template v-slot:prev="{ on, attrs }">
+      <!-- <template v-slot:prev="{ on, attrs }">ㅊ
         <v-btn color="white" v-bind="attrs" v-on="on" icon small>
           <v-icon small>mdi-chevron-left</v-icon>
         </v-btn>

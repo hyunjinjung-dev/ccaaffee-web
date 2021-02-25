@@ -25,7 +25,7 @@
       icon
       fab
       class="white--text"
-      @click="like"
+      @click.stop="like"
     >
       <v-icon v-if="liked()">
         mdi-heart
