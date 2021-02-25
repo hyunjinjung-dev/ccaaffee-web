@@ -137,6 +137,7 @@
             <detail-options :store="store"></detail-options>
             <detail-location :store="store"></detail-location>
             <detail-menu :store="store"></detail-menu>
+            <detail-notice />
           </v-flex>
           <v-flex md4 sm12 xs12 class="pa-1">
             <detail-sentiment :store="store"></detail-sentiment>
@@ -164,6 +165,7 @@ import DetailOperatingTime from "@/components/Detail/DetailOperatingTime.vue"
 import DetailOptions from "@/components/Detail/DetailOptions.vue"
 import DetailLocation from "@/components/Detail/DetailLocation.vue"
 import DetailMenu from "@/components/Detail/DetailMenu.vue"
+import DetailNotice from "@/components/Detail/DetailNotice.vue"
 
 import DetailSentiment from "@/components/Detail/DetailSentiment.vue"
 import DetailReview from "@/components/Detail/DetailReview.vue"
@@ -183,6 +185,7 @@ export default {
     DetailOptions,
     DetailLocation,
     DetailMenu,
+    DetailNotice,
 
     DetailSentiment,
     DetailReview,

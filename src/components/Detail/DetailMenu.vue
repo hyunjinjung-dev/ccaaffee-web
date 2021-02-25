@@ -74,7 +74,7 @@
               </v-list-item>
             </v-flex>
             <!-- <v-flex style="border-top: 1px solid  #eeee;"> -->
-            <v-flex xs12>
+            <!-- <v-flex xs12>
               <v-list-item>
                 <v-divider></v-divider>
               </v-list-item>
@@ -85,7 +85,7 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-            </v-flex>
+            </v-flex> -->
           </v-layout>
         </v-list>
         <!-- <v-container v-if="store.menusLeft" class="py-2 px-4">
