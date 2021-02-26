@@ -16,18 +16,12 @@ let unsubscribe = null
 //   store.commit("setFireUser", fu)
 //   store.commit("setLogin")
 // })
-const subscribe = (fu) => {
-  const ref = firebase
-    .firestore()
-    .collection("users")
-    .doc(fu.uid)
-  unsubscribe = ref.onSnapshot((doc) => {
-    if (doc.exists) {
-      store.commit("setUser", doc.data())
-    }
-  }, console.error)
-}
 
+Vue.prototype.$firebase = firebase
+
+// Auth 정보에 변경이 있으면
+// fu가 있으면 : fireUser 세팅
+// fu가 없으면 : fireUser, user 초기화
 firebase.auth().onAuthStateChanged((fu) => {
   if (!fu) {
     // user 정보가 없을 경우
@@ -45,4 +39,16 @@ firebase.auth().onAuthStateChanged((fu) => {
   store.dispatch("login")
 })
 
-Vue.prototype.$firebase = firebase
+// 위 onAuthStateChanged 에서 "subscribe(fu)"를 통해
+// fu.uid에 해당하는 user정보를 firestore에서 가져와서 세팅
+const subscribe = (fu) => {
+  const ref = firebase
+    .firestore()
+    .collection("users")
+    .doc(fu.uid)
+  unsubscribe = ref.onSnapshot((doc) => {
+    if (doc.exists) {
+      store.commit("setUser", doc.data())
+    }
+  }, console.error)
+}

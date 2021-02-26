@@ -32,8 +32,8 @@
           :key="i" -->
           <!-- <v-skeleton-loader type="card-avatar" :loading="loading"> -->
           <store-card
-            v-if="store"
             :card="{ maxWidth: 350 }"
+            v-if="store"
             :store="store"
             :fireUser="fireUser"
           ></store-card>
