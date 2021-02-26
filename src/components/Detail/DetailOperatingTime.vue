@@ -106,7 +106,8 @@
                         <template v-else>
                           <v-col>
                             <span class="mr-2">{{ dayLabels[index] }}</span>
-                            <span class="error--text">휴무</span>
+                            <!-- <span class="error--text">휴무</span> -->
+                            <span>휴무</span>
                           </v-col>
                         </template>
                       </v-row>

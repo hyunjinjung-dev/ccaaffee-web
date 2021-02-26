@@ -52,6 +52,7 @@ export default new Vuex.Store({
       "유아의자",
       "화장실 남녀구분",
       "흡연시설",
+      "소파",
     ],
     themeTags: [
       "갤러리",
@@ -64,6 +65,9 @@ export default new Vuex.Store({
       "벽돌",
       "오픈콘크리트",
       "가정집",
+      "작업실",
+      "공방",
+      "소품샵",
       "플라워",
       "가든",
       "수영장",
