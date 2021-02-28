@@ -116,10 +116,10 @@ export default {
   },
   computed: {
     coverPhotoSrc() {
-      if (this.coverPhoto != null) {
+      if (this.coverPhoto && this.coverPhoto.length > 0) {
         return this.coverPhoto[0]?.link
       } else {
-        return ""
+        return this.samplePhoto
       }
     },
   },

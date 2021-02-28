@@ -2,13 +2,14 @@
   <v-card>
     <v-img
       class="white--text"
-      :src="store.coverPhotoSrc"
+      :src="coverPhotoSrc"
       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
       aspect-ratio="0.7"
       @click.once="goToDetail(store.storeId)"
     >
       <template v-slot:placeholder>
         <div>hell</div>
+        <div>{{ store.link }}</div>
       </template>
 
       <v-card
@@ -75,6 +76,7 @@ export default {
   data() {
     return {
       coverPhoto: null,
+      samplePhoto: require("@/assets/grey.png"),
     }
   },
   mounted() {
@@ -92,10 +94,10 @@ export default {
   },
   computed: {
     coverPhotoSrc() {
-      if (this.coverPhoto != null) {
+      if (this.coverPhoto && this.coverPhoto.length > 0) {
         return this.coverPhoto[0]?.link
       } else {
-        return ""
+        return this.samplePhoto
       }
     },
   },
@@ -103,38 +105,39 @@ export default {
     removeStore(storeId) {
       this.$emit("removeStore", storeId)
     },
-    // async readCoverPhoto() {
-    //   const storageRef = this.$firebase.storage().ref()
-    //   const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo_cover")
-    //   let storageData = await listRef
-    //     .listAll()
-    //     .then(function(res) {
-    //       let list = []
-    //       res.items.forEach(function(itemRef) {
-    //         // storage file의 이름 가져오기 >> createdAt, uid 세팅
-    //         let fileName = itemRef.name
-    //         let fileNameSplit = itemRef.name.split("-")
-    //         let createdAt = Number(fileNameSplit[0])
-    //         let uid = fileNameSplit[1]
+    async readCoverPhoto() {
+      const storageRef = this.$firebase.storage().ref()
+      const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo_cover")
+      let storageData = await listRef
+        .listAll()
+        .then(function(res) {
+          let list = []
+          res.items.forEach(function(itemRef) {
+            // storage file의 이름 가져오기 >> createdAt, uid 세팅
+            let fileName = itemRef.name
+            let fileNameSplit = itemRef.name.split("-")
+            let createdAt = Number(fileNameSplit[0])
+            let uid = fileNameSplit[1]
 
-    //         // storage file의 링크 가져오고 Data Setting
-    //         itemRef.getDownloadURL().then(function(url) {
-    //           let link = url
-    //           list.push({
-    //             fileName: fileName,
-    //             createdAt: createdAt,
-    //             link: link,
-    //             uid: uid,
-    //           })
-    //         })
-    //       })
-    //       return list
-    //     })
-    //     .catch(function(error) {
-    //       console.log("error", error)
-    //     })
-    //   this.coverPhoto = storageData
-    // },
+            // storage file의 링크 가져오고 Data Setting
+            itemRef.getDownloadURL().then(function(url) {
+              let link = url
+              list.push({
+                fileName: fileName,
+                createdAt: createdAt,
+                link: link,
+                uid: uid,
+              })
+            })
+          })
+          return list
+        })
+        .catch(function(error) {
+          console.log("error", error)
+        })
+      console.log(storageData)
+      this.coverPhoto = storageData
+    },
     goToDetail(storeId) {
       this.$router.push({ name: "Detail", params: { storeId: storeId } })
     },
