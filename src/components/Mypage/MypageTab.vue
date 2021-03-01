@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col
-        :cols="breakPoint == 'xs' ? '6' : breakPoint == 'sm' ? '4' : '3'"
+        :cols="breakPoint == 'xs' ? '6' : breakPoint == 'sm' ? '4' : breakPoint == 'md' ? '3' : '2'"
         v-for="store in storeList"
         :key="store.storeId"
         class="ma-0 pa-1"
@@ -49,8 +49,10 @@ export default {
         return "xs"
       } else if (this.$vuetify.breakpoint.sm) {
         return "sm"
+      } else if (this.$vuetify.breakpoint.md) {
+        return "md"
       } else {
-        return "md-and-up"
+        return "lg-and-up"
       }
     },
   },
