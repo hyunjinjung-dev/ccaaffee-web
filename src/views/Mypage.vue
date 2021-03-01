@@ -56,7 +56,7 @@
       <v-tab-item>
         <v-card flat>
           <v-card-text class="pa-1">
-            33
+            <mypage-tab type="pin"></mypage-tab>
           </v-card-text>
         </v-card>
       </v-tab-item>

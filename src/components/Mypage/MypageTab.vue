@@ -3,14 +3,15 @@
     <v-row>
       <v-col
         :cols="breakPoint == 'xs' ? '6' : breakPoint == 'sm' ? '4' : '3'"
-        v-for="(store, index) in storeList"
-        :key="index"
+        v-for="store in storeList"
+        :key="store.storeId"
         class="ma-0 pa-1"
       >
         <mypage-store-card
           :store="store"
           :type="type"
-          @removeStore="removeStore"
+          @removeUserPageStore="removeUserPageStore"
+          @updateUserPageSentiment="updateUserPageSentiment"
         ></mypage-store-card>
       </v-col>
     </v-row>
@@ -37,6 +38,9 @@ export default {
     }
   },
   computed: {
+    fireUser() {
+      return this.$store.state.fireUser
+    },
     user() {
       return this.$store.state.user
     },
@@ -51,11 +55,24 @@ export default {
     },
   },
   methods: {
-    removeStore(storeId) {
+    removeUserPageStore(storeId) {
       const storeIndex = this.storeList.findIndex((store) => {
         return store.storeId == storeId
       })
       this.storeList.splice(storeIndex, 1)
+    },
+    updateUserPageSentiment(storeId, newVal) {
+      const storeIndex = this.storeList.findIndex((store) => {
+        return store.storeId == storeId
+      })
+      if (newVal == 0) {
+        this.storeList.splice(storeIndex, 1)
+      } else {
+        const userIndex = this.storeList[storeIndex].sentimentUserList.findIndex((user) => {
+          return user.uid == this.fireUser.uid
+        })
+        this.storeList[storeIndex].sentimentUserList[userIndex].sentiment = newVal
+      }
     },
     setStoreList() {
       if (this.type == "like") {
@@ -64,9 +81,10 @@ export default {
       } else if (this.type == "bookmark") {
         this.userStoreIdList = this.user.bookmarkStoreList
         this.getStoreList()
+      } else if (this.type == "pin") {
+        this.userStoreIdList = this.user.sentimentStoreList
+        this.getStoreList()
       }
-      // } else if (this.type == "pin") {
-      // }
     },
     async getStoreList() {
       const ref = this.$firebase
@@ -77,7 +95,12 @@ export default {
 
       await ref.get().then((sn) => {
         sn.forEach((doc) => {
-          const exists = this.userStoreIdList.some((store) => doc.id == store)
+          let exists = null
+          if (this.type != "pin") {
+            exists = this.userStoreIdList.some((store) => doc.id == store)
+          } else {
+            exists = this.userStoreIdList.some((store) => doc.id == store.storeId)
+          }
           if (exists) {
             const newStore = {}
             newStore.storeId = doc.id
@@ -88,6 +111,8 @@ export default {
             newStore.likeUserCount = doc.data().likeUserCount
             newStore.bookmarkUserList = doc.data().bookmarkUserList
             newStore.bookmarkUserCount = doc.data().bookmarkUserCount
+            newStore.sentimentUserList = doc.data().sentimentUserList
+            newStore.sentimentUserCount = doc.data().sentimentUserCount
             this.storeList.push(newStore)
           }
         })

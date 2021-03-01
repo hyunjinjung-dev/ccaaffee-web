@@ -123,7 +123,7 @@ export default {
         })
         await batch.commit()
         if (confirm) {
-          this.$emit("removeStore", this.store.storeId)
+          this.$emit("removeUserPageStore", this.store.storeId)
         }
       } else {
         const batch = await this.$firebase.firestore().batch()

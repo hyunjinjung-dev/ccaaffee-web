@@ -7,10 +7,9 @@
       aspect-ratio="0.7"
       @click.once="goToDetail(store.storeId)"
     >
-      <template v-slot:placeholder>
-        <div>hell</div>
+      <!-- <template v-slot:placeholder>
         <div>{{ store.link }}</div>
-      </template>
+      </template> -->
 
       <v-card
         class="d-flex flex-column white--text"
@@ -18,7 +17,12 @@
         style="background-color: inherit;"
       >
         <div v-if="type == 'like'" style="text-align:right;">
-          <detail-like :store="store" type="card" confirm @removeStore="removeStore"></detail-like>
+          <detail-like
+            :store="store"
+            type="card"
+            confirm
+            @removeUserPageStore="removeUserPageStore"
+          ></detail-like>
         </div>
 
         <div v-else-if="type == 'bookmark'" style="text-align:right;">
@@ -26,18 +30,22 @@
             :store="store"
             type="card"
             confirm
-            @removeStore="removeStore"
+            @removeUserPageStore="removeUserPageStore"
           ></detail-bookmark>
         </div>
 
         <div v-else-if="type == 'pin'" style="text-align:right;">
-          <store-card-sentiment :store="store"></store-card-sentiment>
+          <store-card-sentiment
+            :store="store"
+            type="mypage"
+            @updateUserPageSentiment="updateUserPageSentiment"
+          ></store-card-sentiment>
         </div>
 
         <v-spacer></v-spacer>
 
         <v-card-text class="white--text py-0">
-          <v-chip small>{{ store.addressLocation }} </v-chip>
+          <v-chip small>{{ store.addressLocation }}</v-chip>
         </v-card-text>
 
         <v-card-title class="white--text">
@@ -87,7 +95,6 @@ export default {
     store: {
       deep: true,
       handler() {
-        console.log("store changed")
         this.readCoverPhoto()
       },
     },
@@ -102,8 +109,11 @@ export default {
     },
   },
   methods: {
-    removeStore(storeId) {
-      this.$emit("removeStore", storeId)
+    removeUserPageStore(storeId) {
+      this.$emit("removeUserPageStore", storeId)
+    },
+    updateUserPageSentiment(storeId, newVal) {
+      this.$emit("updateUserPageSentiment", storeId, newVal)
     },
     async readCoverPhoto() {
       const storageRef = this.$firebase.storage().ref()
@@ -135,7 +145,7 @@ export default {
         .catch(function(error) {
           console.log("error", error)
         })
-      console.log(storageData)
+      // console.log(storageData)
       this.coverPhoto = storageData
     },
     goToDetail(storeId) {
