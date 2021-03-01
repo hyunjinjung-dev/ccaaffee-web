@@ -24,16 +24,16 @@
           sm="6"
           md="4"
           lg="3"
-          v-for="(store, index) in storeList"
-          :key="index"
+          v-for="store in storeList"
+          :key="store.storeId"
           class="mx-xs-auto"
         >
           <!-- v-for="i in loading ? 10 : 12"
           :key="i" -->
           <!-- <v-skeleton-loader type="card-avatar" :loading="loading"> -->
           <store-card
-            v-if="store"
             :card="{ maxWidth: 350 }"
+            v-if="store"
             :store="store"
             :fireUser="fireUser"
           ></store-card>

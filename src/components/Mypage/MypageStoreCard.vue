@@ -1,6 +1,5 @@
 <template>
   <v-card>
-    <!-- :src="src" -->
     <v-img
       class="white--text"
       :src="coverPhotoSrc"
@@ -9,31 +8,44 @@
       @click.once="goToDetail(store.storeId)"
     >
       <!-- <template v-slot:placeholder>
-        <div style="height:100%; width:100%; background-color: grey;"></div>
-        <v-row class="fill-height ma-0" align="center" justify="center">
-          Cover를 등록해주세요
-          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-        </v-row>
+        <div>{{ store.link }}</div>
       </template> -->
+
       <v-card
         class="d-flex flex-column white--text"
         height="100%"
         style="background-color: inherit;"
       >
-        <div class="" style="text-align:right;">
-          <detail-like :store="store" type="card"></detail-like>
+        <div v-if="type == 'like'" style="text-align:right;">
+          <detail-like
+            :store="store"
+            type="card"
+            confirm
+            @removeUserPageStore="removeUserPageStore"
+          ></detail-like>
         </div>
-        <div style="text-align:right;">
-          <detail-bookmark :store="store" type="card"></detail-bookmark>
+
+        <div v-else-if="type == 'bookmark'" style="text-align:right;">
+          <detail-bookmark
+            :store="store"
+            type="card"
+            confirm
+            @removeUserPageStore="removeUserPageStore"
+          ></detail-bookmark>
         </div>
-        <div style="text-align:right;">
-          <store-card-sentiment :store="store"></store-card-sentiment>
+
+        <div v-else-if="type == 'pin'" style="text-align:right;">
+          <store-card-sentiment
+            :store="store"
+            type="mypage"
+            @updateUserPageSentiment="updateUserPageSentiment"
+          ></store-card-sentiment>
         </div>
 
         <v-spacer></v-spacer>
 
         <v-card-text class="white--text py-0">
-          <v-chip small>{{ store.addressLocation }} </v-chip>
+          <v-chip small>{{ store.addressLocation }}</v-chip>
         </v-card-text>
 
         <v-card-title class="white--text">
@@ -43,51 +55,18 @@
         <v-card-subtitle class="white--text" v-if="store.branchName">
           {{ store.branchName }}
         </v-card-subtitle>
-
-        <v-card-text class="white--text py-0">
-          <detail-operating-time-calc
-            v-if="store.operatingTimeInfo"
-            :operatingTime="store.operatingTime"
-          ></detail-operating-time-calc>
-        </v-card-text>
-
-        <v-card-text class="white--text py-0">
-          <v-icon class="white--text" x-small>mdi-eye</v-icon>
-          <display-count :count="store.viewCount"></display-count>
-
-          <v-icon class="white--text">mdi-circle-small</v-icon>
-          <v-icon class="white--text" x-small>mdi-pencil</v-icon>
-          <display-count :count="store.reviewCount"></display-count>
-        </v-card-text>
-
-        <v-card-text class="white--text pt-0">
-          <v-icon class="white--text" x-small>mdi-heart</v-icon>
-          <display-count :count="store.likeUserCount"></display-count>
-
-          <v-icon class="white--text">mdi-circle-small</v-icon>
-          <v-icon class="white--text" x-small>mdi-bookmark</v-icon>
-          <display-count :count="store.bookmarkUserCount"></display-count>
-
-          <v-icon class="white--text">mdi-circle-small</v-icon>
-          <v-icon class="white--text" x-small>mdi-pin</v-icon>
-          <display-count :count="store.sentimentUserCount"></display-count>
-        </v-card-text>
       </v-card>
     </v-img>
   </v-card>
 </template>
 
 <script>
-import DisplayCount from "@/components/DisplayCount"
-import DetailOperatingTimeCalc from "@/components/Detail/DetailOperatingTimeCalc.vue"
 import DetailLike from "@/components/Detail/DetailLike.vue"
 import DetailBookmark from "@/components/Detail/DetailBookmark.vue"
 import StoreCardSentiment from "@/components/StoreCardSentiment.vue"
 
 export default {
   components: {
-    DisplayCount,
-    DetailOperatingTimeCalc,
     DetailLike,
     DetailBookmark,
     StoreCardSentiment,
@@ -97,12 +76,15 @@ export default {
       type: Object,
       required: true,
     },
-    card: Object,
+    type: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       coverPhoto: null,
-      // src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
+      samplePhoto: require("@/assets/grey.png"),
     }
   },
   mounted() {
@@ -110,8 +92,11 @@ export default {
   },
   watch: {
     // 필터를 변경했을 때, 이미지가 rerendering되지 않는 문제로 인해 watch 추가
-    store() {
-      this.readCoverPhoto()
+    store: {
+      deep: true,
+      handler() {
+        this.readCoverPhoto()
+      },
     },
   },
   computed: {
@@ -124,6 +109,12 @@ export default {
     },
   },
   methods: {
+    removeUserPageStore(storeId) {
+      this.$emit("removeUserPageStore", storeId)
+    },
+    updateUserPageSentiment(storeId, newVal) {
+      this.$emit("updateUserPageSentiment", storeId, newVal)
+    },
     async readCoverPhoto() {
       const storageRef = this.$firebase.storage().ref()
       const listRef = storageRef.child("cafes/" + this.store.storeId + "/photo_cover")
@@ -149,16 +140,13 @@ export default {
               })
             })
           })
-          // console.log("===========", list)
           return list
         })
         .catch(function(error) {
           console.log("error", error)
         })
-      // console.log("here", storageData)
+      // console.log(storageData)
       this.coverPhoto = storageData
-      // console.log("coverPhoto", this.coverPhoto, this.coverPhoto[0], this.coverPhoto.link)
-      // console.log("coverPhoto[0]", this.coverPhoto[0])
     },
     goToDetail(storeId) {
       this.$router.push({ name: "Detail", params: { storeId: storeId } })

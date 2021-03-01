@@ -94,7 +94,7 @@ const routes = [
   {
     path: "/mypage",
     name: "Mypage",
-    beforeEnter: onlyAuthUser,
+    // beforeEnter: onlyAuthUser,
     components: {
       NavBar,
       default: () => import(/* webpackChunkName: "mypage" */ "../views/Mypage.vue"),

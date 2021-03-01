@@ -1,6 +1,12 @@
 <template>
   <v-sheet class="pa-1" style="background-color: inherit;">
-    <v-menu offset-y left nudge-top="70" nudge-left="50" content-class="elevation-0">
+    <v-menu
+      offset-y
+      left
+      :nudge-top="type == 'mypage' ? '0' : '70'"
+      :nudge-left="type == 'mypage' ? '0' : '50'"
+      content-class="elevation-0"
+    >
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" small icon fab @click="loginCheck">
           <v-icon v-if="userSentiment" color="white">
@@ -12,14 +18,29 @@
         </v-btn>
       </template>
 
-      <div v-if="fireUser">
+      <div v-if="fireUser && type != 'mypage'">
         <div class="white--text font-weight-bold" style="text-align: center;">
           방문하신 적이 있나요?
         </div>
         <v-btn-toggle v-model="userSentiment" style="background-color: inherit;">
           <span v-for="(sentiment, index) in sentiments" :key="index">
-            <v-btn icon text @click="sentimentSelected(sentiment.id, userSentiment)">
+            <v-btn icon @click="sentimentSelected(sentiment.id, userSentiment)">
               <v-icon v-if="userSentiment != sentiment.id" color="white">
+                {{ sentiment.icon + "-outline" }}
+              </v-icon>
+              <v-icon v-else color="white">
+                {{ sentiment.icon }}
+              </v-icon>
+            </v-btn>
+          </span>
+        </v-btn-toggle>
+      </div>
+
+      <div v-else-if="fireUser && type == 'mypage'">
+        <v-btn-toggle dense v-model="userSentiment" style="background-color: inherit;">
+          <span v-for="(sentiment, index) in sentiments" :key="index">
+            <v-btn icon @click="sentimentSelected(sentiment.id, userSentiment)">
+              <v-icon small v-if="userSentiment != sentiment.id" color="white">
                 {{ sentiment.icon + "-outline" }}
               </v-icon>
               <v-icon v-else color="white">{{ sentiment.icon }}</v-icon>
@@ -33,7 +54,7 @@
 
 <script>
 export default {
-  props: ["store"],
+  props: ["store", "type"],
   data: () => ({
     userSentiment: null,
     sentiments: [
@@ -178,8 +199,13 @@ export default {
           }
         }
       } finally {
-        this.patch()
-        // this.$emit("sentimentSelected")
+        if (this.type != "mypage") {
+          this.patch()
+        } else {
+          if (oldVal != newVal) {
+            this.$emit("updateUserPageSentiment", this.store.storeId, newVal)
+          }
+        }
       }
     },
   },
