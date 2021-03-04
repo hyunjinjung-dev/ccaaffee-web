@@ -32,11 +32,11 @@
         @click:append="search"
         class="hidden-sm-and-down"
       ></v-text-field>
- -->
+      -->
       <v-spacer></v-spacer>
 
-      <account-menu v-if="$store.state.fireUser"></account-menu>
-      <sign-in-dialog v-else></sign-in-dialog>
+      <account-menu v-if="fireUser"></account-menu>
+      <sign-in-dialog v-else :dialog="signInDialogToggle"></sign-in-dialog>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -133,23 +133,30 @@
       :secondLineText="alertDialogInfo.secondLineText"
       :thirdLineText="alertDialogInfo.thirdLineText"
     ></alert-dialog>
+
+    <account-info-dialog v-if="accountInfoDialog" :dialog="accountInfoDialog"></account-info-dialog>
   </nav>
 </template>
 
 <script>
 import { mapState } from "vuex"
-import AccountMenu from "@/components/AccountMenu"
-import SignInDialog from "@/components/SignInDialog"
+import AccountMenu from "@/components/Nav/AccountMenu"
+import SignInDialog from "@/components/Nav/SignInDialog"
+import AccountInfoDialog from "@/components/Nav/AccountInfoDialog"
 import AlertDialog from "@/components/Module/AlertDialog"
 
 export default {
   components: {
     AccountMenu,
     SignInDialog,
+    AccountInfoDialog,
     AlertDialog,
   },
   computed: {
-    ...mapState(["alertDialogToggle", "alertDialogInfo"]),
+    ...mapState(["alertDialogToggle", "alertDialogInfo", "signInDialogToggle", "fireUser", "user"]),
+    accountInfoDialog() {
+      return this.user && !this.user.sex
+    },
     //   alertDialogToggle() {
     //     return this.$store.state.alertDialogToggle
     //   },

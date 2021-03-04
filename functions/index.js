@@ -29,6 +29,10 @@ exports.createUser = functions.auth.user().onCreate(async (user) => {
     likeStoreCount: 0,
     sentimentStoreList: [],
     sentimentStoreCount: 0,
+    firstName: "",
+    lastName: "",
+    sex: "",
+    birth: "",
   }
   await fdb
     .collection("users")

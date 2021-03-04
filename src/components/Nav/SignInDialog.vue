@@ -1,22 +1,28 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="dialog" width="350" transition="scroll-x-transition">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn outlined color="primary" v-bind="attrs" v-on="on">
-          <v-progress-circular
-            indeterminate
-            v-if="loading"
-            size="20"
-            class="mr-2"
-          ></v-progress-circular>
-          <v-icon left v-else>mdi-account</v-icon>
-          <span>로그인</span>
-        </v-btn>
-      </template>
+    <!-- <template v-slot:activator="{ on, attrs }"> -->
+    <!-- <v-btn outlined color="primary" v-bind="attrs" v-on="on"> -->
+    <v-btn outlined color="primary" @click="openBtnClicked">
+      <v-progress-circular
+        indeterminate
+        v-if="loading"
+        size="20"
+        class="mr-2"
+      ></v-progress-circular>
+      <v-icon left v-else>mdi-account</v-icon>
+      <span>로그인</span>
+    </v-btn>
+    <!-- </template> -->
 
+    <v-dialog
+      v-model="dialog"
+      width="350"
+      transition="scroll-x-transition"
+      @click:outside="closeBtnClicked"
+    >
       <v-card>
         <v-card-title class="headline mb-4">
-          ccaaffee
+          ccaaffee ☕️
         </v-card-title>
 
         <v-card-text>
@@ -60,7 +66,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false">
+          <v-btn color="primary" text @click="closeBtnClicked">
             Close
           </v-btn>
           <v-scroll-x-transition>
@@ -75,11 +81,12 @@
 </template>
 <script>
 export default {
+  props: ["dialog"],
   data() {
     return {
       loading: false,
       valid: false,
-      dialog: false,
+      // dialog: false,
       openEmailSignIn: false,
       form: {
         email: "",
@@ -100,6 +107,12 @@ export default {
     },
   },
   methods: {
+    openBtnClicked() {
+      this.$store.dispatch("openSignInDialog")
+    },
+    closeBtnClicked() {
+      this.$store.dispatch("closeSignInDialog")
+    },
     async signInBtnClicked() {
       await this.$refs.form.validate()
       if (this.valid) {

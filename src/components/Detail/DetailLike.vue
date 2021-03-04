@@ -91,6 +91,7 @@ export default {
     likeBtnClicked() {
       if (!this.fireUser) {
         this.$toast.error("로그인이 필요해요")
+        this.$store.dispatch("openSignInDialog")
         return
       }
       if (this.confirm) {

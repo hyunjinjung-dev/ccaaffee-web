@@ -1,7 +1,7 @@
 import Vue from "vue"
 import store from "@/store"
 import VueRouter from "vue-router"
-import NavBar from "@/components/NavBar.vue"
+import NavBar from "@/components/Nav/NavBar.vue"
 
 Vue.use(VueRouter)
 
@@ -11,6 +11,7 @@ const onlyAuthUser = (to, from, next) => {
     next()
   } else {
     Vue.prototype.$toast.error("로그인이 필요해요!")
+    store.dispatch("openSignInDialog")
   }
 }
 // 로그인 가드
@@ -94,7 +95,7 @@ const routes = [
   {
     path: "/mypage",
     name: "Mypage",
-    // beforeEnter: onlyAuthUser,
+    beforeEnter: onlyAuthUser,
     components: {
       NavBar,
       default: () => import(/* webpackChunkName: "mypage" */ "../views/Mypage.vue"),

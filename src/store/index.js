@@ -9,6 +9,7 @@ export default new Vuex.Store({
     user: null,
     isLogin: false,
 
+    signInDialogToggle: false,
     alertDialogToggle: false,
     alertDialogInfo: null,
 
@@ -101,6 +102,12 @@ export default new Vuex.Store({
       state.alertDialogInfo = null
       state.alertDialogToggle = false
     },
+    openSignInDialog(state) {
+      state.signInDialogToggle = true
+    },
+    closeSignInDialog(state) {
+      state.signInDialogToggle = false
+    },
   },
   actions: {
     // Login && Logout
@@ -116,6 +123,12 @@ export default new Vuex.Store({
     },
     closeAlertDialog({ commit }) {
       commit("closeAlertDialog")
+    },
+    openSignInDialog({ commit }) {
+      commit("openSignInDialog")
+    },
+    closeSignInDialog({ commit }) {
+      commit("closeSignInDialog")
     },
   },
   modules: {},
